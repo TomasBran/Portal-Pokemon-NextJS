@@ -23,38 +23,16 @@ import Image from 'next/image';
 const PokeGym = () => {
 	const testing = false; //CAMBIAR CUANDO ESTOY TESTEANDO
 
-	useEffect(() => {
-		// if (getFromLocalStorage('gym_streak') === null) {
-		// 	saveToLocalStorage('gym_streak', 0);
-		// }
-		// if (getFromLocalStorage('gym_stats') === null) {
-		// 	saveToLocalStorage('gym_stats', {
-		// 		easymode_badges: {
-		// 			0: 0,
-		// 			1: 0,
-		// 			2: 0,
-		// 			3: 0,
-		// 			4: 0,
-		// 			5: 0,
-		// 			6: 0,
-		// 			7: 0,
-		// 			8: 0,
-		// 		},
-		// 		hardmode_badges: {
-		// 			0: 0,
-		// 			1: 0,
-		// 			2: 0,
-		// 			3: 0,
-		// 			4: 0,
-		// 			5: 0,
-		// 			6: 0,
-		// 			7: 0,
-		// 			8: 0,
-		// 		},
-		// 		games_restarted: 0,
-		// 	});
-		// }
-	}, []);
+	if (getFromLocalStorage('gym_streak') === null) {
+		saveToLocalStorage('gym_streak', 0);
+	}
+	if (getFromLocalStorage('gym_stats') === null) {
+		saveToLocalStorage('gym_stats', {
+			easymode_badges: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 },
+			hardmode_badges: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 },
+			games_restarted: 0,
+		});
+	}
 
 	const MySwal = withReactContent(Swal);
 
