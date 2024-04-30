@@ -325,12 +325,12 @@ const TypesChallenge = () => {
 								onClick={startNewGame}>
 								Comenzar partida
 							</div>
-							<div className='text-xl '>
+							{/* <div className='text-xl '>
 								{`Racha actual: ${getFromLocalStorage('types_streak')}`}
 							</div>
 							<div className='text-xl '>
 								{`Racha más larga: ${getFromLocalStorage('types_highscore')}`}
-							</div>
+							</div> */}
 						</div>
 					)}
 				</div>
