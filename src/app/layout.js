@@ -25,6 +25,10 @@ export default function RootLayout({ children }) {
 					rel='icon'
 					type='image/x-icon'
 				/>
+				<link
+					rel='stylesheet'
+					href='https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'
+				/>
 			</head>
 			<body className={inter.className}>
 				<MainLayout>{children}</MainLayout>

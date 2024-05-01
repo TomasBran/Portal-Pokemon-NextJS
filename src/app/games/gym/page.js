@@ -19,6 +19,10 @@ import {
 } from '../../utils/services/localStorage.js';
 import Synergies from '../../Components/Sinergies/Sinergies.js';
 import Image from 'next/image';
+import {
+	getFromSessionStorage,
+	saveToSessionStorage,
+} from '@/app/utils/services/sessionStorage.js';
 
 const PokeGym = () => {
 	const testing = false; //CAMBIAR CUANDO ESTOY TESTEANDO
@@ -60,16 +64,16 @@ const PokeGym = () => {
 	const [synergiesActive, setSynergiesActive] = useState(true);
 	const [synergyBonus, setSynergyBonus] = useState(null);
 
-	// const initialHasClickedSettings =
-	// 	sessionStorage.getItem('hasClickedSettings') === 'true';
-	// const initialHasClickedSynergies =
-	// 	sessionStorage.getItem('hasClickedSynergies') === 'true';
-	// const [hasClickedSettings, setHasClickedSettings] = useState(
-	// 	initialHasClickedSettings
-	// );
-	// const [hasClickedSynergies, setHasClickedSynergies] = useState(
-	// 	initialHasClickedSynergies
-	// );
+	const initialHasClickedSettings =
+		getFromSessionStorage('hasClickedSettings') === 'true';
+	const initialHasClickedSynergies =
+		getFromSessionStorage('hasClickedSynergies') === 'true';
+	const [hasClickedSettings, setHasClickedSettings] = useState(
+		initialHasClickedSettings
+	);
+	const [hasClickedSynergies, setHasClickedSynergies] = useState(
+		initialHasClickedSynergies
+	);
 
 	const [shouldDisable, setShouldDisable] = useState(false);
 
@@ -212,7 +216,7 @@ const PokeGym = () => {
 			}
 		});
 
-		return <div className='flex gap-1 z-10'>{starsArray}</div>;
+		return <div className='flex gap-1 z-20'>{starsArray}</div>;
 	};
 
 	const handleButtonText = () => {
@@ -592,18 +596,18 @@ const PokeGym = () => {
 		});
 	};
 
-	// const handleSettingsClick = () => {
-	// 	setHasClickedSettings(true);
-	// 	sessionStorage.setItem('hasClickedSettings', 'true');
-	// };
+	const handleSettingsClick = () => {
+		setHasClickedSettings(true);
+		saveToSessionStorage('hasClickedSettings', 'true');
+	};
 
-	// const handleSynergiesClick = () => {
-	// 	setHasClickedSynergies(true);
-	// 	sessionStorage.setItem('hasClickedSynergies', 'true');
-	// };
+	const handleSynergiesClick = () => {
+		setHasClickedSynergies(true);
+		saveToSessionStorage('hasClickedSynergies', 'true');
+	};
 
 	return (
-		<div className='bg-zinc-200 pt-6 px-1 h-screen w-full flex flex-col sm:justify-center justify-start items-center text-center text-black'>
+		<div className='bg-indigo-100 pt-6 px-1 h-screen w-full flex flex-col sm:justify-center justify-start items-center text-center text-black'>
 			<div className='pt-7 sm:h-3/4 h-3/5 flex flex-wrap justify-center items-center w-full sm:gap-x-36'>
 				{isLoading ? (
 					<ProgressSpinner animationDuration='.5s' />
@@ -663,20 +667,20 @@ const PokeGym = () => {
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-4 gap-2 mt-2 w-full'>
 					<button
 						id='fight-button'
-						className='sm:bg-gray-700 bg-slate-500 enabled:active:bg-slate-400 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg sm:enabled:hover:bg-gray-500 sm:enabled:active:bg-gray-400 enabled:active:scale-95 disabled:opacity-30'
+						className='bg-indigo-500 active:bg-indigo-300 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg hover:bg-indigo-400 disabled:hover:bg-indigo-500 disabled:active:bg-indigo-500 enabled:active:scale-95 disabled:opacity-30'
 						onClick={() => updatePokemonTeam()}
 						disabled={shouldDisable}>
 						{rollButtonText}
 					</button>
 					<button
-						className='sm:bg-gray-700 bg-slate-500 enabled:active:bg-slate-400 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg sm:enabled:hover:bg-gray-500 sm:enabled:active:bg-gray-400 enabled:active:scale-95 disabled:opacity-30'
+						className='bg-indigo-500 active:bg-indigo-300 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg hover:bg-indigo-400 disabled:hover:bg-indigo-500 disabled:active:bg-indigo-500 enabled:active:scale-95 disabled:opacity-30'
 						disabled={chosenTeam.length !== 6}
 						onClick={fightGymLeaders}>
 						<span className='text-red-500'>P</span>ELEAR{' '}
 						{chosenTeam.length !== 6 ? `(Necesitas 6 Pokemon)` : ''}
 					</button>
 					<button
-						className='sm:bg-gray-700 bg-slate-500 enabled:active:bg-slate-400 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg sm:enabled:hover:bg-gray-500 sm:enabled:active:bg-gray-400 enabled:active:scale-95 disabled:opacity-30'
+						className='bg-indigo-500 active:bg-indigo-300 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg hover:bg-indigo-400 disabled:hover:bg-indigo-500 disabled:active:bg-indigo-500 enabled:active:scale-95 disabled:opacity-30'
 						disabled={rollButtonText === 'Iniciar Juego'}
 						onClick={() => resetGame(true)}>
 						<span className='text-red-500'>R</span>EINICIAR JUEGO
@@ -745,17 +749,17 @@ const PokeGym = () => {
 					className={`fixed right-4 bottom-4  ${
 						!showSettings ? 'scale-100' : 'scale-0'
 					} transition-all duration-150 transform`}>
-					{/* {!hasClickedSettings && (
+					{!hasClickedSettings && (
 						<div className='relative cursor-pointer flex h-3 w-3 top-2 left-8 pointer-events-none'>
 							<span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75' />
 							<span className='relative inline-flex rounded-full h-3 w-3 bg-sky-500' />
 						</div>
-					)} */}
+					)}
 					<div
-						className={`w-10 cursor-pointer bg-gray-700 rounded-lg p-2 hover:bg-gray-600 active:scale-95 hover:bg-gray-500 transition-all ease-in-out duration-150 `}
+						className={`w-10 cursor-pointer bg-indigo-500 rounded-lg p-2 hover:bg-indigo-400 active:scale-95 active:bg-indigo-300 transition-all ease-in-out duration-150 `}
 						onClick={() => {
 							handleShowSettings();
-							// handleSettingsClick();
+							handleSettingsClick();
 						}}>
 						<Image
 							src={settings}
@@ -767,17 +771,16 @@ const PokeGym = () => {
 			<div
 				className={`${
 					!synergiesActive && 'hidden'
-				} fixed right-0 bottom-0 mx-4 mb-16`}>
-				{/* {!hasClickedSynergies && (
+				} fixed right-0 bottom-0 mx-4 mb-16 z-30`}>
+				{!hasClickedSynergies && (
 					<div className='relative cursor-pointer flex h-3 w-3 top-2 left-8 pointer-events-none'>
 						<span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75'></span>
 						<span className='relative inline-flex rounded-full h-3 w-3 bg-sky-500'></span>
 					</div>
-				)} */}
+				)}
 				<div
 					className='rounded-lg'
-					// onClick={handleSynergiesClick}
-				>
+					onClick={handleSynergiesClick}>
 					<Synergies
 						team={chosenTeam}
 						rerollsLeft={rerollsLeft}

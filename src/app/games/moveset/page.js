@@ -287,7 +287,7 @@ const MoveSet = () => {
 	};
 
 	return (
-		<div className='sm:h-screen min-h-screen pt-14 p-1 sm:pt-0 bg-gray-200 w-full flex flex-col sm:items-center sm:justify-center text-center text-black'>
+		<div className='sm:h-screen min-h-screen pt-14 p-1 sm:pt-0 bg-indigo-100 w-full flex flex-col sm:items-center sm:justify-center text-center text-black'>
 			<div className='w-full sm:h-9/12 h-full flex sm:flex-row flex-col justify-center gap-4 items-center'>
 				<div className='sm:w-3/12 h-full flex flex-col justify-center items-center gap-4'>
 					<div className='w-4/6 sm:block hidden '>
@@ -307,11 +307,11 @@ const MoveSet = () => {
 						<button
 							disabled={guessButtonDisabled}
 							onClick={() => guess(inputValue)}
-							className='rounded-lg disabled:opacity-40 bg-indigo-500  enabled:hover:bg-indigo-400 enabled:active:bg-indigo-300 enabled:cursor-pointer py-4 px-4 flex items-center justify-center'>
+							className='rounded-lg disabled:opacity-40 bg-indigo-500 font-bold enabled:hover:bg-indigo-400 enabled:active:bg-indigo-300 enabled:cursor-pointer py-4 px-4 flex items-center justify-center'>
 							ADIVINAR
 						</button>
 						<button
-							className='bg-indigo-500 hover:bg-indigo-400 active:bg-indigo-300 cursor-pointer py-4 px-4 rounded-lg flex items-center justify-center'
+							className='bg-indigo-500 hover:bg-indigo-400 active:bg-indigo-300 cursor-pointer py-4 px-4 rounded-lg flex items-center justify-center font-bold'
 							onClick={() => resetGame(true)}>
 							REINICIAR
 						</button>
