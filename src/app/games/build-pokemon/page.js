@@ -279,7 +279,7 @@ const BuildPokemon = () => {
 	};
 
 	return (
-		<div className='sm:h-screen min-h-screen bg-zinc-200 pt-14 px-1 text-black text-center'>
+		<div className='sm:h-screen min-h-screen bg-indigo-100 pt-14 px-1 text-black text-center'>
 			{gameStarted ? (
 				<div className='flex flex-col sm:flex-row justify-evenly items-center h-full '>
 					{offeredPokemon !== null && teamLength !== 6 && (
@@ -287,7 +287,7 @@ const BuildPokemon = () => {
 							{!loading ? (
 								<div className='sm:h-[50vh] h-[30vh] flex sm:w-[20vw]'>
 									<Image
-										className='sm:max-h-[50vh] w-auto max-h-[30vh]'
+										className='sm:max-h-[50vh] max-w-[200%] w-auto max-h-[30vh]'
 										src={offeredPokemon.img}
 										alt={offeredPokemon.name}
 										width={1024}

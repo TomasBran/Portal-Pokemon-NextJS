@@ -212,7 +212,7 @@ const PokeGym = () => {
 			}
 		});
 
-		return <div className='flex gap-1 z-10'>{starsArray}</div>;
+		return <div className='flex gap-1 z-20'>{starsArray}</div>;
 	};
 
 	const handleButtonText = () => {
@@ -603,7 +603,7 @@ const PokeGym = () => {
 	// };
 
 	return (
-		<div className='bg-zinc-200 pt-6 px-1 h-screen w-full flex flex-col sm:justify-center justify-start items-center text-center text-black'>
+		<div className='bg-indigo-100 pt-6 px-1 h-screen w-full flex flex-col sm:justify-center justify-start items-center text-center text-black'>
 			<div className='pt-7 sm:h-3/4 h-3/5 flex flex-wrap justify-center items-center w-full sm:gap-x-36'>
 				{isLoading ? (
 					<ProgressSpinner animationDuration='.5s' />
@@ -663,20 +663,20 @@ const PokeGym = () => {
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-4 gap-2 mt-2 w-full'>
 					<button
 						id='fight-button'
-						className='sm:bg-gray-700 bg-slate-500 enabled:active:bg-slate-400 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg sm:enabled:hover:bg-gray-500 sm:enabled:active:bg-gray-400 enabled:active:scale-95 disabled:opacity-30'
+						className='bg-indigo-500 active:bg-indigo-300 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg hover:bg-indigo-400 disabled:hover:bg-indigo-500 disabled:active:bg-indigo-500 enabled:active:scale-95 disabled:opacity-30'
 						onClick={() => updatePokemonTeam()}
 						disabled={shouldDisable}>
 						{rollButtonText}
 					</button>
 					<button
-						className='sm:bg-gray-700 bg-slate-500 enabled:active:bg-slate-400 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg sm:enabled:hover:bg-gray-500 sm:enabled:active:bg-gray-400 enabled:active:scale-95 disabled:opacity-30'
+						className='bg-indigo-500 active:bg-indigo-300 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg hover:bg-indigo-400 disabled:hover:bg-indigo-500 disabled:active:bg-indigo-500 enabled:active:scale-95 disabled:opacity-30'
 						disabled={chosenTeam.length !== 6}
 						onClick={fightGymLeaders}>
 						<span className='text-red-500'>P</span>ELEAR{' '}
 						{chosenTeam.length !== 6 ? `(Necesitas 6 Pokemon)` : ''}
 					</button>
 					<button
-						className='sm:bg-gray-700 bg-slate-500 enabled:active:bg-slate-400 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg sm:enabled:hover:bg-gray-500 sm:enabled:active:bg-gray-400 enabled:active:scale-95 disabled:opacity-30'
+						className='bg-indigo-500 active:bg-indigo-300 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg hover:bg-indigo-400 disabled:hover:bg-indigo-500 disabled:active:bg-indigo-500 enabled:active:scale-95 disabled:opacity-30'
 						disabled={rollButtonText === 'Iniciar Juego'}
 						onClick={() => resetGame(true)}>
 						<span className='text-red-500'>R</span>EINICIAR JUEGO
@@ -752,7 +752,7 @@ const PokeGym = () => {
 						</div>
 					)} */}
 					<div
-						className={`w-10 cursor-pointer bg-gray-700 rounded-lg p-2 hover:bg-gray-600 active:scale-95 hover:bg-gray-500 transition-all ease-in-out duration-150 `}
+						className={`w-10 cursor-pointer bg-indigo-500 rounded-lg p-2 hover:bg-indigo-400 active:scale-95 active:bg-indigo-300 transition-all ease-in-out duration-150 `}
 						onClick={() => {
 							handleShowSettings();
 							// handleSettingsClick();
@@ -767,7 +767,7 @@ const PokeGym = () => {
 			<div
 				className={`${
 					!synergiesActive && 'hidden'
-				} fixed right-0 bottom-0 mx-4 mb-16`}>
+				} fixed right-0 bottom-0 mx-4 mb-16 z-30`}>
 				{/* {!hasClickedSynergies && (
 					<div className='relative cursor-pointer flex h-3 w-3 top-2 left-8 pointer-events-none'>
 						<span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75'></span>

@@ -277,7 +277,7 @@ const TypesChallenge = () => {
 		<div
 			className={`${
 				gameStarted ? 'justify-start' : 'justify-center'
-			} sm:pt-16 sm:p-6 pt-20 px-1 pb-1 flex flex-col sm:gap-10 bg-zinc-200 sm:h-screen min-h-screen text-black text-center`}>
+			} sm:pt-16 sm:p-6 pt-20 px-1 pb-1 flex flex-col sm:gap-10 bg-indigo-100 sm:h-screen min-h-screen text-black text-center`}>
 			{/* QUITAR CUANDO ACTUALICE EL DnD PARA TOUCH BACKEND */}
 			<div className='sm:hidden'>
 				{`De momento este juego no está disponible en dispositivos móbiles.

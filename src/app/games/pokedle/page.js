@@ -349,7 +349,7 @@ const Pokedle = () => {
 	};
 
 	return (
-		<div className='bg-zinc-200 min-h-screen pb-4 p-1 text-center text-black'>
+		<div className='bg-indigo-100 min-h-screen pb-4 p-1 text-center text-black'>
 			<div className='flex sm:flex-row flex-col justify-center items-center gap-4 sm:py-20 pt-14 pb-6'>
 				<span className='sm:block hidden'>Elige un Pokemon:</span>
 				<PokemonSearch

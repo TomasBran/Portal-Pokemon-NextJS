@@ -399,11 +399,13 @@ const Synergies = ({
 
 	return (
 		<div
-			className='z-0 bg-gray-600 rounded-lg '
+			className={`bg-indigo-500 rounded-lg ${
+				showSynergies && 'border-4 border-indigo-900 '
+			}`}
 			ref={synergiesRef}>
 			<div
 				className={`rounded-xl transition-all duration-150 overflow-hidden ${
-					showSynergies ? 'h-60 w-72 py-2' : 'h-0 w-0'
+					showSynergies ? 'h-60 sm:w-80 w-[80vw] py-2' : 'h-0 w-0'
 				} `}>
 				{true && (
 					<div className='h-full '>
@@ -443,7 +445,7 @@ const Synergies = ({
 					src={starIcon}
 					alt='synergies'
 					onClick={() => setShowSynergies((prev) => !prev)}
-					className={`w-10 p-2 cursor-pointer rounded-lg rounded-lg bg-gray-700 hover:bg-gray-600 active:scale-95 active:hover:bg-gray-500 transition-all ease-in-out duration-150`}
+					className={`w-10 p-2 cursor-pointer rounded-lg rounded-lg bg-indigo-500 hover:bg-indigo-400 active:scale-95 active:hover:bg-indigo-300 transition-all ease-in-out duration-150`}
 				/>
 			</div>
 		</div>

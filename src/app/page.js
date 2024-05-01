@@ -54,7 +54,10 @@ const buttonsArray = [
 
 export default function Home() {
 	return (
-		<div className='min-h-screen pt-10 bg-yellow-300 sm:bg-yellow-200 flex items-center w-screen'>
+		<div className='min-h-screen pt-10 bg-yellow-200 sm:bg-yellow-100 flex flex-col justify-center items-center w-screen'>
+			<h2 className='sm:text-3xl text-lg pt-4 -mb-3 sm:mb-0 font-pokemon text-yellow-600 text-center'>
+				Portal Pokemon
+			</h2>
 			<div className='flex flex-col w-full'>
 				<div className='flex justify-evenly flex-wrap gap-7 w-screen w-full px-3 pb-3 pt-6'>
 					{buttonsArray.map((button, index) => (
@@ -64,7 +67,7 @@ export default function Home() {
 							key={index}>
 							<button
 								disabled={button.isDisabled}
-								className={`p-2 md:p-4 w-full h-[35vh] rounded-lg border-none text-white no-underline bg-cover bg-center ease-in duration-150 enabled:active:scale-95 disabled:cursor-default group shadow-black/60 md:enabled:hover:shadow-lg md:shadow-none shadow-lg md:enabled:hover:shadow-black/60`}
+								className={`p-2 md:p-4 w-full h-[35vh] rounded-lg border-none text-white no-underline bg-cover bg-center ease-in duration-150 enabled:active:scale-95 disabled:cursor-default group shadow-black/60 md:enabled:hover:shadow-lg md:shadow-none shadow-lg md:enabled:hover:shadow-yellow-600`}
 								style={{ backgroundImage: `url(${button.image})` }}>
 								<Image
 									priority
@@ -75,9 +78,9 @@ export default function Home() {
 								<div className='flex items-end justify-between w-full h-full flex-col'>
 									{!button.isDisabled && (
 										<div
-											className={`absolute top-4 transform py-2 px-3 rounded-md transition duration-150 ease-in sm:font-bold font-medium text-shadow-md
-											${button.typeText === 'Herramienta' && 'bg-teal-300 text-teal-700 '}
-											${button.typeText === 'Mini-game' && 'bg-zinc-300 text-gray-700 '}`}>
+											className={`absolute top-4 transform py-2 px-3 rounded-md transition duration-150 ease-in sm:font-bold font-medium text-shadow-md shadow-lg shadow-black group-hover:shadow-black/60
+											${button.typeText === 'Herramienta' && 'bg-teal-200 text-teal-700 '}
+											${button.typeText === 'Mini-game' && 'bg-indigo-200 text-indigo-700 '}`}>
 											<span>{button.typeText}</span>
 										</div>
 									)}
