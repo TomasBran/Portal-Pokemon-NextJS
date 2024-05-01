@@ -4,6 +4,7 @@ Portal Pokemon es un proyecto desarrollado en NextJS, que utiliza TailwindCSS pa
 Es mi mayor proyecto, en el que más tiempo y ganas puse.
 
 Tiene un menú Home con las herramientas y juegos a disposición.
+
 El deploy está en: https://portal-pkmn.vercel.app/
 
 
