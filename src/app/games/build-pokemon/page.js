@@ -82,6 +82,17 @@ const BuildPokemon = () => {
 		saveToLocalStorage('buildpokemon_highscores', topFive);
 	};
 
+	const checkIfNewHighscore = (highscore) => {
+		const previousHighScores =
+			getFromLocalStorage('buildpokemon_highscores') || [];
+
+		const isNewHighscore = previousHighScores.every(
+			(score) => highscore >= score
+		);
+
+		return isNewHighscore;
+	};
+
 	const startGame = async () => {
 		setScore(undefined);
 		setGameEnded(false);
@@ -251,6 +262,9 @@ const BuildPokemon = () => {
 			registerHighScore(totalPower);
 		}
 
+		const isNewHighscore = checkIfNewHighscore(totalPower);
+		console.log(isNewHighscore);
+
 		const message = pokemonStats
 			.map((stat) => {
 				return `${stat.statName}: ${stat.baseStat} - ${stat.pokemonName}`;
@@ -261,7 +275,13 @@ const BuildPokemon = () => {
 
 		let result = await MySwal.fire({
 			title: 'Estadísticas de los Pokémon asignados',
-			html: `<pre>${messageWithTotal}</pre>`,
+			html: `<pre>${messageWithTotal}
+			${
+				isNewHighscore
+					? `<br><span class='text-green-500 font-bold'>NUEVO RECORD</span>`
+					: ''
+			}
+			</pre>`,
 			icon: 'success',
 			showCancelButton: true,
 			confirmButtonColor: '#007bff',
