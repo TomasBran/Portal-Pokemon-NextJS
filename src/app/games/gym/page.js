@@ -57,6 +57,7 @@ const PokeGym = () => {
 	const [rollButtonText, setRollButtonText] = useState(
 		`Generar ${6 - chosenTeam.length} pokemon (3 REROLLS)`
 	);
+	const [gameEnded, setGameEnded] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
 	const [hardmode, setHardmode] = useState(false);
 	const [luckActive, setLuckActive] = useState(true);
@@ -315,7 +316,7 @@ const PokeGym = () => {
 						: ''
 				}`;
 
-		await MySwal.fire({
+		let response = await MySwal.fire({
 			title: `<span class='sm:text-lg text-sm'>${finalText}</span>`,
 			text: `Tu equipo fue: ${chosenTeam
 				.map(
@@ -324,19 +325,25 @@ const PokeGym = () => {
 				)
 				.join(' | ')}`,
 			icon: 'success',
-			showCancelButton: false,
-			confirmButtonColor: 'rgb(99 102 241)',
-			confirmButtonText: 'Volver a empezar',
+			showCancelButton: true,
+			confirmButtonColor: '#007bff',
+			cancelButtonColor: '#787878',
+			confirmButtonText: 'Jugar otra vez',
+			cancelButtonText: 'Ver el tablero',
 			width: '70vw',
 		});
-
 		updateGymStats(hardmode, beatenGyms);
-		resetGame(false);
+
+		if (response.isConfirmed) {
+			startNewGame();
+			return;
+		}
+		setGameEnded(true);
 	};
 
 	const resetGame = async (shouldAsk) => {
 		let result = false;
-		if (shouldAsk && !testing) {
+		if (shouldAsk && !testing && !gameEnded) {
 			result = await MySwal.fire({
 				title: 'Quieres reiniciar el juego?',
 				text: 'Esto borrará todos los pokemon elegidos y ofrecidos',
@@ -352,13 +359,18 @@ const PokeGym = () => {
 			updateGymResetNumber();
 		}
 
-		if (result.isConfirmed || !shouldAsk || testing) {
-			setChosenTeam([]);
-			setCurrentTeam([]);
-			setRerollsLeft(testing ? 100 : 4);
-			setRollButtonText('Iniciar Juego');
-			setShouldDisable(false);
+		if (result.isConfirmed || !shouldAsk || testing || gameEnded) {
+			startNewGame();
 		}
+	};
+
+	const startNewGame = () => {
+		setGameEnded(false);
+		setChosenTeam([]);
+		setCurrentTeam([]);
+		setRerollsLeft(testing ? 100 : 4);
+		setRollButtonText('Iniciar Juego');
+		setShouldDisable(false);
 	};
 
 	const updateGymResetNumber = () => {
@@ -409,7 +421,7 @@ const PokeGym = () => {
 
 		if (result.isConfirmed) {
 			setHardmode((prev) => !prev);
-			resetGame(false);
+			startNewGame();
 			toast.warning(`Modo difícil ${!hardmode ? 'activado' : 'desactivado'}.`);
 		}
 	};
@@ -428,7 +440,7 @@ const PokeGym = () => {
 
 		if (result.isConfirmed) {
 			setLuckActive((prev) => !prev);
-			resetGame(false);
+			startNewGame();
 			toast.warning(`Suerte ${!luckActive ? 'activada' : 'desactivada'}.`);
 		}
 	};
@@ -454,7 +466,7 @@ const PokeGym = () => {
 
 		if (result.isConfirmed) {
 			setSynergiesActive((prev) => !prev);
-			resetGame(false);
+			startNewGame();
 			toast.warning(
 				`Sinergias ${!synergiesActive ? 'activadas' : 'desactivadas'}.`
 			);
@@ -630,9 +642,11 @@ const PokeGym = () => {
 										: pokemon.hasBeenChosen
 										? 'bg-green-400/60'
 										: 'bg-red-400/60'
-								} m-1 sm:mx-10 cursor-pointer flex flex-col items-center justify-center sm:gap-1 sm:p-5 sm:rounded-full rounded-lg`}
+								} m-1 sm:mx-10 ${
+									!gameEnded && 'cursor-pointer'
+								} flex flex-col items-center justify-center sm:gap-1 sm:p-5 sm:rounded-full rounded-lg`}
 								key={index}
-								onClick={() => lockInPokemon(pokemon)}>
+								onClick={() => !gameEnded && lockInPokemon(pokemon)}>
 								<Image
 									src={pokeball}
 									alt='Pokeball'
@@ -669,12 +683,12 @@ const PokeGym = () => {
 						id='fight-button'
 						className='bg-indigo-500 active:bg-indigo-300 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg hover:bg-indigo-400 disabled:hover:bg-indigo-500 disabled:active:bg-indigo-500 enabled:active:scale-95 disabled:opacity-30'
 						onClick={() => updatePokemonTeam()}
-						disabled={shouldDisable}>
+						disabled={shouldDisable || gameEnded}>
 						{rollButtonText}
 					</button>
 					<button
 						className='bg-indigo-500 active:bg-indigo-300 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg hover:bg-indigo-400 disabled:hover:bg-indigo-500 disabled:active:bg-indigo-500 enabled:active:scale-95 disabled:opacity-30'
-						disabled={chosenTeam.length !== 6}
+						disabled={chosenTeam.length !== 6 || gameEnded}
 						onClick={fightGymLeaders}>
 						<span className='text-red-500'>P</span>ELEAR{' '}
 						{chosenTeam.length !== 6 ? `(Necesitas 6 Pokemon)` : ''}

@@ -122,8 +122,9 @@ const TypesChallenge = () => {
 				text: `Hiciste todo correcto al 100%. Racha actual: ${streak + 1}`,
 				icon: 'success',
 				showCancelButton: true,
-				confirmButtonColor: 'rgb(99 102 241)',
-				confirmButtonText: 'Volver a jugar',
+				confirmButtonColor: '#007bff',
+				cancelButtonColor: '#787878',
+				confirmButtonText: 'Jugar otra vez',
 				cancelButtonText: 'Ver el tablero',
 				width: '70vw',
 			});
@@ -136,8 +137,9 @@ const TypesChallenge = () => {
 				text: `Tuviste algunos errores. A practicar! Racha actual: 0`,
 				icon: 'warning',
 				showCancelButton: true,
-				confirmButtonColor: 'rgb(99 102 241)',
-				confirmButtonText: 'Volver a jugar',
+				confirmButtonColor: '#007bff',
+				cancelButtonColor: '#787878',
+				confirmButtonText: 'Jugar otra vez',
 				cancelButtonText: 'Ver el tablero',
 				width: '70vw',
 			});

@@ -147,7 +147,8 @@ const Pokedle = () => {
 				}`,
 				icon: 'success',
 				showCancelButton: true,
-				confirmButtonColor: 'green',
+				confirmButtonColor: '#007bff',
+				cancelButtonColor: '#787878',
 				confirmButtonText: 'Jugar otra vez',
 				cancelButtonText: 'Ver el tablero',
 			});

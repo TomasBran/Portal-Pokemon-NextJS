@@ -221,8 +221,10 @@ const BuildPokemon = () => {
 			html: `<pre>${messageWithTotal}</pre>`,
 			icon: 'success',
 			showCancelButton: true,
-			confirmButtonText: 'Jugar de nuevo',
-			cancelButtonText: 'Ver Tablero',
+			confirmButtonColor: '#007bff',
+			cancelButtonColor: '#787878',
+			confirmButtonText: 'Jugar otra vez',
+			cancelButtonText: 'Ver el tablero',
 		});
 
 		if (result.isConfirmed) {

@@ -25,7 +25,7 @@ import Image from 'next/image';
 
 const MoveSet = () => {
 	// ***IMPORTANTE*** DESHABILITAR CUANDO NO ESTE TESTEANDO //
-	const testing = false; // PONER FALSE AL NO TESTEAR
+	const testing = true; // PONER FALSE AL NO TESTEAR
 	if (testing) console.log('EL MODO TESTING ESTA ON');
 	// ***IMPORTANTE*** DESHABILITAR CUANDO NO ESTE TESTEANDO //
 
@@ -157,7 +157,8 @@ const MoveSet = () => {
 				}`,
 				icon: 'success',
 				showCancelButton: true,
-				confirmButtonColor: 'green',
+				confirmButtonColor: '#007bff',
+				cancelButtonColor: '#787878',
 				confirmButtonText: 'Jugar otra vez',
 				cancelButtonText: 'Ver el tablero',
 			}).then((response) => {
