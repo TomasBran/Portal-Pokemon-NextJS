@@ -33,7 +33,7 @@ function PokemonSearch(props) {
 	const getSuggestions = (inputValue) => {
 		const inputValueLowerCase = inputValue.trim().toLowerCase();
 		return pokemonData.filter((pokemon) =>
-			pokemon.name.toLowerCase().includes(inputValueLowerCase)
+			pokemon.name.toLowerCase().startsWith(inputValueLowerCase)
 		);
 	};
 

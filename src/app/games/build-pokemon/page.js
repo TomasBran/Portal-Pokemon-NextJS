@@ -13,11 +13,13 @@ import {
 } from '@/app/utils/services/localStorage';
 import Image from 'next/image';
 import '@/app/Components/Type/type.css';
+import Companion from '@/app/Components/BuildPokemon/Companion';
 
 const BuildPokemon = () => {
 	const MySwal = withReactContent(Swal);
 	const [gameStarted, setGameStarted] = useState(false);
 	const [gameEnded, setGameEnded] = useState(false);
+	const [score, setScore] = useState(undefined);
 	// const [currentGenerations, setCurrentGenerations] = useState([
 	// 	true,
 	// 	true,
@@ -66,6 +68,7 @@ const BuildPokemon = () => {
 	const [rerolls, setRerolls] = useState(3);
 	const [loading, setLoading] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
+	const [showCompanion, setShowCompanion] = useState(false);
 
 	const registerHighScore = (newScore) => {
 		const highScores = getFromLocalStorage('buildpokemon_highscores') || [];
@@ -80,6 +83,7 @@ const BuildPokemon = () => {
 	};
 
 	const startGame = async () => {
+		setScore(undefined);
 		setGameEnded(false);
 		setRerolls(3);
 		getNewpokemon();
@@ -126,7 +130,7 @@ const BuildPokemon = () => {
 		setOfferedPokemon(newPokemon);
 	};
 
-	const assignPokemon = (statLabel, pokemon) => {
+	const assignPokemon = (statLabel, pokemon, statName) => {
 		if (loading) {
 			toast.warning('Por favor espera un segundo.');
 			return;
@@ -141,6 +145,12 @@ const BuildPokemon = () => {
 					return stat;
 				} else {
 					getNewpokemon();
+					const playEvaluation = evaluatePokemonAssignment(
+						pokemon,
+						stats,
+						statName
+					);
+					setScore(playEvaluation);
 					return { ...stat, pokemonAssigned: pokemon };
 				}
 			}
@@ -148,6 +158,39 @@ const BuildPokemon = () => {
 		});
 
 		setStats(updatedStats);
+	};
+	const evaluatePokemonAssignment = (pokemon, stats, statName) => {
+		const pokemonStatValue = pokemon.stats.find(
+			(stat) => stat.stat.name === statName
+		).base_stat;
+
+		const unassignedStats = stats.filter(
+			(stat) => Object.keys(stat.pokemonAssigned).length === 0
+		);
+
+		const unassignedStatsValues = unassignedStats.map((stat) => {
+			const pokemonStat = pokemon.stats.find(
+				(pokemonStat) => pokemonStat.stat.name === stat.statName
+			);
+			return pokemonStat ? pokemonStat.base_stat : 0;
+		});
+
+		if (unassignedStatsValues.every((value) => pokemonStatValue >= value)) {
+			return 'best';
+		} else if (
+			unassignedStatsValues.every((value) => pokemonStatValue <= value)
+		) {
+			return 'worst';
+		} else {
+			const average =
+				unassignedStatsValues.reduce((total, value) => total + value, 0) /
+				unassignedStatsValues.length;
+			if (pokemonStatValue > average) {
+				return 'good';
+			} else {
+				return 'bad';
+			}
+		}
 	};
 
 	useEffect(() => {
@@ -266,12 +309,18 @@ const BuildPokemon = () => {
 		setShowSettings((prev) => !prev);
 	};
 
+	const handleShowCompanion = () => {
+		setShowCompanion((prev) => !prev);
+	};
+
 	const openBuildPokemonTutorial = () => {
 		MySwal.fire({
 			title: `¿Cómo se juega a <span class='text-blue-600'>Construye Un Pokemon</span>?`,
 			html: `Al comenzar una partida te mostrará un Pokemon, el cual debes asignar a una estadística que elijas, en la que creas que este Pokemon es bueno. Por ejemplo, si te toca <span class='font-semibold text-purple-500'>Mewtwo</span>, lo mejor sería enviarlo a Ataque Especial (Si aun esta disponible).<br>
 			Una vez que una estadística sea ocupada, no podrá volver a ser elegida, así que elige con cautela!<br>
-			Al final, podrás ver el poder total del Pokemon que construiste. Si tiene 600 o más, es de poder <span class='font-semibold text-red-500'>Legendario</span>!!`,
+			Al final, podrás ver el poder total del Pokemon que construiste. Si tiene 600 o más, es de poder <span class='font-semibold text-red-500'>Legendario</span>!!<br><br>
+
+			PD: Si tienes el compañero activado, préstale atención a sus reacciones. Podrían darte una pista de que tan buena fue tu jugada.`,
 			showCancelButton: true,
 			confirmButtonColor: 'rgb(99 102 241)',
 			cancelButtonColor: 'rgb(69 168 68)',
@@ -370,7 +419,11 @@ const BuildPokemon = () => {
 									<div className='relative sm:rounded-b-lg group'>
 										<div
 											onClick={() =>
-												assignPokemon(stat.statLabel, offeredPokemon)
+												assignPokemon(
+													stat.statLabel,
+													offeredPokemon,
+													stat.statName
+												)
 											}
 											className={`${
 												stat.pokemonAssigned.name === undefined &&
@@ -415,6 +468,17 @@ const BuildPokemon = () => {
 							))}
 						</div>
 					</div>
+					<div
+						className={`${
+							showCompanion
+								? 'w-24 h-24 border-double rounded-xl border-gray-600 border-4 '
+								: 'w-0 h-0 '
+						} absolute top-16 right-2 transition-all ease-in-out duration-150 transform `}>
+						<Companion
+							score={score}
+							stats={stats}
+						/>
+					</div>
 				</div>
 			) : (
 				<div className='flex items-center justify-center sm:h-4/6 h-[80vh] '>
@@ -425,45 +489,54 @@ const BuildPokemon = () => {
 					</div>
 				</div>
 			)}
-			{showSettings && (
+			<div
+				ref={settingsRef}
+				className={`${
+					showSettings
+						? 'scale-100 translate-y-0 translate-x-0'
+						: 'scale-0 translate-y-full translate-x-40'
+				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-4 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-xl text-white font-medium z-20`}>
 				<div
-					ref={settingsRef}
-					className='fixed sm:right-0 bottom-0 sm:m-3 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-xl text-white font-medium'>
-					<div
-						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 rounded-t-xl'
-						onClick={() => {
-							setShowSettings(false);
-							openBuildPokemonTutorial();
-						}}>
-						¿Cómo se juega?
-					</div>
-
-					<div
-						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
-						onClick={() => {
-							setShowSettings(false);
-							showHighScores();
-						}}>
-						Estadísticas
-					</div>
-
-					<div
-						className='w-full py-2 bg-orange-400 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-b-xl'
-						onClick={() => setShowSettings(false)}>
-						Cerrar
-					</div>
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 rounded-t-xl'
+					onClick={() => {
+						setShowSettings(false);
+						openBuildPokemonTutorial();
+					}}>
+					¿Cómo se juega?
 				</div>
-			)}
-			{!showSettings && (
+
 				<div
-					className='w-10 cursor-pointer sm:bg-indigo-500 bg-slate-700 rounded-lg p-2 sm:hover:bg-indigo-400 active:scale-95 active:hover:bg-slate-500 sm:active:hover:bg-indigo-300 transition-all ease-in-out duration-150 fixed sm:right-4 sm:bottom-4 right-1 bottom-1'
-					onClick={handleShowSettings}>
-					<Image
-						src={settings}
-						alt='settings'
-					/>
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					onClick={() => {
+						handleShowCompanion();
+					}}>
+					Mostrar compañero ayudante: {showCompanion ? 'SI' : 'NO'}
 				</div>
-			)}
+
+				<div
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					onClick={() => {
+						setShowSettings(false);
+						showHighScores();
+					}}>
+					Estadísticas
+				</div>
+
+				<div
+					className='w-full py-2 bg-orange-400 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-b-xl'
+					onClick={() => setShowSettings(false)}>
+					Cerrar
+				</div>
+			</div>
+			<div
+				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer sm:bg-indigo-500 bg-gray-700 rounded-lg p-2 sm:hover:bg-indigo-400 active:scale-95 active:hover:bg-gray-500 sm:active:hover:bg-indigo-300 transition-all ease-in-out duration-150 transform
+					${!showSettings ? 'scale-100' : 'scale-0'}`}
+				onClick={handleShowSettings}>
+				<Image
+					src={settings}
+					alt='settings'
+				/>
+			</div>
 		</div>
 	);
 };
