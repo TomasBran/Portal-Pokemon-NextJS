@@ -692,7 +692,7 @@ const PokeGym = () => {
 						showSettings
 							? 'scale-100 translate-y-0 translate-x-0'
 							: 'scale-0 translate-y-full translate-x-40'
-					} transition-all duration-150 transform z-10 fixed sm:right-0 bottom-0 sm:m-3 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-lg text-white font-medium`}>
+					} transition-all duration-150 transform fixed sm:right-0 bottom-0 sm:m-3 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-lg text-white font-medium z-50 `}>
 					<div
 						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-t-lg'
 						onClick={handleHardMode}>
@@ -756,7 +756,7 @@ const PokeGym = () => {
 						</div>
 					)}
 					<div
-						className={`w-10 cursor-pointer bg-indigo-500 rounded-lg p-2 hover:bg-indigo-400 active:scale-95 active:bg-indigo-300 transition-all ease-in-out duration-150 `}
+						className={`w-10 cursor-pointer bg-slate-700 active:bg-slate-600 sm:bg-indigo-500 rounded-lg p-2 hover:bg-indigo-400 active:scale-95 sm:active:bg-indigo-300 transition-all ease-in-out duration-150 `}
 						onClick={() => {
 							handleShowSettings();
 							handleSettingsClick();
