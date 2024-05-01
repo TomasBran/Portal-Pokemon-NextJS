@@ -399,8 +399,8 @@ const Synergies = ({
 
 	return (
 		<div
-			className={`bg-indigo-500 rounded-lg ${
-				showSynergies && 'border-4 border-indigo-900 '
+			className={` bg-slate-700 sm:bg-indigo-500 rounded-lg ${
+				showSynergies && 'sm:border-4 border-indigo-900 '
 			}`}
 			ref={synergiesRef}>
 			<div
@@ -445,7 +445,7 @@ const Synergies = ({
 					src={starIcon}
 					alt='synergies'
 					onClick={() => setShowSynergies((prev) => !prev)}
-					className={`w-10 p-2 cursor-pointer rounded-lg rounded-lg bg-indigo-500 hover:bg-indigo-400 active:scale-95 active:hover:bg-indigo-300 transition-all ease-in-out duration-150`}
+					className={`bg-slate-700 active:bg-slate-600 w-10 p-2 cursor-pointer rounded-lg rounded-lg sm:bg-indigo-500 sm:hover:bg-indigo-400 active:scale-95 sm:active:hover:bg-indigo-300 transition-all ease-in-out duration-150`}
 				/>
 			</div>
 		</div>

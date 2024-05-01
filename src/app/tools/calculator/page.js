@@ -506,9 +506,9 @@ const Calculator = () => {
 			</div>
 
 			<div
-				className={`w-10 cursor-pointer bg-gray-700 rounded-lg p-2 hover:bg-gray-600 active:scale-95 active:hover:bg-gray-500 transition-all ease-in-out duration-150 fixed right-4 bottom-4 ${
+				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer sm:bg-teal-600 bg-gray-700 rounded-lg p-2 sm:hover:bg-teal-500 active:scale-95 active:hover:bg-gray-500 sm:active:hover:bg-teal-400 transition-all ease-in-out duration-150 transform ${
 					!showSettings ? 'scale-100' : 'scale-0'
-				} transition-all duration-150 transform`}
+				}`}
 				onClick={handleShowSettings}>
 				<Image
 					src={settings}

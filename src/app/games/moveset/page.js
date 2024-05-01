@@ -403,7 +403,7 @@ const MoveSet = () => {
 			</div>
 
 			<div
-				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer bg-gray-700 rounded-lg p-2 hover:bg-gray-600 active:scale-95 active:hover:bg-gray-500 transition-all ease-in-out duration-150
+				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer sm:bg-indigo-500 bg-gray-700 rounded-lg p-2 sm:hover:bg-indigo-400 active:scale-95 active:hover:bg-gray-500 sm:active:hover:bg-indigo-300 transition-all ease-in-out duration-150 transform
 					${!showSettings ? 'scale-100' : 'scale-0'}`}
 				onClick={handleShowSettings}>
 				<Image
