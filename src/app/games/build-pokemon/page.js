@@ -491,9 +491,9 @@ const BuildPokemon = () => {
 					<div
 						className={`${
 							showCompanion
-								? 'w-24 h-24 border-double rounded-xl border-gray-600 border-4 '
+								? 'sm:w-24 w-[22vw] h-auto border-double rounded-xl border-gray-600 border-4 '
 								: 'w-0 h-0 '
-						} absolute top-16 right-2 transition-all ease-in-out duration-150 transform `}>
+						} absolute sm:top-16 top-12 sm:right-2 right-1 transition-all ease-in-out duration-150 transform `}>
 						<Companion
 							score={score}
 							stats={stats}
