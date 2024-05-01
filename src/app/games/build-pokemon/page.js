@@ -263,7 +263,6 @@ const BuildPokemon = () => {
 		}
 
 		const isNewHighscore = checkIfNewHighscore(totalPower);
-		console.log(isNewHighscore);
 
 		const message = pokemonStats
 			.map((stat) => {
