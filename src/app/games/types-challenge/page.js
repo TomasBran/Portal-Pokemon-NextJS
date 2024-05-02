@@ -278,14 +278,18 @@ const TypesChallenge = () => {
 	return (
 		<div
 			className={`${
-				gameStarted ? 'justify-start' : 'justify-center'
-			} sm:pt-16 sm:p-6 pt-20 px-1 pb-1 flex flex-col sm:gap-10 bg-indigo-100 sm:h-screen min-h-screen text-black text-center`}>
+				gameStarted ? 'justify-start' : 'justify-between'
+			} sm:pt-16 sm:p-6 pt-20 px-1 pb-1 flex flex-col sm:gap-2 bg-indigo-100 sm:h-screen min-h-screen text-black text-center`}>
 			{/* QUITAR CUANDO ACTUALICE EL DnD PARA TOUCH BACKEND */}
 			<div className='sm:hidden'>
 				{`De momento este juego no está disponible en dispositivos móbiles.
 					Disculpa el inconveniente 🥲`}
 			</div>
 			{/* QUITAR CUANDO ACTUALICE EL DnD PARA TOUCH BACKEND */}
+			<h2
+				className={`sm:block hidden text-3xl font-pokemon text-indigo-600 text-center`}>
+				Desafío de Tipos
+			</h2>
 			<div className='w-full sm:m-4 h-2/6 sm:block hidden text-black text-center'>
 				<div className='h-1/6 flex justify-center gap-2 items-center mb-4'>
 					{gameStarted ? (

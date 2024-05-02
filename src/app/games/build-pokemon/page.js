@@ -350,8 +350,11 @@ const BuildPokemon = () => {
 
 	return (
 		<div className='sm:h-screen min-h-screen bg-indigo-100 pt-14 px-1 text-black text-center'>
+			<h2 className='sm:text-3xl text-sm sm:pt-4 sm:mb-0 font-pokemon text-indigo-600 text-center'>
+				Construye un Pokemon
+			</h2>
 			{gameStarted ? (
-				<div className='flex flex-col sm:flex-row justify-evenly items-center h-full '>
+				<div className='flex flex-col sm:flex-row justify-evenly items-center h-5/6 '>
 					{offeredPokemon !== null && teamLength !== 6 && (
 						<div className='flex flex-col gap-6 h-full sm:w-auto w-full justify-center items-center'>
 							{!loading ? (

@@ -25,7 +25,7 @@ import Image from 'next/image';
 
 const MoveSet = () => {
 	// ***IMPORTANTE*** DESHABILITAR CUANDO NO ESTE TESTEANDO //
-	const testing = true; // PONER FALSE AL NO TESTEAR
+	const testing = false; // PONER FALSE AL NO TESTEAR
 	if (testing) console.log('EL MODO TESTING ESTA ON');
 	// ***IMPORTANTE*** DESHABILITAR CUANDO NO ESTE TESTEANDO //
 
@@ -289,6 +289,9 @@ const MoveSet = () => {
 
 	return (
 		<div className='sm:h-screen min-h-screen pt-14 p-1 sm:pt-0 bg-indigo-100 w-full flex flex-col sm:items-center sm:justify-center text-center text-black'>
+			<h2 className='sm:text-3xl text-lg sm:pt-20 sm:mb-0 font-pokemon text-indigo-600 text-center'>
+				Adivina el MoveSet
+			</h2>
 			<div className='w-full sm:h-9/12 h-full flex sm:flex-row flex-col justify-center gap-4 items-center'>
 				<div className='sm:w-3/12 h-full flex flex-col justify-center items-center gap-4'>
 					<div className='w-4/6 sm:block hidden '>

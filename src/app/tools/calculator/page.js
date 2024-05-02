@@ -227,6 +227,14 @@ const Calculator = () => {
 
 	return (
 		<div className='min-h-screen sm:bg-teal-200 bg-teal-200/80 sm:pt-16 pt-12 p-1 sm:p-0 flex flex-col items-center w-screen text-black text-center'>
+			<h2
+				className={`${
+					currentFirstSelection === '' && currentSecondSelection === ''
+						? 'sm:block'
+						: 'sm:hidden'
+				} sm:text-3xl text-lg sm:py-2 font-pokemon text-teal-600 text-center`}>
+				Calculadora
+			</h2>
 			<div className='flex justify-start flex-col items-center w-full h-full '>
 				<div className='flex justify-center sm:gap-14 gap-2 w-full sm:h-60 h-full sm:flex-row flex-col flex-col-reverse'>
 					<div className='flex justify-center items-center sm:w-6/12 w-full h-full flex-wrap gap-3 p-2 bg-teal-700 sm:rounded-lg overflow-auto'>

@@ -620,6 +620,9 @@ const PokeGym = () => {
 
 	return (
 		<div className='bg-indigo-100 pt-6 px-1 h-screen w-full flex flex-col sm:justify-center justify-start items-center text-center text-black'>
+			<h2 className='sm:text-3xl text-lg sm:pt-10 pt-6 -mb-5 sm:mb-0 font-pokemon text-indigo-600 text-center'>
+				Gimnasio Pokemon
+			</h2>
 			<div className='pt-7 sm:h-3/4 h-3/5 flex flex-wrap justify-center items-center w-full sm:gap-x-36'>
 				{isLoading ? (
 					<ProgressSpinner animationDuration='.5s' />
