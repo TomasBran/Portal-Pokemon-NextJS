@@ -68,7 +68,7 @@ const BuildPokemon = () => {
 	const [rerolls, setRerolls] = useState(3);
 	const [loading, setLoading] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
-	const [showCompanion, setShowCompanion] = useState(false);
+	const [showCompanion, setShowCompanion] = useState(true);
 
 	const registerHighScore = (newScore) => {
 		const highScores = getFromLocalStorage('buildpokemon_highscores') || [];
