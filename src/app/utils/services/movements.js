@@ -1,5 +1,7 @@
-async function getPokemonMovements(pokemonName) {
-	let pokemonMovements = [];
+import { toast } from 'sonner';
+
+async function getPokemonMoveset(pokemonName) {
+	let pokemonMoveset = [];
 	pokemonName += '';
 
 	await fetch('https://pokeapi.co/api/v2/pokemon/' + pokemonName.toLowerCase())
@@ -10,7 +12,7 @@ async function getPokemonMovements(pokemonName) {
 				movement.move.name.replace(/-/g, ' ')
 			);
 
-			while (pokemonMovements.length < 4) {
+			while (pokemonMoveset.length < 4) {
 				const randomNumber = Math.floor(
 					Math.random() * availableMovements.length
 				);
@@ -20,8 +22,8 @@ async function getPokemonMovements(pokemonName) {
 						movementsArray[randomNumber].version_group_details.length - 1
 					].move_learn_method.name === 'level-up'
 				) {
-					if (!pokemonMovements.includes(availableMovements[randomNumber])) {
-						pokemonMovements.push(availableMovements[randomNumber]);
+					if (!pokemonMoveset.includes(availableMovements[randomNumber])) {
+						pokemonMoveset.push(availableMovements[randomNumber]);
 					}
 				}
 			} // 0 a 3
@@ -29,17 +31,40 @@ async function getPokemonMovements(pokemonName) {
 			const randomAbilityNumber = Math.floor(
 				Math.random() * fetchedPokemon.abilities.length
 			);
-			pokemonMovements.push(
+			pokemonMoveset.push(
 				fetchedPokemon.abilities[randomAbilityNumber].ability.name.replace(
 					/-/g,
 					' '
 				)
 			); // 4
-			pokemonMovements.push(fetchedPokemon.name); // 5
-			pokemonMovements.push(fetchedPokemon.id); // 6
+			pokemonMoveset.push(fetchedPokemon.name); // 5
+			pokemonMoveset.push(fetchedPokemon.id); // 6
 		});
 
-	return pokemonMovements;
+	return pokemonMoveset;
 }
 
-export { getPokemonMovements };
+export { getPokemonMoveset };
+
+async function getMovementInfo(movementName) {
+	let movement = {};
+	movementName += '';
+
+	if (movementName === '') {
+		toast.error(`El buscador está vacio.`);
+		return;
+	}
+
+	await fetch('https://pokeapi.co/api/v2/move/' + movementName.toLowerCase())
+		.then((res) => res.json())
+		.then((fetchedMovement) => {
+			movement = fetchedMovement;
+		})
+		.catch((err) => {
+			toast.error(`El movimiento "${movementName.toUpperCase()}" no existe`);
+		});
+
+	return movement;
+}
+
+export { getMovementInfo };

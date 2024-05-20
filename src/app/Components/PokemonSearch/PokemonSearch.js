@@ -46,7 +46,9 @@ function PokemonSearch(props) {
 
 	const renderSuggestion = (suggestion) => <div>{suggestion.name}</div>;
 
-	const onSuggestionSelected = (event, { suggestion }) => {};
+	const onSuggestionSelected = (event, { suggestion }) => {
+		searchPokemon(suggestion.name);
+	};
 
 	const onSuggestionsFetchRequested = ({ value }) => {
 		setSuggestions(getSuggestions(value));
@@ -67,7 +69,7 @@ function PokemonSearch(props) {
 	};
 
 	const inputProps = {
-		placeholder: 'Buscar Pokemon',
+		placeholder: 'Ej: Pikachu',
 		value,
 		onChange,
 		onKeyDown: handleKeyDown,
@@ -78,7 +80,7 @@ function PokemonSearch(props) {
 	};
 
 	const searchPokemon = (pokemon) => {
-		props.searchPokemon(pokemon.name);
+		props.searchPokemon(pokemon);
 		clearInput();
 	};
 

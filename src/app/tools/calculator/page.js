@@ -47,6 +47,7 @@ const Calculator = () => {
 	useEffect(() => {
 		deleteSelection();
 		deleteBothTypes();
+		resetTypes();
 	}, []);
 
 	const handleInputChange = (value) => {
@@ -183,12 +184,14 @@ const Calculator = () => {
 	}
 
 	const pickRandomType = () => {
+		resetTypes();
 		const randomIndex = Math.floor(Math.random() * pokemonTypesArray.length);
 		const randomPokemonType = pokemonTypesArray[randomIndex];
 		setSelection(randomPokemonType.name);
 	};
 
 	const pickTwoRandomTypes = () => {
+		resetTypes();
 		let randomIndex = Math.floor(Math.random() * pokemonTypesArray.length);
 		let randomPokemonType = pokemonTypesArray[randomIndex];
 
@@ -273,7 +276,7 @@ const Calculator = () => {
 							/>
 							<PokemonSearch
 								onInputChange={handleInputChange}
-								searchPokemon={() => searchPokemon(inputValue)}
+								searchPokemon={searchPokemon}
 								gimmickForms={gimmickForms}
 							/>
 						</div>

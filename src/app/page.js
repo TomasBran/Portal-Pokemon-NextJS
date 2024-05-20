@@ -67,7 +67,7 @@ export default function Home() {
 							key={index}>
 							<button
 								disabled={button.isDisabled}
-								className={`p-2 md:p-4 w-full h-[35vh] rounded-lg border-none text-white no-underline bg-cover bg-center ease-in duration-150 enabled:active:scale-95 disabled:cursor-default group shadow-black/60 md:enabled:hover:shadow-lg md:shadow-none shadow-lg md:enabled:hover:shadow-yellow-600`}
+								className={`p-2 md:p-4 w-full h-[35vh] rounded-lg border-none text-white no-underline bg-cover bg-center ease-in duration-150 enabled:active:scale-95 disabled:cursor-default group shadow-black/80 md:enabled:hover:shadow-lg shadow-lg md:enabled:hover:shadow-yellow-600 md:opacity-85 md:enabled:hover:opacity-100`}
 								style={{ backgroundImage: `url(${button.image})` }}>
 								<Image
 									priority

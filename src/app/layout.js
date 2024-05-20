@@ -2,12 +2,6 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import MainLayout from './Components/MainLayout/MainLayout';
-import Navbar from './Components/Navbar/Navbar';
-import { Toaster } from 'sonner';
-import { PrimeReactProvider } from 'primereact/api';
-import { SelectionProvider } from './utils/context/SelectionContext';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const inter = Inter({ subsets: ['latin'] });
 
