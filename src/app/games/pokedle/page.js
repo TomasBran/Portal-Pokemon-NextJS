@@ -80,8 +80,8 @@ const Pokedle = () => {
 		setOriginalPokemon(newPokemon);
 	};
 
-	const comparePokemon = async (originalPokemon) => {
-		const newChosenPokemon = await getPokemon(inputValue.toLowerCase());
+	const comparePokemon = async (chosenPokemon) => {
+		const newChosenPokemon = await getPokemon(chosenPokemon.toLowerCase());
 
 		if (newChosenPokemon === undefined) {
 			return;
@@ -358,7 +358,7 @@ const Pokedle = () => {
 				<span className='sm:block hidden'>Elige un Pokemon:</span>
 				<PokemonSearch
 					onInputChange={handleInputChange}
-					searchPokemon={() => comparePokemon(originalPokemon)}
+					searchPokemon={comparePokemon}
 					showSearchButton={false}
 				/>
 				<div className='flex justify-center gap-2 sm:gap-4 sm:w-auto w-[65vw] text-sm'>
@@ -366,7 +366,7 @@ const Pokedle = () => {
 						id='guess-button'
 						className='bg-indigo-500 enabled:hover:bg-indigo-400 enabled:active:bg-indigo-300 enabled:active:scale-95 transition duration-150 rounded-lg py-4 sm:px-8 px-4 text-white font-bold disabled:opacity-40'
 						onClick={() => {
-							comparePokemon(originalPokemon);
+							comparePokemon(inputValue);
 							setInputValue('');
 						}}
 						disabled={guessButtonDisabled}>

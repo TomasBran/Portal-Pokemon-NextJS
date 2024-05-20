@@ -304,7 +304,7 @@ const MoveSet = () => {
 					<PokemonSearch
 						onInputChange={handleInputChange}
 						showSearchButton={false}
-						searchPokemon={() => guess(inputValue)}
+						searchPokemon={guess}
 					/>
 
 					<div className='flex justify-center gap-4 text-white font-medium'>
@@ -336,7 +336,7 @@ const MoveSet = () => {
 												? 'bg-green-500'
 												: 'bg-red-500'
 										} flex justify-center font-bold text-white border-2 rounded-xl px-6 py-1`}>
-										{pokemon}
+										{capitalizeFirstLetter(pokemon)}
 									</span>
 								</div>
 							))}
