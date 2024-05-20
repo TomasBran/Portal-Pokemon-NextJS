@@ -8,7 +8,7 @@ import unknown_pokemon from '@/../public/assets/unresolved_pokemon.png';
 import settings from '@/../public/assets/settings.png';
 import PokemonSearch from '@/app/Components/PokemonSearch/PokemonSearch.js';
 import Generations from '@/app/Components/Generations/Generations.js';
-import { getPokemonMovements } from '@/app/utils/services/movements';
+import { getPokemonMoveset } from '@/app/utils/services/movements';
 import {
 	getPokemonsGeneration,
 	pokemonExists,
@@ -74,12 +74,12 @@ const MoveSet = () => {
 
 	const startNewGame = async () => {
 		if (testing) {
-			const newPokemon = await getPokemonMovements('eevee');
+			const newPokemon = await getPokemonMoveset('eevee');
 			setOriginalPokemonMovements(newPokemon);
 			return;
 		}
 
-		const newPokemon = await getPokemonMovements(
+		const newPokemon = await getPokemonMoveset(
 			generateRandomPokemonNumber(currentGenerations)
 		);
 		setOriginalPokemonMovements(newPokemon);
@@ -304,7 +304,7 @@ const MoveSet = () => {
 					<PokemonSearch
 						onInputChange={handleInputChange}
 						showSearchButton={false}
-						searchPokemon={() => guess(inputValue)}
+						searchPokemon={guess}
 					/>
 
 					<div className='flex justify-center gap-4 text-white font-medium'>
@@ -336,7 +336,7 @@ const MoveSet = () => {
 												? 'bg-green-500'
 												: 'bg-red-500'
 										} flex justify-center font-bold text-white border-2 rounded-xl px-6 py-1`}>
-										{pokemon}
+										{capitalizeFirstLetter(pokemon)}
 									</span>
 								</div>
 							))}
