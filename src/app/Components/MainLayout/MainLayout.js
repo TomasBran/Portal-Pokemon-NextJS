@@ -9,7 +9,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export default function MainLayout({ children }) {
 	return (
-		<div>
+		<div className='overflow-x-hidden'>
 			<DndProvider backend={HTML5Backend}>
 				<PrimeReactProvider>
 					<SelectionProvider>

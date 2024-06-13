@@ -14,6 +14,8 @@ import { pokemonTypesArray } from '@/app/Components/Type/TypeArray';
 import Type from '@/app/Components/Type/Type';
 import pokedex from '@/../public/assets/pokedex.webp';
 import settings from '@/../public/assets/settings.png';
+import AudioPlayer from '@/app/Components/AudioPlayer/AudioPlayer';
+import { GoMute, GoUnmute } from 'react-icons/go';
 
 const Calculator = () => {
 	const [loading, setLoading] = useState(false);
@@ -32,6 +34,10 @@ const Calculator = () => {
 	const [types_x05, setTypes_x05] = useState([]);
 	const [types_x025, setTypes_x025] = useState([]);
 	const [types_x0, setTypes_x0] = useState([]);
+	const [audioUrl, setAudioUrl] = useState([]);
+	const [shouldPlay, setShouldPlay] = useState(false);
+	const [volume, setVolume] = useState(0.3);
+	const [lastVolume, setLastVolume] = useState(0.3);
 
 	const MySwal = withReactContent(Swal);
 
@@ -76,6 +82,39 @@ const Calculator = () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, [showSettings]);
+
+	useEffect(() => {
+		handleAudioChange(currentPokemonName);
+		setShouldPlay(true);
+	}, [currentPokemonName]);
+
+	const handleVolumeChange = (event) => {
+		setVolume(parseFloat(event.target.value));
+	};
+
+	const handleMute = () => {
+		if (volume === 0) {
+			setVolume(lastVolume);
+		} else {
+			setLastVolume(volume);
+			setVolume(0);
+		}
+	};
+
+	const handleAudioChange = (pokemon) => {
+		if (pokemon === '') {
+			return;
+		}
+		fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.toLowerCase()}`)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(`data=`, data);
+				setAudioUrl(data.cries.latest);
+			})
+			.catch((error) => {
+				console.error('Error fetching audio URLs:', error);
+			});
+	};
 
 	const handleClick = (type) => {
 		if (type === currentFirstSelection || type === currentSecondSelection) {
@@ -229,7 +268,7 @@ const Calculator = () => {
 	};
 
 	return (
-		<div className='min-h-screen sm:bg-teal-200 bg-teal-200/80 sm:pt-16 pt-12 p-1 sm:p-0 flex flex-col items-center w-screen text-black text-center'>
+		<div className='min-h-screen overflow-x-hidden sm:bg-teal-200 bg-teal-200/80 sm:pt-16 pt-12 p-1 sm:p-0 flex flex-col items-center w-screen text-black text-center'>
 			<h2
 				className={`${
 					currentFirstSelection === '' && currentSecondSelection === ''
@@ -239,7 +278,7 @@ const Calculator = () => {
 				Calculadora
 			</h2>
 			<div className='flex justify-start flex-col items-center w-full h-full '>
-				<div className='flex justify-center sm:gap-14 gap-2 w-full sm:h-60 h-full sm:flex-row flex-col flex-col-reverse'>
+				<div className='flex justify-center sm:gap-14 gap-2 w-full sm:h-60 h-full sm:flex-row flex-col-reverse'>
 					<div className='flex justify-center items-center sm:w-6/12 w-full h-full flex-wrap gap-3 p-2 bg-teal-700 sm:rounded-lg overflow-auto'>
 						{pokemonTypesArray.map((type) => (
 							<button
@@ -384,7 +423,7 @@ const Calculator = () => {
 							: ''
 					}`}>
 					<div
-						className={`bg-teal-500 sm:min-h-[43vh] sm:w-[23vw] w-full sm:rounded-lg sm:p-4 p-2 sm:p-4 p-2 ${
+						className={`bg-teal-500 sm:min-h-[43vh] sm:w-[23vw] w-full sm:rounded-lg sm:p-4 p-2 ${
 							isArrayEmpty(types_x4) && isArrayEmpty(types_x2) ? 'hidden' : ''
 						}`}>
 						<p>Efectivo:</p>
@@ -509,6 +548,27 @@ const Calculator = () => {
 					{`Formas Gimmick en Pokedex: ${gimmickForms ? 'SI' : 'NO'} `}
 				</div>
 
+				<div className='flex items-center justify-center gap-2 h-full w-full py-2'>
+					<span>Volumen:</span>
+					<input
+						className={`range transition-all ease-in duration-300 cursor-pointer ${
+							volume <= 0.8 ? 'accent-yellow-300' : 'accent-red-500'
+						} `}
+						id='volume'
+						type='range'
+						min='0'
+						max='1'
+						step='0.01'
+						value={volume}
+						onChange={handleVolumeChange}
+					/>
+					<div
+						className='cursor-pointer hover:text-yellow-500'
+						onClick={handleMute}>
+						{volume !== 0 ? <GoUnmute /> : <GoMute />}
+					</div>
+				</div>
+
 				<div
 					className='w-full py-2 bg-orange-400 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-b-lg'
 					onClick={() => setShowSettings(false)}>
@@ -526,6 +586,11 @@ const Calculator = () => {
 					alt='settings'
 				/>
 			</div>
+			<AudioPlayer
+				audioSrc={audioUrl}
+				shouldPlay={shouldPlay}
+				volume={volume}
+			/>
 		</div>
 	);
 };

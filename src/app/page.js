@@ -9,13 +9,6 @@ import build_pokemon from '../../public/assets/build_pokemon.png';
 
 const buttonsArray = [
 	{
-		url: '/tools/calculator',
-		text: 'Calculadora',
-		image: calculator,
-		typeText: 'Herramienta',
-		isDisabled: false,
-	},
-	{
 		url: '/games/gym',
 		text: 'Gimnasio',
 		image: gym,
@@ -45,9 +38,16 @@ const buttonsArray = [
 	},
 	{
 		url: '/games/build-pokemon',
-		text: 'Construye un Pokemon (WIP)',
+		text: 'Construye un Pokemon',
 		image: build_pokemon,
 		typeText: 'Mini-game',
+		isDisabled: false,
+	},
+	{
+		url: '/tools/calculator',
+		text: 'Calculadora',
+		image: calculator,
+		typeText: 'Herramienta',
 		isDisabled: false,
 	},
 ];
@@ -59,7 +59,7 @@ export default function Home() {
 				Portal Pokemon
 			</h2>
 			<div className='flex flex-col w-full'>
-				<div className='flex justify-evenly flex-wrap gap-7 w-screen w-full px-3 pb-3 pt-6'>
+				<div className='flex justify-evenly flex-wrap gap-7 w-full px-3 pb-3 pt-6'>
 					{buttonsArray.map((button, index) => (
 						<Link
 							className='no-underline lg:w-3/12 w-full relative'
