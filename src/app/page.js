@@ -12,35 +12,35 @@ const buttonsArray = [
 		url: '/games/gym',
 		text: 'Gimnasio',
 		image: gym,
-		typeText: 'Mini-game',
+		typeText: 'Juego',
 		isDisabled: false,
 	},
 	{
 		url: '/games/pokedle',
 		text: 'Pokedle',
 		image: pokedle,
-		typeText: 'Mini-game',
+		typeText: 'Juego',
 		isDisabled: false,
 	},
 	{
 		url: '/games/moveset',
 		text: 'Adivina el MoveSet',
 		image: moveset,
-		typeText: 'Mini-game',
+		typeText: 'Juego',
 		isDisabled: false,
 	},
 	{
 		url: '/games/types-challenge',
 		text: 'Desafío de Tipos',
 		image: typesChallenge,
-		typeText: 'Mini-game',
+		typeText: 'Juego',
 		isDisabled: false,
 	},
 	{
 		url: '/games/build-pokemon',
 		text: 'Construye un Pokemon',
 		image: build_pokemon,
-		typeText: 'Mini-game',
+		typeText: 'Juego',
 		isDisabled: false,
 	},
 	{
@@ -78,9 +78,9 @@ export default function Home() {
 								<div className='flex items-end justify-between w-full h-full flex-col'>
 									{!button.isDisabled && (
 										<div
-											className={`absolute top-4 transform py-2 px-3 rounded-md transition duration-150 ease-in sm:font-bold font-medium text-shadow-md shadow-lg shadow-black group-hover:shadow-black/60
+											className={`absolute top-4 transform py-2 px-6 rounded-md transition duration-150 ease-in sm:font-bold font-medium text-shadow-md shadow-lg shadow-black group-hover:shadow-black/60
 											${button.typeText === 'Herramienta' && 'bg-teal-200 text-teal-700 '}
-											${button.typeText === 'Mini-game' && 'bg-indigo-200 text-indigo-700 '}`}>
+											${button.typeText === 'Juego' && 'bg-indigo-200 text-indigo-700 '}`}>
 											<span>{button.typeText}</span>
 										</div>
 									)}
