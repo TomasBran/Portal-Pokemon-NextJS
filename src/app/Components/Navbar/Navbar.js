@@ -7,7 +7,7 @@ import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
 const routes = [
 	{
 		url: '/',
-		text: 'Home',
+		text: 'Inicio',
 		isDisabled: false,
 		category: 'home',
 	},
@@ -52,7 +52,7 @@ const routes = [
 const homeRoute = [
 	{
 		url: '/',
-		text: 'Home',
+		text: 'Inicio',
 		isDisabled: false,
 	},
 ];

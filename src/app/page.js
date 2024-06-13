@@ -55,7 +55,7 @@ const buttonsArray = [
 export default function Home() {
 	return (
 		<div className='min-h-screen pt-10 bg-yellow-200 sm:bg-yellow-100 flex flex-col justify-center items-center w-screen'>
-			<h2 className='sm:text-3xl text-lg pt-4 -mb-3 sm:mb-0 font-pokemon text-yellow-600 text-center'>
+			<h2 className='sm:block hidden sm:text-3xl text-lg pt-4 -mb-3 sm:mb-0 font-pokemon text-yellow-600 text-center'>
 				Portal Pokemon
 			</h2>
 			<div className='flex flex-col w-full'>
