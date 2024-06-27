@@ -136,7 +136,7 @@ const Navbar = () => {
 	}, [isOpenGames, isOpenTools]);
 
 	return (
-		<nav className='bg-gray-800 fixed top-0 w-screen z-10 font-pokemon'>
+		<nav className='bg-gray-800 fixed top-0 w-screen z-50 font-pokemon'>
 			<div
 				className={`md:hidden visible flex h-full justify-between items-center px-4 py-2`}>
 				<Link

@@ -270,11 +270,7 @@ const Calculator = () => {
 	return (
 		<div className='min-h-screen overflow-x-hidden sm:bg-teal-200 bg-teal-200/80 sm:pt-16 pt-12 p-1 sm:p-0 flex flex-col items-center w-screen text-black text-center'>
 			<h2
-				className={`${
-					currentFirstSelection === '' && currentSecondSelection === ''
-						? 'sm:block'
-						: 'sm:hidden'
-				} sm:text-3xl text-lg sm:py-2 font-pokemon text-teal-600 text-center`}>
+				className={`sm:text-3xl text-lg sm:py-2 font-pokemon text-teal-600 text-center`}>
 				Calculadora
 			</h2>
 			<div className='flex justify-start flex-col items-center w-full h-full '>
@@ -417,7 +413,7 @@ const Calculator = () => {
 				</div>
 
 				<div
-					className={`flex sm:flex-row flex-col w-full justify-evenly sm:gap-4 sm:divide-y-0 divide-y-2 ${
+					className={`flex sm:flex-row flex-col w-full justify-evenly sm:gap-4 sm:divide-y-0 divide-y-2 pb-2 ${
 						currentFirstSelection === '' && currentSecondSelection === ''
 							? 'hidden'
 							: ''
@@ -522,13 +518,13 @@ const Calculator = () => {
 
 			<div
 				ref={settingsRef}
-				className={`fixed sm:right-0 bottom-0 sm:m-3 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-lg text-white font-medium ${
+				className={`fixed sm:right-0 bottom-0 sm:m-3 bg-slate-700 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-lg text-white font-medium ${
 					showSettings
 						? 'scale-100 translate-y-0 translate-x-0'
 						: 'scale-0 translate-y-full translate-x-40'
 				} transition-all duration-150 transform`}>
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 rounded-t-lg'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 rounded-t-lg'
 					onClick={() => {
 						openCalculatorTutorial();
 						setShowSettings(false);
@@ -537,13 +533,13 @@ const Calculator = () => {
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700'
 					onClick={handleShowIcons}>
 					{`Mostrar ${showIcons ? 'nombres' : 'iconos'}`}
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700'
 					onClick={handleShowGimmickForms}>
 					{`Formas Gimmick en Pokedex: ${gimmickForms ? 'SI' : 'NO'} `}
 				</div>
@@ -570,14 +566,14 @@ const Calculator = () => {
 				</div>
 
 				<div
-					className='w-full py-2 bg-orange-400 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-b-lg'
+					className='w-full py-2 bg-red-500 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 sm:rounded-b-lg'
 					onClick={() => setShowSettings(false)}>
 					Cerrar
 				</div>
 			</div>
 
 			<div
-				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer sm:bg-teal-600 bg-gray-700 rounded-lg p-2 sm:hover:bg-teal-500 active:scale-95 active:hover:bg-gray-500 sm:active:hover:bg-teal-400 transition-all ease-in-out duration-150 transform ${
+				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer bg-slate-700 rounded-lg p-2 hover:bg-slate-600 active:scale-95 active:hover:bg-slate-500 transition-all ease-in-out duration-150 transform ${
 					!showSettings ? 'scale-100' : 'scale-0'
 				}`}
 				onClick={handleShowSettings}>

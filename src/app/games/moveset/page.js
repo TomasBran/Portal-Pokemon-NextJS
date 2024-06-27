@@ -316,7 +316,9 @@ const MoveSet = () => {
 							ADIVINAR
 						</button>
 						<button
-							className='bg-red-500 hover:bg-red-400 active:bg-red-300 cursor-pointer py-4 px-4 rounded-lg flex items-center justify-center font-bold'
+							className={`bg-red-500 hover:bg-red-400 active:bg-red-300 cursor-pointer py-4 px-4 rounded-lg flex items-center justify-center font-bold ${
+								guessButtonDisabled && 'animate-bounce'
+							}`}
 							onClick={() => resetGame(true)}>
 							REINICIAR
 						</button>

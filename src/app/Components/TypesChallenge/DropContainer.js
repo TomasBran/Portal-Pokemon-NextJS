@@ -24,10 +24,10 @@ const DroppableArea = ({ id, items, onDrop, enabledContainer = true }) => {
 	return (
 		<div
 			ref={drop}
-			className={`overflow-auto sm:h-full h-32 w-full items-start flex flex-wrap justify-center sm:gap-2 gap-1 p-2 border-2 rounded-lg ${
+			className={`overflow-auto sm:h-full h-32 w-full items-start flex flex-wrap justify-center sm:gap-2 gap-1 p-2 border-2 ${
 				isOver
-					? 'border-blue-800 bg-blue-300'
-					: 'border-violet-800 bg-violet-300'
+					? 'border-green-700 bg-green-400'
+					: 'border-slate-800 bg-slate-400'
 			}`}>
 			{items.map((item) => (
 				<DraggableItem

@@ -253,9 +253,29 @@ const TypesChallenge = () => {
 		}
 	};
 
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (
+				showSettings &&
+				settingsRef.current &&
+				!settingsRef.current.contains(event.target) &&
+				!Swal.isVisible()
+			) {
+				setShowSettings(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClickOutside);
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [showSettings]);
+
 	const openTypesChallengeTutorial = () => {
 		setShowSettings(false);
 		MySwal.fire({
+			width: '60vw',
 			title: '¿Cómo se juega?',
 			html: `Debes posicionar todos los tipos en su posición correcta.<br>
 			Por ejemplo, si me toca el tipo <span class='font-bold text-red-500'>Fuego</span> yo ya se que uno de los tipos que le pega efectivo es <span class='font-bold text-blue-500'>Agua</span>, y con esa premisa debo completar toda la tabla del tipo que me toque.<br>
@@ -279,7 +299,7 @@ const TypesChallenge = () => {
 		<div
 			className={`${
 				gameStarted ? 'justify-start' : 'justify-between'
-			} sm:pt-16 sm:p-6 pt-20 px-1 pb-1 flex flex-col sm:gap-2 bg-indigo-100 sm:h-screen min-h-screen text-black text-center`}>
+			} sm:pt-16 sm:p-6 pt-20 px-1 pb-1 flex flex-col sm:gap-2 bg-gray-200 sm:h-screen min-h-screen text-black text-center`}>
 			{/* QUITAR CUANDO ACTUALICE EL DnD PARA TOUCH BACKEND */}
 			<div className='sm:hidden'>
 				{`De momento este juego no está disponible en dispositivos móbiles.
@@ -287,10 +307,10 @@ const TypesChallenge = () => {
 			</div>
 			{/* QUITAR CUANDO ACTUALICE EL DnD PARA TOUCH BACKEND */}
 			<h2
-				className={`sm:block hidden text-3xl font-pokemon text-indigo-600 text-center`}>
+				className={`sm:block hidden text-3xl font-pokemon text-slate-700 text-center`}>
 				Desafío de Tipos
 			</h2>
-			<div className='w-full sm:m-4 h-2/6 sm:block hidden text-black text-center'>
+			<div className='w-full sm:my-4 h-2/6 sm:block hidden text-black text-center'>
 				<div className='h-1/6 flex justify-center gap-2 items-center mb-4'>
 					{gameStarted ? (
 						<div className='h-[6vh] w-full flex sm:flex-row flex-col justify-center items-center gap-2'>
@@ -298,7 +318,7 @@ const TypesChallenge = () => {
 								<h2 className='font-bold text-lg'>Tipo seleccionado:</h2>
 
 								<div
-									className={`border-2 text-sm font-bold border-white p-2 m-2 sm:w-2/6 h-full flex justify-evenly items-center text-white font-medium rounded-lg gap-1 ${originalType.toLowerCase()}`}>
+									className={`border-2 text-sm font-bold border-white p-2 m-2 sm:w-2/6 h-full flex justify-evenly items-center text-white  rounded-lg gap-1 ${originalType.toLowerCase()}`}>
 									<Image
 										src={typeLogos[originalType.toLowerCase()]}
 										alt={`${originalType} Logo`}
@@ -309,7 +329,7 @@ const TypesChallenge = () => {
 							</div>
 							<div className='flex justify-evenly h-full sm:w-80 w-full'>
 								<button
-									className='bg-indigo-500 disabled:opacity-50 h-full px-10 sm:px-6 py-2 sm:py-0 rounded-lg text-white font-bold enabled:cursor-pointer enabled:hover:bg-indigo-600 enabled:active:bg-indigo-700 enabled:active:scale-95 flex justify-center items-center'
+									className='bg-green-500 disabled:opacity-50 h-full px-10 sm:px-6 py-2 sm:py-0 rounded-lg text-white font-bold enabled:cursor-pointer enabled:hover:bg-green-600 enabled:active:bg-green-700 enabled:active:scale-95 flex justify-center items-center'
 									disabled={gameEnded}
 									onClick={handleGuess}>
 									Adivinar
@@ -317,7 +337,9 @@ const TypesChallenge = () => {
 
 								{gameEnded && (
 									<button
-										className='bg-indigo-500 h-full px-10 sm:px-6 rounded-lg text-white font-bold cursor-pointer hover:bg-indigo-600 active:bg-indigo-700 active:scale-95 flex justify-center items-center'
+										className={`bg-red-500 h-full px-10 sm:px-6 rounded-lg text-white font-bold cursor-pointer hover:bg-red-600 active:bg-red-700 active:scale-95 flex justify-center items-center ${
+											gameEnded && 'animate-bounce'
+										}`}
 										onClick={handleRestart}>
 										Reiniciar
 									</button>
@@ -327,7 +349,7 @@ const TypesChallenge = () => {
 					) : (
 						<div className='flex flex-col gap-4'>
 							<div
-								className='bg-indigo-500 py-6 px-10 rounded-lg text-white font-bold cursor-pointer hover:bg-indigo-600 active:bg-indigo-700 active:scale-95 shadow-lg shadow-indigo-500'
+								className='bg-slate-700 py-6 px-10 rounded-lg text-white font-bold cursor-pointer hover:bg-slate-600 active:bg-slate-500 active:scale-95 shadow-lg shadow-slate-700'
 								onClick={startNewGame}>
 								Comenzar partida
 							</div>
@@ -356,20 +378,20 @@ const TypesChallenge = () => {
 					{zonesData.map((zone) => (
 						<div
 							key={zone.id}
-							className='sm:w-[24%] w-[48%] sm:h-full h-1/5 flex flex-col gap-1'>
+							className='sm:w-[24%] w-[48%] sm:h-full h-1/5 flex flex-col '>
 							<div
 								onClick={() => handleZoneClick(zone.id)}
-								className={`sm:h-1/6 text-lg font-medium border-black border-2 rounded-lg flex justify-center items-center hover:bg-blue-400 cursor-pointer
+								className={`sm:h-1/6 text-lg font-medium border-black border-2 border-b-0 rounded-t-lg flex justify-center items-center hover:bg-blue-400 active:bg-blue-500 cursor-pointer
 								${
 									correctZone[zone.id] === undefined
 										? 'bg-white'
 										: correctZone[zone.id]
-										? 'bg-green-300'
-										: 'bg-red-300'
+										? 'bg-green-400'
+										: 'bg-red-400'
 								}`}>
 								{zone.title}
 							</div>
-							<div className='w-full rounded-lg sm:h-[45vh] '>
+							<div className='w-full sm:h-[45vh]'>
 								<DroppableArea
 									id={zone.id}
 									items={zones[zone.id] || []}
@@ -388,17 +410,17 @@ const TypesChallenge = () => {
 					showSettings
 						? 'scale-100 translate-y-0 translate-x-0'
 						: 'scale-0 translate-y-full translate-x-40'
-				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-3 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-xl text-white font-medium`}>
-				<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-t-xl'></div>
+				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-3 bg-slate-700 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-2xl text-white font-medium`}>
+				<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 sm:rounded-t-xl'></div>
 
 				<div
-					className='w-full py-2 rounded-t-xl hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 rounded-t-xl hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700'
 					onClick={openTypesChallengeTutorial}>
 					¿Cómo se juega?
 				</div>
 
 				<div
-					className='w-full py-2 bg-orange-400 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-b-xl'
+					className='w-full py-2 bg-red-500 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 sm:rounded-b-xl'
 					onClick={() => setShowSettings(false)}>
 					Cerrar
 				</div>
@@ -408,7 +430,7 @@ const TypesChallenge = () => {
 				{/* QUITAR CUANDO ACTUALICE EL DnD PARA TOUCH BACKEND Y FUNCIONE EL JUEGO EN MOBILE*/}
 
 				<div
-					className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer sm:bg-indigo-500 bg-gray-700 rounded-lg p-2 sm:hover:bg-indigo-400 active:scale-95 active:hover:bg-gray-500 sm:active:hover:bg-indigo-300 transition-all ease-in-out duration-150 transform
+					className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer bg-slate-700 rounded-lg p-2 hover:bg-slate-600 active:scale-95 active:hover:bg-slate-500 transition-all ease-in-out duration-150 transform
                         ${!showSettings ? 'scale-100' : 'scale-0'}`}
 					onClick={handleShowSettings}>
 					<Image
