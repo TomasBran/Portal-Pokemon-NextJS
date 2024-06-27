@@ -54,8 +54,8 @@ const buttonsArray = [
 
 export default function Home() {
 	return (
-		<div className='min-h-screen pt-10 bg-yellow-200 sm:bg-yellow-100 flex flex-col justify-center items-center w-screen'>
-			<h2 className='sm:block hidden sm:text-3xl text-lg pt-4 -mb-3 sm:mb-0 font-pokemon text-yellow-600 text-center'>
+		<div className='min-h-screen pt-10 bg-gray-200 sm:bg-gray-200 flex flex-col justify-center items-center w-screen'>
+			<h2 className='sm:block hidden sm:text-3xl text-lg pt-4 -mb-3 sm:mb-0 font-pokemon text-gray-700 text-center'>
 				Portal Pokemon
 			</h2>
 			<div className='flex flex-col w-full'>
@@ -67,7 +67,7 @@ export default function Home() {
 							key={index}>
 							<button
 								disabled={button.isDisabled}
-								className={`p-2 md:p-4 w-full h-[35vh] rounded-lg border-none text-white no-underline bg-cover bg-center ease-in duration-150 enabled:active:scale-95 disabled:cursor-default group shadow-black/80 md:enabled:hover:shadow-lg shadow-lg md:enabled:hover:shadow-yellow-600 md:opacity-85 md:enabled:hover:opacity-100`}
+								className={`p-2 md:p-4 w-full h-[35vh] rounded-lg border-none text-white no-underline bg-cover bg-center ease-in duration-150 enabled:active:scale-95 disabled:cursor-default group shadow-black/80 shadow-lg md:opacity-85 md:enabled:hover:opacity-100`}
 								style={{ backgroundImage: `url(${button.image})` }}>
 								<Image
 									priority
@@ -80,7 +80,7 @@ export default function Home() {
 										<div
 											className={`absolute top-4 transform py-2 px-6 rounded-md transition duration-150 ease-in sm:font-bold font-medium text-shadow-md shadow-lg shadow-black group-hover:shadow-black/60
 											${button.typeText === 'Herramienta' && 'bg-teal-200 text-teal-700 '}
-											${button.typeText === 'Juego' && 'bg-indigo-200 text-indigo-700 '}`}>
+											${button.typeText === 'Juego' && 'bg-slate-300 text-slate-600 '}`}>
 											<span>{button.typeText}</span>
 										</div>
 									)}

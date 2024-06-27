@@ -64,7 +64,6 @@ function PokemonSearch(props) {
 				toast.error(`El buscador está vacío.`);
 				return;
 			}
-			searchPokemon(value);
 		}
 	};
 

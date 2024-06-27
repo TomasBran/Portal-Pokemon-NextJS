@@ -100,7 +100,7 @@ const Generations = ({ getGenerations, resetGame, padding = 4 }) => {
 						toggleGenerationPanel();
 						resetGame(false);
 					}}>
-					Listo
+					Guardar
 				</button>
 			</div>
 		</div>

@@ -514,8 +514,9 @@ const PokeGym = () => {
 	const openFAQ = () => {
 		setShowSettings(false);
 		MySwal.fire({
+			width: '60vw',
 			title: 'Preguntas Frecuentes',
-			html: `<span class='font-bold sm:text-2xl text-lg'>¿Como se juega?</span><br>En las opciones está el tutorial.<br><br>
+			html: `<span class='font-bold sm:text-2xl text-lg'>¿Como se juega?</span><br>En las opciones está el <a class='font-semibold underline text-blue-400' href="#" id="tutorialLink">tutorial</a>.<br><br>
 			<span class='font-bold sm:text-2xl text-lg'>¿Qué es el modo difícil?</span><br>En el modo difícil no se muestran las estrellas que indican el poder de un Pokemon. Se puede activar y desactivar en las opciones.<br><br>
 			<span class='font-bold sm:text-2xl text-lg'>¿Cómo funciona la suerte?</span><br>La suerte es un factor al azar que potencia o desmejora tu puntaje final. Varía desde un -3% a un +5%, por lo que en promedio, te beneficiará. Se puede activar y desactivar en las opciones.<br><br>
 			<span class='font-bold sm:text-2xl text-lg'>¿Cómo funcionan las sinergias?</span><br><br>Con algunas combinaciones de Pokemon, podes conseguir mas puntos que solamente con fuerza bruta. Para poder usarlas, las generaciones deben estar todas habilitadas. Para más información mirá la sección de <span class='font-bold'>Listado de Sinergias</span>
@@ -524,6 +525,16 @@ const PokeGym = () => {
 			confirmButtonColor: 'rgb(99 102 241)',
 			confirmButtonText: '¡Estoy listo!',
 		});
+
+		setTimeout(() => {
+			document
+				.getElementById('tutorialLink')
+				.addEventListener('click', function (event) {
+					event.preventDefault();
+					Swal.close();
+					openGymTutorial();
+				});
+		}, 100);
 	};
 
 	const openSynergies = () => {
@@ -619,8 +630,8 @@ const PokeGym = () => {
 	};
 
 	return (
-		<div className='bg-indigo-100 pt-6 px-1 h-screen w-full flex flex-col sm:justify-center justify-start items-center text-center text-black'>
-			<h2 className='sm:text-3xl text-lg sm:pt-10 pt-6 -mb-5 sm:mb-0 font-pokemon text-indigo-600 text-center'>
+		<div className='bg-gray-200 pt-6 px-1 h-screen w-full flex flex-col sm:justify-center justify-start items-center text-center text-black'>
+			<h2 className='sm:text-3xl text-lg sm:pt-10 pt-6 -mb-5 sm:mb-0 font-pokemon text-slate-700 text-center'>
 				Gimnasio Pokemon
 			</h2>
 			<div className='pt-7 sm:h-3/4 h-3/5 flex flex-wrap justify-center items-center w-full sm:gap-x-36'>
@@ -684,23 +695,32 @@ const PokeGym = () => {
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-4 gap-2 mt-2 w-full'>
 					<button
 						id='fight-button'
-						className='bg-indigo-500 active:bg-indigo-300 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg hover:bg-indigo-400 disabled:hover:bg-indigo-500 disabled:active:bg-indigo-500 enabled:active:scale-95 disabled:opacity-30'
+						className={`${
+							rollButtonText === 'Iniciar Juego'
+								? 'bg-green-400 enabled:hover:bg-green-500 enabled:active:bg-green-600'
+								: 'bg-indigo-500 enabled:hover:bg-indigo-400 enabled:active:bg-indigo-300'
+						}  text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg enabled:active:scale-95 disabled:opacity-30`}
 						onClick={() => updatePokemonTeam()}
 						disabled={shouldDisable || gameEnded}>
 						{rollButtonText}
 					</button>
 					<button
-						className='bg-indigo-500 active:bg-indigo-300 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg hover:bg-indigo-400 disabled:hover:bg-indigo-500 disabled:active:bg-indigo-500 enabled:active:scale-95 disabled:opacity-30'
+						className={` ${
+							chosenTeam.length !== 6
+								? 'bg-indigo-500 enabled:active:bg-indigo-300 enabled:hover:bg-indigo-400'
+								: 'bg-green-400 enabled:hover:bg-green-500 enabled:active:bg-green-600'
+						}  text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg  enabled:active:scale-95 disabled:opacity-30`}
 						disabled={chosenTeam.length !== 6 || gameEnded}
 						onClick={fightGymLeaders}>
-						<span className='text-red-500'>P</span>ELEAR{' '}
-						{chosenTeam.length !== 6 ? `(Necesitas 6 Pokemon)` : ''}
+						PELEAR {chosenTeam.length !== 6 ? `(Necesitas 6 Pokemon)` : ''}
 					</button>
 					<button
-						className='bg-indigo-500 active:bg-indigo-300 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg hover:bg-indigo-400 disabled:hover:bg-indigo-500 disabled:active:bg-indigo-500 enabled:active:scale-95 disabled:opacity-30'
+						className={`bg-red-500 enabled:hover:bg-red-600 enabled:active:bg-red-700 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg enabled:active:scale-95 disabled:opacity-30 ${
+							gameEnded && 'sm:animate-bounce'
+						}`}
 						disabled={rollButtonText === 'Iniciar Juego'}
 						onClick={() => resetGame(true)}>
-						<span className='text-red-500'>R</span>EINICIAR JUEGO
+						REINICIAR JUEGO
 					</button>
 				</div>
 				<div
@@ -709,26 +729,26 @@ const PokeGym = () => {
 						showSettings
 							? 'scale-100 translate-y-0 translate-x-0'
 							: 'scale-0 translate-y-full translate-x-40'
-					} transition-all duration-150 transform fixed sm:right-0 bottom-0 sm:m-3 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-lg text-white font-medium z-50 `}>
+					} transition-all duration-150 transform fixed sm:right-0 bottom-0 sm:m-3 bg-slate-700 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-2xl text-white font-medium z-50 `}>
 					<div
-						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-t-lg'
+						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700 sm:rounded-t-xl'
 						onClick={handleHardMode}>
 						Modo difícil: {hardmode ? 'ON' : 'OFF'}
 					</div>
 
 					<div
-						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 						onClick={handleLuckActive}>
 						Suerte: {luckActive ? 'ON' : 'OFF'}
 					</div>
 
 					<div
-						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 						onClick={handleSynergiesActive}>
 						Sinergias: {synergiesActive ? 'ON' : 'OFF'}
 					</div>
 
-					<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'>
+					<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'>
 						<Generations
 							getGenerations={getGenerations}
 							resetGame={resetGame}
@@ -736,27 +756,27 @@ const PokeGym = () => {
 						/>
 					</div>
 					<div
-						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 						onClick={openGymTutorial}>
 						¿Cómo se juega?
 					</div>
 					<div
-						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 						onClick={openFAQ}>
 						Preguntas Frecuentes
 					</div>
 					<div
-						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 						onClick={openSynergies}>
 						Listado de Sinergias
 					</div>
 					<div
-						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 						onClick={openStats}>
 						Estadísticas
 					</div>
 					<div
-						className='w-full bg-orange-400 py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-b-lg'
+						className='w-full bg-red-500 py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700 sm:rounded-b-xl'
 						onClick={() => setShowSettings(false)}>
 						Cerrar
 					</div>
@@ -773,7 +793,7 @@ const PokeGym = () => {
 						</div>
 					)}
 					<div
-						className={`w-10 cursor-pointer bg-slate-700 active:bg-slate-600 sm:bg-indigo-500 rounded-lg p-2 hover:bg-indigo-400 active:scale-95 sm:active:bg-indigo-300 transition-all ease-in-out duration-150 `}
+						className={`w-10 cursor-pointer bg-slate-700 hover:bg-slate-600 active:bg-slate-500 rounded-lg p-2 active:scale-95  transition-all ease-in-out duration-150 `}
 						onClick={() => {
 							handleShowSettings();
 							handleSettingsClick();

@@ -136,12 +136,12 @@ const Navbar = () => {
 	}, [isOpenGames, isOpenTools]);
 
 	return (
-		<nav className='bg-yellow-500 fixed top-0 w-screen z-10'>
+		<nav className='bg-gray-800 fixed top-0 w-screen z-10 font-pokemon'>
 			<div
 				className={`md:hidden visible flex h-full justify-between items-center px-4 py-2`}>
 				<Link
 					href='/'
-					className='text-white font-bold text-md h-full'
+					className='text-white font-bold text-xs h-full'
 					onClick={() => setIsOpen(false)}>
 					Portal Pokemon
 				</Link>
@@ -178,12 +178,12 @@ const Navbar = () => {
 				</button>
 			</div>
 			<div className={`${isOpen ? 'block' : 'hidden'} md:hidden`}>
-				<ul className='bg-yellow-400 shadow-lg shadow-yellow-400'>
+				<ul className='bg-slate-600 shadow-lg shadow-slate-600'>
 					{routes.map((route, index) => (
 						<li key={index}>
 							<Link
 								href={route.url}
-								className='block py-2 px-4 text-white hover:bg-blue-400'
+								className='block py-3 px-4 text-white hover:bg-blue-400 text-sm'
 								onClick={toggleMenu}>
 								{route.text}
 							</Link>
@@ -199,7 +199,7 @@ const Navbar = () => {
 						className='h-full'>
 						<Link
 							href={route.url}
-							className='font-medium px-4 text-white hover:bg-blue-500 w-full md:w-[13vw] h-full flex justify-center gap-2 items-center'>
+							className='font-pokemon text-sm font-medium px-4 text-white hover:bg-slate-600 w-full md:w-[15vw] h-full flex justify-center gap-2 items-center'>
 							{route.text}
 						</Link>
 					</li>
@@ -209,8 +209,8 @@ const Navbar = () => {
 					className='h-full cursor-pointer'
 					onClick={toggleGamesMenu}>
 					<span
-						className={`font-medium px-4 text-white hover:bg-blue-500 w-full md:w-[13vw] h-full flex justify-center gap-1 items-center relative z-20 ${
-							isOpenGames ? 'bg-blue-500' : ' bg-yellow-500'
+						className={`font-pokemon text-sm font-medium px-4 text-white hover:bg-slate-600 w-full md:w-[15vw] h-full flex justify-center gap-1 items-center relative z-20 ${
+							isOpenGames ? 'bg-slate-600' : ' bg-gray-800'
 						}`}>
 						Juegos
 						<div className='text-white text-xl'>
@@ -219,7 +219,7 @@ const Navbar = () => {
 					</span>
 
 					<ul
-						className={`bg-blue-500 flex-col flex relative z-0
+						className={`bg-slate-600 flex-col flex relative z-0 rounded-b-xl overflow-auto text-xs text-center
 							${
 								isOpenGames
 									? 'scale-y-100 translate-y-0'
@@ -231,7 +231,7 @@ const Navbar = () => {
 								className='h-full'>
 								<Link
 									href={route.url}
-									className='px-2 py-2 text-white hover:bg-yellow-500 text- w-full md:max-w-[13vw] h-full flex justify-center items-center '>
+									className='px-2 py-4 text-white hover:bg-gray-700 text- w-full md:max-w-[15vw] h-full flex justify-center items-center '>
 									{route.text}
 								</Link>
 							</li>
@@ -243,8 +243,8 @@ const Navbar = () => {
 					className='h-full cursor-pointer'
 					onClick={toggleToolsMenu}>
 					<span
-						className={`font-medium px-4 text-white hover:bg-blue-500 w-full md:w-[13vw] h-full flex justify-center gap-1 items-center relative z-20 ${
-							isOpenTools ? 'bg-blue-500' : 'bg-yellow-500'
+						className={`font-pokemon text-sm font-medium px-4 text-white hover:bg-slate-600 w-full md:w-[15vw] h-full flex justify-center gap-1 items-center relative z-20 ${
+							isOpenTools ? 'bg-slate-600' : 'bg-gray-800'
 						}`}>
 						Herramientas
 						<div className='text-white text-xl'>
@@ -253,7 +253,7 @@ const Navbar = () => {
 					</span>
 
 					<ul
-						className={`bg-blue-500 flex-col flex relative z-0
+						className={`bg-slate-600 flex-col flex relative z-0 rounded-b-xl overflow-auto
 							${
 								isOpenTools
 									? 'scale-y-100 translate-y-0'
@@ -265,7 +265,7 @@ const Navbar = () => {
 								className='h-full'>
 								<Link
 									href={route.url}
-									className='px-2 py-2 text-white hover:bg-yellow-500 text- w-full md:max-w-[13vw] h-full flex justify-center items-center '>
+									className='px-2 py-4 text-white hover:bg-gray-700 text- w-full md:max-w-[15vw] h-full flex justify-center items-center text-xs text-center'>
 									{route.text}
 								</Link>
 							</li>

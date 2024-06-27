@@ -1,3 +1,5 @@
+import TooltipImage from '../TooltipImage/TooltipImage';
+
 const TeamContainer = ({ team }) => {
 	return (
 		<div className='flex justify-evenly bg-white w-full h-full sm:border-2 border-black sm:rounded-2xl sm:p-4 py-2 items-center'>
@@ -7,10 +9,13 @@ const TeamContainer = ({ team }) => {
 					<div
 						className='flex justify-center items-center w-2/12 h-full'
 						key={index}>
-						<img
-							alt=''
+						<TooltipImage
+							type_1={pokemon.type_1}
+							type_2={pokemon.type_2}
+							alt={pokemon.name}
 							src={pokemon.img}
-							className={`sm:w-4/6 w-full h-full object-contain drop-shadow-xl`}
+							tooltipText={pokemon.name}
+							imgClasses={`sm:w-4/6 w-full h-full object-contain drop-shadow-xl`}
 						/>
 					</div>
 				);

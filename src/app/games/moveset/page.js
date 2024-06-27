@@ -206,6 +206,7 @@ const MoveSet = () => {
 	const openMovesetTutorial = () => {
 		setShowSettings(false);
 		MySwal.fire({
+			width: '50vw',
 			title: '¿Cómo se juega?',
 			html: `Debes adivinar el Pokemon escondido. Comienza eligiendo uno y continúa a partir de las pistas que éste te otorgue.<br>
 			Las pistas serán 5, y se te otorgará una por cada intento. Las primeras 4 serán movimientos que el Pokemon oculto sea capaz de aprender por nivel, y la última pista será una de las habilidades que este Pokemon pueda tener (incluso habilidades ocultas).<br><br>
@@ -288,8 +289,8 @@ const MoveSet = () => {
 	};
 
 	return (
-		<div className='sm:h-screen min-h-screen pt-14 p-1 sm:pt-0 bg-indigo-100 w-full flex flex-col sm:items-center sm:justify-center text-center text-black'>
-			<h2 className='sm:text-3xl text-lg sm:pt-20 sm:mb-0 font-pokemon text-indigo-600 text-center'>
+		<div className='sm:h-screen min-h-screen pt-14 p-1 sm:pt-0 bg-gray-200 w-full flex flex-col sm:items-center sm:justify-center text-center text-black'>
+			<h2 className='sm:text-3xl text-lg sm:pt-20 sm:mb-0 font-pokemon text-slate-700 text-center'>
 				Adivina el MoveSet
 			</h2>
 			<div className='w-full sm:h-9/12 h-full flex sm:flex-row flex-col justify-center gap-4 items-center'>
@@ -311,18 +312,18 @@ const MoveSet = () => {
 						<button
 							disabled={guessButtonDisabled}
 							onClick={() => guess(inputValue)}
-							className='rounded-lg disabled:opacity-40 bg-indigo-500 font-bold enabled:hover:bg-indigo-400 enabled:active:bg-indigo-300 enabled:cursor-pointer py-4 px-4 flex items-center justify-center'>
+							className='rounded-lg disabled:opacity-40 bg-green-500 font-bold enabled:hover:bg-green-400 enabled:active:bg-green-300 enabled:cursor-pointer py-4 px-4 flex items-center justify-center'>
 							ADIVINAR
 						</button>
 						<button
-							className='bg-indigo-500 hover:bg-indigo-400 active:bg-indigo-300 cursor-pointer py-4 px-4 rounded-lg flex items-center justify-center font-bold'
+							className='bg-red-500 hover:bg-red-400 active:bg-red-300 cursor-pointer py-4 px-4 rounded-lg flex items-center justify-center font-bold'
 							onClick={() => resetGame(true)}>
 							REINICIAR
 						</button>
 					</div>
 				</div>
 
-				<div className='flex flex-col sm:flex-row flex-col-reverse sm:w-3/6 w-full sm:gap-16 gap-4'>
+				<div className='flex sm:flex-row flex-col-reverse sm:w-3/6 w-full sm:gap-16 gap-4'>
 					<div className='sm:w-3/6 w-full sm:pb-0 pb-2 sm:h-[50vh] sm:max-h-[50vh] max-h-60 bg-white text-white sm:rounded-2xl border-2 border-gray-900 flex flex-col items-center overflow-y-auto'>
 						<div className='text-gray-800 font-bold border-b-2 border-black sm:w-1/6 h-2/12 sm:fixed bg-white flex justify-center pt-2 items-center'>
 							Intentos ({guessedPokemons.length}):
@@ -344,7 +345,7 @@ const MoveSet = () => {
 					</div>
 
 					<div className='sm:w-3/6 w-full h-full flex flex-col flex-wrap items-center justify-center sm:gap-10 gap-4'>
-						<div className='bg-stone-500 rounded px-10 py-3 text-white font-medium'>
+						<div className='bg-slate-700 rounded px-10 py-3 text-white font-medium'>
 							Generación: {getPokemonsGeneration(originalPokemonMovements[6])}{' '}
 						</div>
 						<div className='flex flex-wrap w-full justify-center items-center sm:gap-3 gap-1 text-sm sm:text-base'>
@@ -352,7 +353,7 @@ const MoveSet = () => {
 								<div
 									key={index}
 									className={`p-4 rounded-xl capitalize text-white font-medium flex justify-center items-center sm:h-3/6 h-24 w-5/12 ${
-										movesShown >= index ? 'bg-blue-500' : 'bg-red-500'
+										movesShown >= index ? 'bg-blue-400' : 'bg-slate-800'
 									}`}>
 									<span>
 										{`Movimiento ${index + 1}:`}
@@ -364,7 +365,7 @@ const MoveSet = () => {
 						</div>
 						<div
 							className={`p-4 rounded-xl capitalize text-white font-medium flex justify-center items-center w-full ${
-								movesShown >= 4 ? 'bg-blue-500' : 'bg-red-500'
+								movesShown >= 4 ? 'bg-blue-500' : 'bg-slate-800'
 							}`}>{`Habilidad: ${
 							movesShown >= 4 ? originalPokemonMovements[4] : '???'
 						}`}</div>
@@ -378,8 +379,8 @@ const MoveSet = () => {
 					showSettings
 						? 'scale-100 translate-y-0 translate-x-0'
 						: 'scale-0 translate-y-full translate-x-40'
-				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-4 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-xl text-white font-medium`}>
-				<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-t-xl'>
+				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-4 bg-slate-700 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-2xl text-white font-medium`}>
+				<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 sm:rounded-t-xl'>
 					<Generations
 						getGenerations={getGenerations}
 						resetGame={resetGame}
@@ -388,26 +389,26 @@ const MoveSet = () => {
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700'
 					onClick={openMovesetTutorial}>
 					¿Cómo se juega?
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700'
 					onClick={openStats}>
 					Estadísticas
 				</div>
 
 				<div
-					className='w-full py-2 bg-orange-400 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-b-xl'
+					className='w-full py-2 bg-red-500 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 sm:rounded-b-xl'
 					onClick={() => setShowSettings(false)}>
 					Cerrar
 				</div>
 			</div>
 
 			<div
-				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer sm:bg-indigo-500 bg-gray-700 rounded-lg p-2 sm:hover:bg-indigo-400 active:scale-95 active:hover:bg-gray-500 sm:active:hover:bg-indigo-300 transition-all ease-in-out duration-150 transform
+				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer bg-slate-700 rounded-lg p-2 hover:bg-slate-600 active:scale-95  active:hover:bg-slate-500 transition-all ease-in-out duration-150 transform
 					${!showSettings ? 'scale-100' : 'scale-0'}`}
 				onClick={handleShowSettings}>
 				<Image

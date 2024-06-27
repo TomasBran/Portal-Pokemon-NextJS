@@ -229,15 +229,16 @@ const Pokedle = () => {
 	const putDataStyle = (data) => {
 		switch (data) {
 			case 'correct-guess':
-				return 'bg-green-500';
+				return 'bg-green-600';
+
 			case 'wrong-guess':
-				return 'bg-red-500';
+				return 'bg-red-600';
 
 			case 'partial-correct-guess':
-				return 'bg-yellow-500';
+				return 'bg-yellow-600';
 
 			default:
-				return 'bg-indigo-500';
+				return 'bg-slate-700';
 		}
 	};
 
@@ -267,6 +268,7 @@ const Pokedle = () => {
 	const openPokedleTutorial = () => {
 		setShowSettings(false);
 		MySwal.fire({
+			width: '50vw',
 			title: '¿Cómo se juega?',
 			html: `Debes adivinar el Pokemon escondido. Comienza eligiendo uno y continúa a partir de las pistas que éste te otorgue.<br>
 			Por ejemplo, si el pokemon que tocó es <span class='font-bold text-gray-500'>Magnemite</span>, y yo elegí a <span class='font-bold text-yellow-500'>Pikachu</span>, me dirá que coinciden en su primer tipo (<span class='font-bold text-yellow-500'>Eléctrico</span>), pero no coincidirán en el segundo, ya que <span class='font-bold text-yellow-500'>Pikachu</span> es monotipo y <span class='font-bold text-gray-500'>Magnemite</span> es tipo <span class='font-bold text-yellow-500'>Eléctrico</span>/<span class='font-bold text-gray-500'>Acero</span>. También me comparará el resto de los datos.<br><br>
@@ -350,8 +352,8 @@ const Pokedle = () => {
 	};
 
 	return (
-		<div className='bg-indigo-100 min-h-screen pb-4 p-1 text-center text-black'>
-			<h2 className='sm:text-3xl text-lg pt-20 -mb-3 sm:mb-0 font-pokemon text-indigo-600 text-center'>
+		<div className='bg-gray-200 min-h-screen pb-4 p-1 text-center text-black '>
+			<h2 className='sm:text-3xl text-lg pt-20 -mb-3 sm:mb-0 font-pokemon text-slate-700 text-center'>
 				Pokedle
 			</h2>
 			<div className='flex sm:flex-row flex-col justify-center items-center gap-4 sm:py-6 pt-14 pb-6'>
@@ -364,7 +366,7 @@ const Pokedle = () => {
 				<div className='flex justify-center gap-2 sm:gap-4 sm:w-auto w-[65vw] text-sm'>
 					<button
 						id='guess-button'
-						className='bg-indigo-500 enabled:hover:bg-indigo-400 enabled:active:bg-indigo-300 enabled:active:scale-95 transition duration-150 rounded-lg py-4 sm:px-8 px-4 text-white font-bold disabled:opacity-40'
+						className='bg-green-500 enabled:hover:bg-green-400 enabled:active:bg-green-300 enabled:active:scale-95 transition duration-150 rounded-lg py-4 sm:px-8 px-4 text-white font-bold disabled:opacity-40'
 						onClick={() => {
 							comparePokemon(inputValue);
 							setInputValue('');
@@ -373,7 +375,8 @@ const Pokedle = () => {
 						ADIVINAR
 					</button>
 					<button
-						className={`bg-indigo-500 enabled:active:bg-blue-300 enabled:active:scale-95 transition duration-150 enabled:hover:bg-blue-400 disabled:opacity-40 rounded-lg py-4 sm:px-8 px-4 text-white font-bold`}
+						className={`bg-red-500 enabled:active:bg-red-300 enabled:active:scale-95 transition duration-150 enabled:hover:bg-red-400 disabled:opacity-40 rounded-lg py-4 sm:px-8 px-4 text-white font-bold
+							${guessButtonDisabled && 'sm:animate-bounce'}`}
 						onClick={() => resetGame()}
 						disabled={comparisons.length === 0}>
 						REINICIAR
@@ -387,7 +390,7 @@ const Pokedle = () => {
 							{attributes.map((attribute, index) => (
 								<div
 									key={index}
-									className='bg-blue-700 rounded-lg sm:py-2 px-4 sm:w-1/12 w-24 flex items-center justify-center'>
+									className='bg-slate-900 rounded-lg sm:py-2 px-4 sm:w-1/12 w-24 flex items-center justify-center'>
 									<p className='font-bold text-white text-sm'>{attribute}</p>
 								</div>
 							))}
@@ -403,7 +406,7 @@ const Pokedle = () => {
 										key={property}>
 										<div
 											key={property}
-											className={`sm:w-5/6 w-full h-20 border-2 border-white text-white flex justify-center items-center rounded-lg ${putDataStyle(
+											className={`sm:w-5/6 w-full h-20 border-2 border-slate-700 text-white flex justify-center items-center rounded-lg ${putDataStyle(
 												data.class
 											)} bg-contain bg-center bg-no-repeat`}
 											style={
@@ -426,8 +429,8 @@ const Pokedle = () => {
 					showSettings
 						? 'scale-100 translate-y-0 translate-x-0'
 						: 'scale-0 translate-y-full translate-x-40'
-				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-3 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-xl text-white font-medium`}>
-				<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-t-xl'>
+				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-3 bg-slate-700 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-2xl text-white font-medium`}>
+				<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700 sm:rounded-t-xl'>
 					<Generations
 						getGenerations={getGenerations}
 						resetGame={reloadGame}
@@ -436,26 +439,26 @@ const Pokedle = () => {
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 					onClick={openPokedleTutorial}>
 					¿Cómo se juega?
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 					onClick={openStats}>
 					Estadísticas
 				</div>
 
 				<div
-					className='w-full py-2 bg-orange-400 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-b-xl'
+					className='w-full py-2 bg-red-500 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700 sm:rounded-b-xl'
 					onClick={() => setShowSettings(false)}>
 					Cerrar
 				</div>
 			</div>
 
 			<div
-				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer sm:bg-indigo-500 bg-gray-700 rounded-lg p-2 sm:hover:bg-indigo-400 active:scale-95 active:hover:bg-gray-500 sm:active:hover:bg-indigo-300 transition-all ease-in-out duration-150 transform ${
+				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer bg-slate-700 rounded-lg p-2 hover:bg-slate-600 active:scale-95  active:hover:bg-slate-500 transition-all ease-in-out duration-150 transform ${
 					!showSettings ? 'scale-100' : 'scale-0'
 				}`}
 				onClick={handleShowSettings}>
