@@ -22,6 +22,22 @@ import {
 	saveToLocalStorage,
 } from '@/app/utils/services/localStorage';
 import Image from 'next/image';
+import TutorialModal from '@/app/Components/TutorialModal/TutorialModal';
+
+const tutorialSteps = [
+	{
+		image: '/assets/tutorial/moveset/tutorial_1.png',
+		text: 'Para empezar a jugar a Adivina el Moveset, elegí cualquier pokemon viendo la primera pista.',
+	},
+	{
+		image: '/assets/tutorial/moveset/tutorial_2.png',
+		text: 'Por cada intento fallido, te daran una nueva pista, hasta tener los 4 movimientos y la habilidad.',
+	},
+	{
+		image: '/assets/tutorial/moveset/tutorial_3.png',
+		text: 'Hasta que finalmente aciertes el Pokemon y ganes la partida!',
+	},
+];
 
 const MoveSet = () => {
 	// ***IMPORTANTE*** DESHABILITAR CUANDO NO ESTE TESTEANDO //
@@ -48,6 +64,10 @@ const MoveSet = () => {
 	const [showSettings, setShowSettings] = useState(false);
 	const settingsRef = useRef(null);
 	const [guessButtonDisabled, setGuessButtonDisabled] = useState(false);
+
+	const tutorialModalOpened =
+		getFromLocalStorage('moveset_tutorial') === 'true';
+	const [isModalOpen, setIsModalOpen] = useState(!tutorialModalOpened);
 
 	useEffect(() => {
 		if (getFromLocalStorage('moveset_streak') === null) {
@@ -205,16 +225,17 @@ const MoveSet = () => {
 
 	const openMovesetTutorial = () => {
 		setShowSettings(false);
-		MySwal.fire({
-			width: '50vw',
-			title: '¿Cómo se juega?',
-			html: `Debes adivinar el Pokemon escondido. Comienza eligiendo uno y continúa a partir de las pistas que éste te otorgue.<br>
-			Las pistas serán 5, y se te otorgará una por cada intento. Las primeras 4 serán movimientos que el Pokemon oculto sea capaz de aprender por nivel, y la última pista será una de las habilidades que este Pokemon pueda tener (incluso habilidades ocultas).<br><br>
-			<span class='font-bold text-green-500'>Dato</span>: Puedes cambiar las generaciones a las que gustes, para que el pokemon a adivinar pertenezca a esas generaciones.`,
-			showCancelButton: false,
-			confirmButtonColor: 'rgb(99 102 241)',
-			confirmButtonText: '¡Estoy listo!',
-		});
+		setIsModalOpen(true);
+		// MySwal.fire({
+		// 	width: '50vw',
+		// 	title: '¿Cómo se juega?',
+		// 	html: `Debes adivinar el Pokemon escondido. Comienza eligiendo uno y continúa a partir de las pistas que éste te otorgue.<br>
+		// 	Las pistas serán 5, y se te otorgará una por cada intento. Las primeras 4 serán movimientos que el Pokemon oculto sea capaz de aprender por nivel, y la última pista será una de las habilidades que este Pokemon pueda tener (incluso habilidades ocultas).<br><br>
+		// 	<span class='font-bold text-green-500'>Dato</span>: Puedes cambiar las generaciones a las que gustes, para que el pokemon a adivinar pertenezca a esas generaciones.`,
+		// 	showCancelButton: false,
+		// 	confirmButtonColor: 'rgb(99 102 241)',
+		// 	confirmButtonText: '¡Estoy listo!',
+		// });
 	};
 
 	const updateMovesetResetNumber = () => {
@@ -418,6 +439,12 @@ const MoveSet = () => {
 					alt='settings'
 				/>
 			</div>
+			<TutorialModal
+				steps={tutorialSteps}
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				localStorageKey='moveset_tutorial'
+			/>
 		</div>
 	);
 };

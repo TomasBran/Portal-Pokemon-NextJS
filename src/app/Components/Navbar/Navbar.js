@@ -210,7 +210,7 @@ const Navbar = () => {
 					onClick={toggleGamesMenu}>
 					<span
 						className={`font-pokemon text-sm font-medium px-4 text-white hover:bg-slate-600 w-full md:w-[15vw] h-full flex justify-center gap-1 items-center relative z-20 ${
-							isOpenGames ? 'bg-slate-600' : ' bg-gray-800'
+							isOpenGames ? 'bg-gray-900' : ' bg-gray-800'
 						}`}>
 						Juegos
 						<div className='text-white text-xl'>

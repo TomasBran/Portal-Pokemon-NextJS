@@ -23,6 +23,7 @@ import {
 	getFromSessionStorage,
 	saveToSessionStorage,
 } from '@/app/utils/services/sessionStorage.js';
+import TutorialModal from '@/app/Components/TutorialModal/TutorialModal.js';
 
 const PokeGym = () => {
 	const testing = false; //CAMBIAR CUANDO ESTOY TESTEANDO
@@ -65,6 +66,9 @@ const PokeGym = () => {
 	const [synergiesActive, setSynergiesActive] = useState(true);
 	const [synergyBonus, setSynergyBonus] = useState(null);
 
+	const tutorialModalOpened = getFromLocalStorage('gym_tutorial') === 'true';
+	const [isModalOpen, setIsModalOpen] = useState(!tutorialModalOpened);
+
 	const initialHasClickedSettings =
 		getFromSessionStorage('hasClickedSettings') === 'true';
 	const initialHasClickedSynergies =
@@ -77,6 +81,25 @@ const PokeGym = () => {
 	);
 
 	const [shouldDisable, setShouldDisable] = useState(false);
+
+	const tutorialSteps = [
+		{
+			image: '/assets/tutorial/gym/tutorial_1.png',
+			text: 'Para empezar a jugar al Gimnasio Pokemon, lo primero es apretar el botón iniciar.',
+		},
+		{
+			image: '/assets/tutorial/gym/tutorial_2.png',
+			text: 'Luego, empezarás a elegir todos los Pokemon que quieras entre las 6 opciones.',
+		},
+		{
+			image: '/assets/tutorial/gym/tutorial_3.png',
+			text: 'Cuando lo decidas, si aun no completaste tu equipo, podrás rollear 3 veces más. Abajo a la izquierda podrás ver como viene tu equipo.',
+		},
+		{
+			image: '/assets/tutorial/gym/tutorial_4.png',
+			text: 'Y cuando completes tu equipo, a pelear!',
+		},
+	];
 
 	const lockInPokemon = useCallback(
 		(pokemon) => {
@@ -498,17 +521,18 @@ const PokeGym = () => {
 
 	const openGymTutorial = () => {
 		setShowSettings(false);
-		MySwal.fire({
-			title: '¿Cómo se juega?',
-			html: `Paso 1: Dale a Iniciar juego.<br>
-			Paso 2: Se te ofrecerán 6 Pokemon, puedes elegir la cantidad que quieras.<br>
-			Paso 3: Si aun no completaste el equipo de 6, tendrás hasta 3 rerolls.<br>
-			Paso 4: Pelea y gana las 8 medallas!!<br><br>
-			Tip: Puedes activar/desactivar el modo difícil y la suerte en las opciones.`,
-			showCancelButton: false,
-			confirmButtonColor: 'rgb(99 102 241)',
-			confirmButtonText: '¡Estoy listo!',
-		});
+		setIsModalOpen(true);
+		// MySwal.fire({
+		// 	title: '¿Cómo se juega?',
+		// 	html: `Paso 1: Dale a Iniciar juego.<br>
+		// 	Paso 2: Se te ofrecerán 6 Pokemon, puedes elegir la cantidad que quieras.<br>
+		// 	Paso 3: Si aun no completaste el equipo de 6, tendrás hasta 3 rerolls.<br>
+		// 	Paso 4: Pelea y gana las 8 medallas!!<br><br>
+		// 	Tip: Puedes activar/desactivar el modo difícil y la suerte en las opciones.`,
+		// 	showCancelButton: false,
+		// 	confirmButtonColor: 'rgb(99 102 241)',
+		// 	confirmButtonText: '¡Estoy listo!',
+		// });
 	};
 
 	const openFAQ = () => {
@@ -652,10 +676,10 @@ const PokeGym = () => {
 									window.innerWidth >= 450
 										? pokemon.hasBeenChosen
 											? `bg-cover bg-center`
-											: 'bg-red-400/60'
+											: 'bg-blue-300/80'
 										: pokemon.hasBeenChosen
 										? 'bg-green-400/60'
-										: 'bg-red-400/60'
+										: 'bg-blue-300/80'
 								} m-1 sm:mx-10 ${
 									!gameEnded && 'cursor-pointer'
 								} flex flex-col items-center justify-center sm:gap-1 sm:p-5 sm:rounded-full rounded-lg`}
@@ -826,6 +850,12 @@ const PokeGym = () => {
 					/>
 				</div>
 			</div>
+			<TutorialModal
+				steps={tutorialSteps}
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				localStorageKey='gym_tutorial'
+			/>
 		</div>
 	);
 };

@@ -14,6 +14,26 @@ import {
 import Image from 'next/image';
 import '@/app/Components/Type/type.css';
 import Companion from '@/app/Components/BuildPokemon/Companion';
+import TutorialModal from '@/app/Components/TutorialModal/TutorialModal';
+
+const tutorialSteps = [
+	{
+		image: '/assets/tutorial/build/tutorial_1.png',
+		text: 'Para empezar a jugar a Construye un Pokemon, clickeá en "Comenzar Partida".',
+	},
+	{
+		image: '/assets/tutorial/build/tutorial_2.png',
+		text: 'Se te darán diferentes pokemon, los debés asignar a la mejor estadística posible, o saltearlos (hasta 3 veces).',
+	},
+	{
+		image: '/assets/tutorial/build/tutorial_3.png',
+		text: 'Cuando termines de asignar todas las estadísticas, tocá el boton "Calcular Fuerza".',
+	},
+	{
+		image: '/assets/tutorial/build/tutorial_4.png',
+		text: 'Te aparecerá un cartel indicando tu puntaje. A ganar!',
+	},
+];
 
 const BuildPokemon = () => {
 	const MySwal = withReactContent(Swal);
@@ -70,6 +90,9 @@ const BuildPokemon = () => {
 	const [showSettings, setShowSettings] = useState(false);
 	const [showCompanion, setShowCompanion] = useState(true);
 	const [companionSize, setCompanionSize] = useState(0.5);
+
+	const tutorialModalOpened = getFromLocalStorage('build_tutorial') === 'true';
+	const [isModalOpen, setIsModalOpen] = useState(!tutorialModalOpened);
 
 	const registerHighScore = (newScore) => {
 		const highScores = getFromLocalStorage('buildpokemon_highscores') || [];
@@ -330,15 +353,20 @@ const BuildPokemon = () => {
 	};
 
 	const handleCompanionClassname = () => {
-		const baseVW = 18;
-		const incrementVW = 8;
-		const baseSM = 16;
-		const incrementSM = 16;
-
-		const vw = baseVW + companionSize * incrementVW;
-		const sm = baseSM + companionSize * incrementSM;
-
-		return `sm:w-${sm} w-[${vw}vw]`;
+		switch (companionSize) {
+			case 0:
+				return 'sm:w-16 w-[18vw]';
+			case 0.25:
+				return 'sm:w-20 w-[20vw]';
+			case 0.5:
+				return 'sm:w-24 w-[22vw]';
+			case 0.75:
+				return 'sm:w-28 w-[24vw]';
+			case 1:
+				return 'sm:w-32 w-[26vw]';
+			default:
+				return 'sm:w-20 w-[20vw]';
+		}
 	};
 
 	const handleShowSettings = () => {
@@ -350,19 +378,19 @@ const BuildPokemon = () => {
 	};
 
 	const openBuildPokemonTutorial = () => {
-		MySwal.fire({
-			title: `¿Cómo se juega a <span class='text-blue-600'>Construye Un Pokemon</span>?`,
-			html: `Al comenzar una partida te mostrará un Pokemon, el cual debes asignar a una estadística que elijas, en la que creas que este Pokemon es bueno. Por ejemplo, si te toca <span class='font-semibold text-purple-500'>Mewtwo</span>, lo mejor sería enviarlo a Ataque Especial (Si aun esta disponible).<br>
-			Una vez que una estadística sea ocupada, no podrá volver a ser elegida, así que elige con cautela!<br>
-			Al final, podrás ver el poder total del Pokemon que construiste. Si tiene 600 o más, es de poder <span class='font-semibold text-red-500'>Legendario</span>!!<br><br>
-
-			PD: Si tienes el compañero activado, préstale atención a sus reacciones. Podrían darte una pista de que tan buena fue tu jugada.`,
-			showCancelButton: true,
-			confirmButtonColor: 'rgb(99 102 241)',
-			cancelButtonColor: 'rgb(69 168 68)',
-			confirmButtonText: 'Excelente!',
-			cancelButtonText: 'Magnífico!',
-		});
+		setIsModalOpen(true);
+		// MySwal.fire({
+		// 	title: `¿Cómo se juega a <span class='text-blue-600'>Construye Un Pokemon</span>?`,
+		// 	html: `Al comenzar una partida te mostrará un Pokemon, el cual debes asignar a una estadística que elijas, en la que creas que este Pokemon es bueno. Por ejemplo, si te toca <span class='font-semibold text-purple-500'>Mewtwo</span>, lo mejor sería enviarlo a Ataque Especial (Si aun esta disponible).<br>
+		// 	Una vez que una estadística sea ocupada, no podrá volver a ser elegida, así que elige con cautela!<br>
+		// 	Al final, podrás ver el poder total del Pokemon que construiste. Si tiene 600 o más, es de poder <span class='font-semibold text-red-500'>Legendario</span>!!<br><br>
+		// 	PD: Si tienes el compañero activado, préstale atención a sus reacciones. Podrían darte una pista de que tan buena fue tu jugada.`,
+		// 	showCancelButton: true,
+		// 	confirmButtonColor: 'rgb(99 102 241)',
+		// 	cancelButtonColor: 'rgb(69 168 68)',
+		// 	confirmButtonText: 'Excelente!',
+		// 	cancelButtonText: 'Magnífico!',
+		// });
 	};
 
 	return (
@@ -595,6 +623,12 @@ const BuildPokemon = () => {
 					alt='settings'
 				/>
 			</div>
+			<TutorialModal
+				steps={tutorialSteps}
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				localStorageKey='build_tutorial'
+			/>
 		</div>
 	);
 };

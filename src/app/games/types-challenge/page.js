@@ -14,12 +14,32 @@ import {
 	saveToLocalStorage,
 } from '@/app/utils/services/localStorage.js';
 import Image from 'next/image';
+import TutorialModal from '@/app/Components/TutorialModal/TutorialModal';
 
 const zonesData = [
 	{ id: 'zone_1', title: 'Efectivo' },
 	{ id: 'zone_2', title: 'Neutral' },
 	{ id: 'zone_3', title: 'Poco efectivo' },
 	{ id: 'zone_4', title: 'Inmune' },
+];
+
+const tutorialSteps = [
+	{
+		image: '/assets/tutorial/types/tutorial_1.png',
+		text: 'Para empezar a jugar al Desafio de Tipos, clickeá en "Comenzar Partida".',
+	},
+	{
+		image: '/assets/tutorial/types/tutorial_2.png',
+		text: 'Se te asignará un tipo y tendrás que completar sus debilidades, quien le pega neutral, etc.',
+	},
+	{
+		image: '/assets/tutorial/types/tutorial_3.png',
+		text: 'Cuando termines de asignar todos, tocá el boton "Adivinar".',
+	},
+	{
+		image: '/assets/tutorial/types/tutorial_4.png',
+		text: 'Te aparecerá un cartel indicando como te fue. A ganar!',
+	},
 ];
 
 const TypesChallenge = () => {
@@ -54,6 +74,9 @@ const TypesChallenge = () => {
 		zone_3: undefined,
 		zone_4: undefined,
 	});
+
+	const tutorialModalOpened = getFromLocalStorage('types_tutorial') === 'true';
+	const [isModalOpen, setIsModalOpen] = useState(!tutorialModalOpened);
 
 	const [zones, setZones] = useState({
 		main: Object.values(pokemonTypesObject).map((tipo) => ({
@@ -274,25 +297,26 @@ const TypesChallenge = () => {
 
 	const openTypesChallengeTutorial = () => {
 		setShowSettings(false);
-		MySwal.fire({
-			width: '60vw',
-			title: '¿Cómo se juega?',
-			html: `Debes posicionar todos los tipos en su posición correcta.<br>
-			Por ejemplo, si me toca el tipo <span class='font-bold text-red-500'>Fuego</span> yo ya se que uno de los tipos que le pega efectivo es <span class='font-bold text-blue-500'>Agua</span>, y con esa premisa debo completar toda la tabla del tipo que me toque.<br>
-			Si presionas "Adivinar" te dirá si está bien o mal y te dejará ver el tablero. Si seleccionas esta última opción podrás reacomodar los tipos para ver en qué te equivocaste.<br>
-			Si presionas en alguna de las zonas, se enviarán todos los tipos que aún no estén asignados. En caso de no haber ninguno, se desasignarán todos los tipos de esa zona.
-			<br><br><br><br>
-			<span class='text-sm text-gray-400'>
-			Psst! No me acabas de dar una pista si me toca el tipo Fuego?
-			</span><br>
-			<span class='text-sm text-black'>
-			Si, pero si no sabías esa debilidad, capaz incluso necesites otra pista.
-			</span>
-			`,
-			showCancelButton: false,
-			confirmButtonColor: 'rgb(99 102 241)',
-			confirmButtonText: '¡Estoy listo!',
-		});
+		setIsModalOpen(true);
+		// MySwal.fire({
+		// 	width: '60vw',
+		// 	title: '¿Cómo se juega?',
+		// 	html: `Debes posicionar todos los tipos en su posición correcta.<br>
+		// 	Por ejemplo, si me toca el tipo <span class='font-bold text-red-500'>Fuego</span> yo ya se que uno de los tipos que le pega efectivo es <span class='font-bold text-blue-500'>Agua</span>, y con esa premisa debo completar toda la tabla del tipo que me toque.<br>
+		// 	Si presionas "Adivinar" te dirá si está bien o mal y te dejará ver el tablero. Si seleccionas esta última opción podrás reacomodar los tipos para ver en qué te equivocaste.<br>
+		// 	Si presionas en alguna de las zonas, se enviarán todos los tipos que aún no estén asignados. En caso de no haber ninguno, se desasignarán todos los tipos de esa zona.
+		// 	<br><br><br><br>
+		// 	<span class='text-sm text-gray-400'>
+		// 	Psst! No me acabas de dar una pista si me toca el tipo Fuego?
+		// 	</span><br>
+		// 	<span class='text-sm text-black'>
+		// 	Si, pero si no sabías esa debilidad, capaz incluso necesites otra pista.
+		// 	</span>
+		// 	`,
+		// 	showCancelButton: false,
+		// 	confirmButtonColor: 'rgb(99 102 241)',
+		// 	confirmButtonText: '¡Estoy listo!',
+		// });
 	};
 
 	return (
@@ -438,6 +462,14 @@ const TypesChallenge = () => {
 						alt='settings'
 					/>
 				</div>
+			</div>
+			<div className='sm:block hidden'>
+				<TutorialModal
+					steps={tutorialSteps}
+					isOpen={isModalOpen}
+					onClose={() => setIsModalOpen(false)}
+					localStorageKey='types_tutorial'
+				/>
 			</div>
 		</div>
 	);

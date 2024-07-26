@@ -13,6 +13,7 @@ import {
 	saveToLocalStorage,
 } from '../../utils/services/localStorage.js';
 import Image from 'next/image.js';
+import TutorialModal from '@/app/Components/TutorialModal/TutorialModal.js';
 
 const attributes = [
 	'Foto',
@@ -23,6 +24,21 @@ const attributes = [
 	'Fuerza',
 	'Peso (kg)',
 	'Altura (mts)',
+];
+
+const tutorialSteps = [
+	{
+		image: '/assets/tutorial/pokedle/tutorial_1.png',
+		text: 'Para empezar a jugar al Pokedle, elegí cualquier pokemon.',
+	},
+	{
+		image: '/assets/tutorial/pokedle/tutorial_2.png',
+		text: 'Con las pistas que consigas (como su fuerza, peso, etc) poco a poco te irás acercando al pokemon escondido.',
+	},
+	{
+		image: '/assets/tutorial/pokedle/tutorial_3.png',
+		text: 'Hasta que finalmente aciertes el Pokemon y ganes la partida!',
+	},
 ];
 
 const Pokedle = () => {
@@ -50,6 +66,10 @@ const Pokedle = () => {
 			});
 		}
 	}, []);
+
+	const tutorialModalOpened =
+		getFromLocalStorage('pokedle_tutorial') === 'true';
+	const [isModalOpen, setIsModalOpen] = useState(!tutorialModalOpened);
 
 	const [comparisons, setComparisons] = useState([]);
 	const [inputValue, setInputValue] = useState('');
@@ -267,17 +287,18 @@ const Pokedle = () => {
 
 	const openPokedleTutorial = () => {
 		setShowSettings(false);
-		MySwal.fire({
-			width: '50vw',
-			title: '¿Cómo se juega?',
-			html: `Debes adivinar el Pokemon escondido. Comienza eligiendo uno y continúa a partir de las pistas que éste te otorgue.<br>
-			Por ejemplo, si el pokemon que tocó es <span class='font-bold text-gray-500'>Magnemite</span>, y yo elegí a <span class='font-bold text-yellow-500'>Pikachu</span>, me dirá que coinciden en su primer tipo (<span class='font-bold text-yellow-500'>Eléctrico</span>), pero no coincidirán en el segundo, ya que <span class='font-bold text-yellow-500'>Pikachu</span> es monotipo y <span class='font-bold text-gray-500'>Magnemite</span> es tipo <span class='font-bold text-yellow-500'>Eléctrico</span>/<span class='font-bold text-gray-500'>Acero</span>. También me comparará el resto de los datos.<br><br>
-			<span class='font-bold text-green-500'>Dato</span>: En la generación, fuerza, peso y altura habrá una flecha hacia arriba/abajo que indica si el número del Pokemon objetivo es mayor o menor en caso de no coincidir.
-			.`,
-			showCancelButton: false,
-			confirmButtonColor: 'rgb(99 102 241)',
-			confirmButtonText: '¡Estoy listo!',
-		});
+		setIsModalOpen(true);
+		// MySwal.fire({
+		// 	width: '50vw',
+		// 	title: '¿Cómo se juega?',
+		// 	html: `Debes adivinar el Pokemon escondido. Comienza eligiendo uno y continúa a partir de las pistas que éste te otorgue.<br>
+		// 	Por ejemplo, si el pokemon que tocó es <span class='font-bold text-gray-500'>Magnemite</span>, y yo elegí a <span class='font-bold text-yellow-500'>Pikachu</span>, me dirá que coinciden en su primer tipo (<span class='font-bold text-yellow-500'>Eléctrico</span>), pero no coincidirán en el segundo, ya que <span class='font-bold text-yellow-500'>Pikachu</span> es monotipo y <span class='font-bold text-gray-500'>Magnemite</span> es tipo <span class='font-bold text-yellow-500'>Eléctrico</span>/<span class='font-bold text-gray-500'>Acero</span>. También me comparará el resto de los datos.<br><br>
+		// 	<span class='font-bold text-green-500'>Dato</span>: En la generación, fuerza, peso y altura habrá una flecha hacia arriba/abajo que indica si el número del Pokemon objetivo es mayor o menor en caso de no coincidir.
+		// 	.`,
+		// 	showCancelButton: false,
+		// 	confirmButtonColor: 'rgb(99 102 241)',
+		// 	confirmButtonText: '¡Estoy listo!',
+		// });
 	};
 
 	const updatePokedleResetNumber = () => {
@@ -467,6 +488,12 @@ const Pokedle = () => {
 					alt='settings'
 				/>
 			</div>
+			<TutorialModal
+				steps={tutorialSteps}
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				localStorageKey='pokedle_tutorial'
+			/>
 		</div>
 	);
 };
