@@ -24,8 +24,12 @@ import {
 	saveToSessionStorage,
 } from '@/app/utils/services/sessionStorage.js';
 import TutorialModal from '@/app/Components/TutorialModal/TutorialModal.js';
+import { useTranslation } from 'react-i18next';
+import '../../../../config/i18n';
 
 const PokeGym = () => {
+	const { t } = useTranslation();
+
 	const testing = false; //CAMBIAR CUANDO ESTOY TESTEANDO
 
 	if (getFromLocalStorage('gym_streak') === null) {
@@ -85,19 +89,19 @@ const PokeGym = () => {
 	const tutorialSteps = [
 		{
 			image: '/assets/tutorial/gym/tutorial_1.png',
-			text: 'Para empezar a jugar al Gimnasio Pokemon, lo primero es apretar el botón iniciar.',
+			text: t('gym.tutorial.1'),
 		},
 		{
 			image: '/assets/tutorial/gym/tutorial_2.png',
-			text: 'Luego, empezarás a elegir todos los Pokemon que quieras entre las 6 opciones.',
+			text: t('gym.tutorial.2'),
 		},
 		{
 			image: '/assets/tutorial/gym/tutorial_3.png',
-			text: 'Cuando lo decidas, si aun no completaste tu equipo, podrás rollear 3 veces más. Abajo a la izquierda podrás ver como viene tu equipo.',
+			text: t('gym.tutorial.3'),
 		},
 		{
 			image: '/assets/tutorial/gym/tutorial_4.png',
-			text: 'Y cuando completes tu equipo, a pelear!',
+			text: t('gym.tutorial.4'),
 		},
 	];
 
@@ -135,7 +139,7 @@ const PokeGym = () => {
 					}
 					break;
 				case 'r':
-					if (rollButtonText !== 'Iniciar Juego') {
+					if (rollButtonText !== t('gym.buttons.roll_button_start')) {
 						resetGame(true);
 					}
 					break;
@@ -143,9 +147,8 @@ const PokeGym = () => {
 					if (chosenTeam.length === 6) {
 						fightGymLeaders();
 					} else {
-						toast.error(
-							`Necesitas ${6 - chosenTeam.length} Pokemon más para poder pelear`
-						);
+						const quantity = 6 - chosenTeam.length;
+						toast.error(t('gym.messages.error', { quantity }));
 					}
 					break;
 
@@ -173,7 +176,7 @@ const PokeGym = () => {
 		const tempText = rollButtonText;
 
 		setTimeout(() => {
-			gymButton.textContent = 'Espera';
+			gymButton.textContent = t('gym.buttons.roll_button_wait');
 		}, 1);
 
 		setCurrentTeam([]);
@@ -245,24 +248,24 @@ const PokeGym = () => {
 
 	const handleButtonText = () => {
 		if (rerollsLeft === 4 || rerollsLeft === 100) {
-			setRollButtonText('Iniciar Juego');
+			setRollButtonText(t('gym.buttons.roll_button_start'));
 			setShouldDisable(false);
 			return;
 		}
 		if (rerollsLeft === 0) {
-			setRollButtonText('NO QUEDAN REROLLS');
+			setRollButtonText(t('gym.buttons.roll_button_empty'));
 			setShouldDisable(true);
 			return;
 		}
 		if (chosenTeam.length < 6) {
+			const quantity = 6 - chosenTeam.length;
+			const rerolls = rerollsLeft;
 			setRollButtonText(
-				`Generar ${6 - chosenTeam.length} pokemon (${rerollsLeft} ${
-					rerollsLeft !== 1 ? 'RE-ROLLS' : 'RE-ROLL'
-				})`
+				t('gym.buttons.roll_button_active', { quantity, rerolls })
 			);
 			setShouldDisable(false);
 		} else {
-			setRollButtonText('EQUIPO COMPLETO');
+			setRollButtonText(t('gym.buttons.roll_button_full_team'));
 			setShouldDisable(true);
 		}
 	};
@@ -276,7 +279,7 @@ const PokeGym = () => {
 		let power = 0;
 		let beatenGyms;
 		let excessPower;
-		let finalText = `Gimnasios vencidos: `;
+		let finalText = t('gym.messages.end_game_message.base_message');
 		chosenTeam.forEach((element) => {
 			power += element.power;
 		});
@@ -294,65 +297,70 @@ const PokeGym = () => {
 		if (power >= 3200) {
 			beatenGyms = 8;
 			excessPower = Math.round((power - 3200).toFixed(0) / 9.5);
-			finalText = `Felicitaciones! Conquistaste los <span style="color: green;">${beatenGyms}</span> gimnasios. Un maestro pokemon!\n- Te sobró un <span style="color: green;">${excessPower}%</span> de poder.`;
+			finalText = t('gym.messages.end_game_message.eight_medals', {
+				excessPower,
+			});
 		} else if (power >= 3000) {
 			beatenGyms = 6 + Math.floor((power - 3000) / 100);
 			excessPower = (power - 3000) % 100; // MOSTRAR EL PROGRESO
 			// excessPower = (power % 100 === 0) ? 0 : 100 - (power % 100); // MOSTRAR EL RESTANTE
-			finalText += `<span style="color: green;">${beatenGyms}</span>. Impresionante!`;
+			finalText += t('gym.messages.end_game_message.six_medals', {
+				beatenGyms,
+			});
 		} else {
 			beatenGyms = 1 + Math.floor((power - 2250) / 150);
 			if (beatenGyms <= 0) {
 				beatenGyms = 0;
 			}
-			finalText += `<span style="color: red;">${beatenGyms}.</span>`;
+			finalText += t('gym.messages.end_game_message.less_than_six', {
+				beatenGyms,
+			});
 			excessPower = (((power - 2250) % 150) / 150) * 100; // MOSTRAR PROGRESO
 			// excessPower = (((power-2250) % 150 === 0) ? 0 : 150 - ((power-2250) % 150))/150*100; // MOSTRAR RESTANTE
 
 			if (beatenGyms >= 4) {
-				finalText += ' Nada mal.';
+				finalText += t('gym.messages.end_game_message.five_medals');
 			} else {
-				finalText += ' Aun queda trabajo por hacer.';
+				finalText += t('gym.messages.end_game_message.less_than_four');
 			}
 			if (beatenGyms === 0) {
 				excessPower = ((2250 - power) / 2250) * 100;
-				finalText += `\nTe faltó un <span style="color: blue;">~${excessPower.toFixed(
-					0
-				)}%</span> de progreso para conseguir la primera medalla.`;
+				const remainingPower = excessPower.toFixed(0);
+				finalText += t('gym.messages.end_game_message.zero_medals', {
+					remainingPower,
+				});
 			}
 		}
 
+		const nextMedal = beatenGyms + 1;
+		const remainingPower = excessPower.toFixed(0);
+		const color = bonusLuck === 0 ? 'blue' : bonusLuck >= 0 ? 'green' : 'red';
+
 		finalText += `${
 			beatenGyms !== 8 && beatenGyms !== 0
-				? `\n- Progreso hacia la ${
-						beatenGyms + 1
-				  }° medalla: <span style="color: blue;">~${excessPower.toFixed(
-						0
-				  )}%</span>.`
+				? t('gym.messages.end_game_message.one_to_seven', {
+						nextMedal,
+						remainingPower,
+				  })
 				: ''
 		}
         ${
 					luckActive
-						? `- Bonus Suerte: <span style="color: ${
-								bonusLuck === 0 ? 'blue' : bonusLuck >= 0 ? 'green' : 'red'
-						  };">${bonusLuck}%</span>`
+						? t('gym.messages.end_game_message.luck', {
+								color,
+								bonusLuck,
+						  })
 						: ''
 				}`;
 
 		let response = await MySwal.fire({
 			title: `<span class='sm:text-lg text-sm'>${finalText}</span>`,
-			text: `Tu equipo fue: ${chosenTeam
-				.map(
-					(pokemon) =>
-						`${pokemon.name} ~${((pokemon.power / power) * 100).toFixed(0)}%`
-				)
-				.join(' | ')}`,
 			icon: 'success',
 			showCancelButton: true,
 			confirmButtonColor: '#007bff',
 			cancelButtonColor: '#787878',
-			confirmButtonText: 'Jugar otra vez',
-			cancelButtonText: 'Ver el tablero',
+			confirmButtonText: t('gym.buttons.end_game_confirm'),
+			cancelButtonText: t('gym.buttons.end_game_cancel'),
 			width: '70vw',
 		});
 		updateGymStats(hardmode, beatenGyms);
@@ -368,14 +376,14 @@ const PokeGym = () => {
 		let result = false;
 		if (shouldAsk && !testing && !gameEnded) {
 			result = await MySwal.fire({
-				title: 'Quieres reiniciar el juego?',
-				text: 'Esto borrará todos los pokemon elegidos y ofrecidos',
+				title: t('gym.messages.reset.title'),
+				text: t('gym.messages.reset.text'),
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: 'rgb(99 102 241)',
 				cancelButtonColor: 'rgb(239 68 68)',
-				cancelButtonText: 'Cancelar',
-				confirmButtonText: 'Reiniciar',
+				cancelButtonText: t('gym.buttons.cancel'),
+				confirmButtonText: t('gym.buttons.reset_confirm'),
 			});
 		}
 		if (result.isConfirmed) {
@@ -392,7 +400,7 @@ const PokeGym = () => {
 		setChosenTeam([]);
 		setCurrentTeam([]);
 		setRerollsLeft(testing ? 100 : 4);
-		setRollButtonText('Iniciar Juego');
+		setRollButtonText(t('gym.buttons.roll_button_start'));
 		setShouldDisable(false);
 	};
 
@@ -430,69 +438,92 @@ const PokeGym = () => {
 
 	const handleHardMode = async () => {
 		let result = await MySwal.fire({
-			title: 'Quieres cambiar la dificultad?',
-			text: 'En el modo difícil no se puede ver el poder de los Pokemon. Si comenzaste una partida, se reiniciará.',
+			title: t('gym.messages.difficulty.title'),
+			text: t('gym.messages.difficulty.text'),
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: 'rgb(99 102 241)',
 			cancelButtonColor: 'rgb(239 68 68)',
-			cancelButtonText: 'Cancelar',
+			cancelButtonText: t('gym.buttons.cancel'),
 			confirmButtonText: `${
-				hardmode ? 'Cambiar a normal' : 'Cambiar a difícil'
+				hardmode
+					? t('gym.buttons.difficulty_on')
+					: t('gym.buttons.difficulty_off')
 			}`,
 		});
 
 		if (result.isConfirmed) {
 			setHardmode((prev) => !prev);
 			startNewGame();
-			toast.warning(`Modo difícil ${!hardmode ? 'activado' : 'desactivado'}.`);
+
+			const isHardmode = hardmode
+				? t('common.deactivated')
+				: t('common.activated');
+
+			toast.warning(t('gym.messages.difficulty.confirmed', { isHardmode }));
 		}
 	};
 
 	const handleLuckActive = async () => {
+		const luck = luckActive ? t('common.deactivate') : t('common.activate');
+		const capitalLuck = luckActive
+			? t('common.Deactivate')
+			: t('common.Activate');
+		const newLuck = !luckActive
+			? t('common.activated')
+			: t('common.deactivated');
+
 		let result = await MySwal.fire({
-			title: `Quieres ${luckActive ? 'desactivar' : 'activar'} la suerte?`,
-			text: 'El factor suerte varía al azar entre -3% y +5%. Si comenzaste una partida, se reiniciará.',
+			title: t('gym.messages.luck.title', { luck }),
+			text: t('gym.messages.luck.text'),
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: 'rgb(99 102 241)',
 			cancelButtonColor: 'rgb(239 68 68)',
-			cancelButtonText: 'Cancelar',
-			confirmButtonText: `${luckActive ? 'Desactivar' : 'Activar'}`,
+			cancelButtonText: t('gym.buttons.cancel'),
+			confirmButtonText: t('gym.buttons.luck_confirm', { capitalLuck }),
 		});
 
 		if (result.isConfirmed) {
 			setLuckActive((prev) => !prev);
 			startNewGame();
-			toast.warning(`Suerte ${!luckActive ? 'activada' : 'desactivada'}.`);
+			toast.warning(t('gym.messages.luck.confirmed', { newLuck }));
 		}
 	};
 
 	const handleSynergiesActive = async () => {
 		if (!currentGenerations.every((element) => element === true)) {
-			toast.warning(`Habilita todas las generaciones para tener sinergias.`);
+			toast.warning(t('gym.messages.synergies.warning'));
 			return;
 		}
 
+		const synergies = synergiesActive
+			? t('common.deactivate')
+			: t('common.activate');
+		const capitalSynergies = synergiesActive
+			? t('common.Deactivate')
+			: t('common.Activate');
+		const newSynergies = !synergiesActive
+			? t('common.activated_plural')
+			: t('common.deactivated_plural');
+
 		let result = await MySwal.fire({
-			title: `Quieres ${
-				synergiesActive ? 'desactivar' : 'activar'
-			} las sinergias?`,
-			text: 'Se recomienda dejar las sinergias activadas, representan efectos beneficiosos para el jugador, sin ninguna contra. Si comenzaste una partida, se reiniciará.',
+			title: t('gym.messages.synergies.title', { synergies }),
+			text: t('gym.messages.synergies.text'),
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: 'rgb(99 102 241)',
 			cancelButtonColor: 'rgb(239 68 68)',
-			cancelButtonText: 'Cancelar',
-			confirmButtonText: `${synergiesActive ? 'Desactivar' : 'Activar'}`,
+			cancelButtonText: t('gym.buttons.cancel'),
+			confirmButtonText: t('gym.buttons.synergies_confirm', {
+				capitalSynergies,
+			}),
 		});
 
 		if (result.isConfirmed) {
 			setSynergiesActive((prev) => !prev);
 			startNewGame();
-			toast.warning(
-				`Sinergias ${!synergiesActive ? 'activadas' : 'desactivadas'}.`
-			);
+			toast.warning(t('gym.messages.synergies.confirmed', { newSynergies }));
 		}
 	};
 
@@ -522,32 +553,17 @@ const PokeGym = () => {
 	const openGymTutorial = () => {
 		setShowSettings(false);
 		setIsModalOpen(true);
-		// MySwal.fire({
-		// 	title: '¿Cómo se juega?',
-		// 	html: `Paso 1: Dale a Iniciar juego.<br>
-		// 	Paso 2: Se te ofrecerán 6 Pokemon, puedes elegir la cantidad que quieras.<br>
-		// 	Paso 3: Si aun no completaste el equipo de 6, tendrás hasta 3 rerolls.<br>
-		// 	Paso 4: Pelea y gana las 8 medallas!!<br><br>
-		// 	Tip: Puedes activar/desactivar el modo difícil y la suerte en las opciones.`,
-		// 	showCancelButton: false,
-		// 	confirmButtonColor: 'rgb(99 102 241)',
-		// 	confirmButtonText: '¡Estoy listo!',
-		// });
 	};
 
 	const openFAQ = () => {
 		setShowSettings(false);
 		MySwal.fire({
 			width: '60vw',
-			title: 'Preguntas Frecuentes',
-			html: `<span class='font-bold sm:text-2xl text-lg'>¿Como se juega?</span><br>En las opciones está el <a class='font-semibold underline text-blue-400' href="#" id="tutorialLink">tutorial</a>.<br><br>
-			<span class='font-bold sm:text-2xl text-lg'>¿Qué es el modo difícil?</span><br>En el modo difícil no se muestran las estrellas que indican el poder de un Pokemon. Se puede activar y desactivar en las opciones.<br><br>
-			<span class='font-bold sm:text-2xl text-lg'>¿Cómo funciona la suerte?</span><br>La suerte es un factor al azar que potencia o desmejora tu puntaje final. Varía desde un -3% a un +5%, por lo que en promedio, te beneficiará. Se puede activar y desactivar en las opciones.<br><br>
-			<span class='font-bold sm:text-2xl text-lg'>¿Cómo funcionan las sinergias?</span><br><br>Con algunas combinaciones de Pokemon, podes conseguir mas puntos que solamente con fuerza bruta. Para poder usarlas, las generaciones deben estar todas habilitadas. Para más información mirá la sección de <span class='font-bold'>Listado de Sinergias</span>
-			`,
+			title: t('gym.modals.faq.title'),
+			html: t('gym.modals.faq.text'),
 			showCancelButton: false,
 			confirmButtonColor: 'rgb(99 102 241)',
-			confirmButtonText: '¡Estoy listo!',
+			confirmButtonText: t('gym.modals.faq.button'),
 		});
 
 		setTimeout(() => {
@@ -565,81 +581,63 @@ const PokeGym = () => {
 		setShowSettings(false);
 		MySwal.fire({
 			width: '90vw',
-			title: 'Lista de Sinergias',
-			html: `<span class='font-bold sm:text-2xl text-lg text-green-400'>Bonus de mismo tipo</span>
-			<br> Se consigue cuando posees 3 pokemon que compartan 1 mismo tipo <br>
-
-			<span class='font-bold sm:text-2xl text-lg text-green-400'>Bonus de misma generación</span>
-			<br> Se consigue cuando posees 3 pokemon que pertenezcan a la misma generación <br>
-
-			<span class='font-bold sm:text-2xl text-lg text-blue-400'>Bonus equipo sin Legendarios</span>
-			<br> Se consigue cuando ningún pokemon en tu equipo es ni Legendario ni Singular <br>
-
-			<span class='font-bold sm:text-2xl text-lg text-blue-400'>Bonus 1-Shot</span>
-			<br> Se consigue solo cuando aún te quedan los 3 rerolls disponibles <br>
-
-			<span class='font-bold sm:text-2xl text-lg text-blue-400'>Bonus desesperación</span>
-			<br> Se consigue si al momento de utilizar el último reroll, aún te faltan 4 miembros del equipo <br>
-
-			<span class='font-bold sm:text-2xl text-lg text-purple-400'>Trinidad Elemental</span>
-			<br> Se consigue cuando posees los siguientes tipos en tu equipo: Fuego - Agua - Hoja. Tiene nivel 1, 2 y 3 <br>
-
-			<span class='font-bold sm:text-2xl text-lg text-purple-400'>Mentalidad Marcial</span>
-			<br> Se consigue cuando posees los siguientes tipos en tu equipo: Lucha - Psíquico - Siniestro. Tiene nivel 1, 2 y 3 <br>
-
-			<span class='font-bold sm:text-2xl text-lg text-purple-400'>Fortaleza Helada</span>
-			<br> Se consigue cuando posees los siguientes tipos en tu equipo: Tierra - Hielo - Acero. Tiene nivel 1, 2 y 3 <br>
-
-			<span class='font-bold sm:text-2xl text-lg text-red-400'>Perfección Elemental</span>
-			<br> Se consigue cuando posees 10 tipos distintos en tu equipo
-			
-			`,
+			title: t('gym.modals.synergies.title'),
+			html: t('gym.modals.synergies.text'),
 			showCancelButton: false,
 			confirmButtonColor: 'rgb(99 102 241)',
-			confirmButtonText: '¡Estoy listo!',
+			confirmButtonText: t('gym.modals.synergies.confirm_button'),
 		});
 	};
 
 	const openStats = () => {
 		const gymStats = getFromLocalStorage('gym_stats');
+		const easy_0 = gymStats.easymode_badges[0];
+		const easy_1 = gymStats.easymode_badges[1];
+		const easy_2 = gymStats.easymode_badges[2];
+		const easy_3 = gymStats.easymode_badges[3];
+		const easy_4 = gymStats.easymode_badges[4];
+		const easy_5 = gymStats.easymode_badges[5];
+		const easy_6 = gymStats.easymode_badges[6];
+		const easy_7 = gymStats.easymode_badges[7];
+		const easy_8 = gymStats.easymode_badges[8];
+		const hard_0 = gymStats.hardmode_badges[0];
+		const hard_1 = gymStats.hardmode_badges[1];
+		const hard_2 = gymStats.hardmode_badges[2];
+		const hard_3 = gymStats.hardmode_badges[3];
+		const hard_4 = gymStats.hardmode_badges[4];
+		const hard_5 = gymStats.hardmode_badges[5];
+		const hard_6 = gymStats.hardmode_badges[6];
+		const hard_7 = gymStats.hardmode_badges[7];
+		const hard_8 = gymStats.hardmode_badges[8];
+		const games_restarted = gymStats.games_restarted;
+
 		setShowSettings(false);
 		MySwal.fire({
-			title: 'Estadística de gimnasios derrotados',
-			html: `
-			<div class='flex w-full justify-evenly'>
-				<div>
-					<span class='font-bold'>Modo normal:</span>
-					<br><br>
-					0 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.easymode_badges[0]} </span><br>
-					1 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.easymode_badges[1]} </span><br>
-					2 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.easymode_badges[2]} </span><br>
-					3 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.easymode_badges[3]} </span><br>
-					4 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.easymode_badges[4]} </span><br>
-					5 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.easymode_badges[5]} </span><br>
-					6 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.easymode_badges[6]} </span><br>
-					7 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.easymode_badges[7]} </span><br>
-					8 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.easymode_badges[8]} </span><br>
-				</div>
-
-				<div>
-					<span class='font-bold'>Modo Difícil:</span>
-					<br><br>
-					0 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.hardmode_badges[0]} </span><br>
-					1 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.hardmode_badges[1]} </span><br>
-					2 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.hardmode_badges[2]} </span><br>
-					3 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.hardmode_badges[3]} </span><br>
-					4 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.hardmode_badges[4]} </span><br>
-					5 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.hardmode_badges[5]} </span><br>
-					6 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.hardmode_badges[6]} </span><br>
-					7 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.hardmode_badges[7]} </span><br>
-					8 Gimnasios: <span class='font-semibold text-blue-800'>${gymStats.hardmode_badges[8]} </span><br>
-				</div>
-			</div><br><br>
-			<span class='font-bold'>Partidas reiniciadas: ${gymStats.games_restarted} </span>
-			`,
+			title: '',
+			html: t('gym.modals.stats.text', {
+				easy_0,
+				easy_1,
+				easy_2,
+				easy_3,
+				easy_4,
+				easy_5,
+				easy_6,
+				easy_7,
+				easy_8,
+				hard_0,
+				hard_1,
+				hard_2,
+				hard_3,
+				hard_4,
+				hard_5,
+				hard_6,
+				hard_7,
+				hard_8,
+				games_restarted,
+			}),
 			showCancelButton: false,
 			confirmButtonColor: 'rgb(99 102 241)',
-			confirmButtonText: '¡A seguir ganando!',
+			confirmButtonText: t('gym.modals.stats.button'),
 		});
 	};
 
@@ -656,7 +654,7 @@ const PokeGym = () => {
 	return (
 		<div className='bg-gray-200 pt-6 px-1 h-screen w-full flex flex-col sm:justify-center justify-start items-center text-center text-black'>
 			<h2 className='sm:text-3xl text-lg sm:pt-10 pt-6 -mb-5 sm:mb-0 font-pokemon text-slate-700 text-center'>
-				Gimnasio Pokemon
+				{t('gym.html.title')}
 			</h2>
 			<div className='pt-7 sm:h-3/4 h-3/5 flex flex-wrap justify-center items-center w-full sm:gap-x-36'>
 				{isLoading ? (
@@ -720,7 +718,7 @@ const PokeGym = () => {
 					<button
 						id='fight-button'
 						className={`${
-							rollButtonText === 'Iniciar Juego'
+							rollButtonText === t('gym.buttons.roll_button_start')
 								? 'bg-green-400 enabled:hover:bg-green-500 enabled:active:bg-green-600'
 								: 'bg-indigo-500 enabled:hover:bg-indigo-400 enabled:active:bg-indigo-300'
 						}  text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg enabled:active:scale-95 disabled:opacity-30`}
@@ -736,15 +734,16 @@ const PokeGym = () => {
 						}  text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg  enabled:active:scale-95 disabled:opacity-30`}
 						disabled={chosenTeam.length !== 6 || gameEnded}
 						onClick={fightGymLeaders}>
-						PELEAR {chosenTeam.length !== 6 ? `(Necesitas 6 Pokemon)` : ''}
+						{t('gym.buttons.fight')}{' '}
+						{chosenTeam.length !== 6 ? t('gym.buttons.fight_incomplete') : ''}
 					</button>
 					<button
 						className={`bg-red-500 enabled:hover:bg-red-600 enabled:active:bg-red-700 text-white sm:my-6 p-3 sm:w-3/12 w-full sm:h-24 font-bold transition-all ease-in-out duration-150 sm:rounded-md enabled:hover:shadow-lg enabled:active:scale-95 disabled:opacity-30 ${
 							gameEnded && 'sm:animate-bounce'
 						}`}
-						disabled={rollButtonText === 'Iniciar Juego'}
+						disabled={rollButtonText === t('gym.buttons.roll_button_start')}
 						onClick={() => resetGame(true)}>
-						REINICIAR JUEGO
+						{t('gym.buttons.restart_game')}
 					</button>
 				</div>
 				<div
@@ -757,19 +756,19 @@ const PokeGym = () => {
 					<div
 						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700 sm:rounded-t-xl'
 						onClick={handleHardMode}>
-						Modo difícil: {hardmode ? 'ON' : 'OFF'}
+						{t('gym.settings.hardmode')}: {hardmode ? 'ON' : 'OFF'}
 					</div>
 
 					<div
 						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 						onClick={handleLuckActive}>
-						Suerte: {luckActive ? 'ON' : 'OFF'}
+						{t('gym.settings.luck')}: {luckActive ? 'ON' : 'OFF'}
 					</div>
 
 					<div
 						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 						onClick={handleSynergiesActive}>
-						Sinergias: {synergiesActive ? 'ON' : 'OFF'}
+						{t('gym.settings.synergies')}: {synergiesActive ? 'ON' : 'OFF'}
 					</div>
 
 					<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'>
@@ -782,27 +781,27 @@ const PokeGym = () => {
 					<div
 						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 						onClick={openGymTutorial}>
-						¿Cómo se juega?
+						{t('gym.settings.how_to_play')}
 					</div>
 					<div
 						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 						onClick={openFAQ}>
-						Preguntas Frecuentes
+						{t('gym.settings.faq')}
 					</div>
 					<div
 						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 						onClick={openSynergies}>
-						Listado de Sinergias
+						{t('gym.settings.synergies_list')}
 					</div>
 					<div
 						className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 						onClick={openStats}>
-						Estadísticas
+						{t('gym.settings.stats')}
 					</div>
 					<div
 						className='w-full bg-red-500 py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700 sm:rounded-b-xl'
 						onClick={() => setShowSettings(false)}>
-						Cerrar
+						{t('gym.settings.close')}
 					</div>
 				</div>
 

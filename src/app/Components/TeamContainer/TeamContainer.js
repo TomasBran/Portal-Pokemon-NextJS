@@ -1,9 +1,13 @@
+import { useTranslation } from 'react-i18next';
 import TooltipImage from '../TooltipImage/TooltipImage';
 
 const TeamContainer = ({ team }) => {
+	const { t } = useTranslation();
 	return (
 		<div className='flex justify-evenly bg-white w-full h-full sm:border-2 border-black sm:rounded-2xl sm:p-4 py-2 items-center'>
-			{team.length === 0 && <span className='text-2xl'>Equipo Vacio</span>}
+			{team.length === 0 && (
+				<span className='text-2xl'>{t('team_container_title.text')}</span>
+			)}
 			{team.map((pokemon, index) => {
 				return (
 					<div

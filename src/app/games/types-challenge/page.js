@@ -15,36 +15,40 @@ import {
 } from '@/app/utils/services/localStorage.js';
 import Image from 'next/image';
 import TutorialModal from '@/app/Components/TutorialModal/TutorialModal';
-
-const zonesData = [
-	{ id: 'zone_1', title: 'Efectivo' },
-	{ id: 'zone_2', title: 'Neutral' },
-	{ id: 'zone_3', title: 'Poco efectivo' },
-	{ id: 'zone_4', title: 'Inmune' },
-];
-
-const tutorialSteps = [
-	{
-		image: '/assets/tutorial/types/tutorial_1.png',
-		text: 'Para empezar a jugar al Desafio de Tipos, clickeá en "Comenzar Partida".',
-	},
-	{
-		image: '/assets/tutorial/types/tutorial_2.png',
-		text: 'Se te asignará un tipo y tendrás que completar sus debilidades, quien le pega neutral, etc.',
-	},
-	{
-		image: '/assets/tutorial/types/tutorial_3.png',
-		text: 'Cuando termines de asignar todos, tocá el boton "Adivinar".',
-	},
-	{
-		image: '/assets/tutorial/types/tutorial_4.png',
-		text: 'Te aparecerá un cartel indicando como te fue. A ganar!',
-	},
-];
+import { useTranslation } from 'react-i18next';
 
 const TypesChallenge = () => {
-	const testing = false; // PONER FALSE AL NO TESTEAR
+	const { t } = useTranslation();
+	// PONER FALSE AL NO TESTEAR
+	const testing = true; // PONER FALSE AL NO TESTEAR
 	if (testing) console.log('EL MODO TESTING ESTA ON');
+	// PONER FALSE AL NO TESTEAR
+
+	const zonesData = [
+		{ id: 'zone_1', title: t('types_challenge.zones_title.zone_1') },
+		{ id: 'zone_2', title: t('types_challenge.zones_title.zone_2') },
+		{ id: 'zone_3', title: t('types_challenge.zones_title.zone_3') },
+		{ id: 'zone_4', title: t('types_challenge.zones_title.zone_4') },
+	];
+
+	const tutorialSteps = [
+		{
+			image: '/assets/tutorial/types/tutorial_1.png',
+			text: t('types_challenge.tutorial.1'),
+		},
+		{
+			image: '/assets/tutorial/types/tutorial_2.png',
+			text: t('types_challenge.tutorial.2'),
+		},
+		{
+			image: '/assets/tutorial/types/tutorial_3.png',
+			text: t('types_challenge.tutorial.3'),
+		},
+		{
+			image: '/assets/tutorial/types/tutorial_4.png',
+			text: t('types_challenge.tutorial.4'),
+		},
+	];
 
 	const [streak, setStreak] = useState(0);
 
@@ -131,7 +135,7 @@ const TypesChallenge = () => {
 
 	const handleGuess = async () => {
 		if (zones.main.length !== 0) {
-			toast.error(`Aun hay tipos sin asignar.`);
+			toast.error(t('types_challenge.messages.unassigned'));
 			return;
 		}
 
@@ -140,15 +144,16 @@ const TypesChallenge = () => {
 		let response;
 
 		if (result) {
+			const currentStreak = streak + 1;
 			response = await MySwal.fire({
-				title: `Excelente!`,
-				text: `Hiciste todo correcto al 100%. Racha actual: ${streak + 1}`,
+				title: t('types_challenge.messages.win.title'),
+				text: t('types_challenge.messages.win.text', { currentStreak }),
 				icon: 'success',
 				showCancelButton: true,
 				confirmButtonColor: '#007bff',
 				cancelButtonColor: '#787878',
-				confirmButtonText: 'Jugar otra vez',
-				cancelButtonText: 'Ver el tablero',
+				confirmButtonText: t('types_challenge.buttons.play_again'),
+				cancelButtonText: t('types_challenge.buttons.see_board'),
 				width: '70vw',
 			});
 			setStreak((prev) => prev + 1);
@@ -156,14 +161,14 @@ const TypesChallenge = () => {
 			checkHighscore(streak + 1);
 		} else {
 			response = await MySwal.fire({
-				title: `Todavia te falta.`,
-				text: `Tuviste algunos errores. A practicar! Racha actual: 0`,
+				title: t('types_challenge.messages.lose.title'),
+				text: t('types_challenge.messages.lose.text'),
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#007bff',
 				cancelButtonColor: '#787878',
-				confirmButtonText: 'Jugar otra vez',
-				cancelButtonText: 'Ver el tablero',
+				confirmButtonText: t('types_challenge.buttons.play_again'),
+				cancelButtonText: t('types_challenge.buttons.see_board'),
 				width: '70vw',
 			});
 			setStreak(0);
@@ -298,25 +303,6 @@ const TypesChallenge = () => {
 	const openTypesChallengeTutorial = () => {
 		setShowSettings(false);
 		setIsModalOpen(true);
-		// MySwal.fire({
-		// 	width: '60vw',
-		// 	title: '¿Cómo se juega?',
-		// 	html: `Debes posicionar todos los tipos en su posición correcta.<br>
-		// 	Por ejemplo, si me toca el tipo <span class='font-bold text-red-500'>Fuego</span> yo ya se que uno de los tipos que le pega efectivo es <span class='font-bold text-blue-500'>Agua</span>, y con esa premisa debo completar toda la tabla del tipo que me toque.<br>
-		// 	Si presionas "Adivinar" te dirá si está bien o mal y te dejará ver el tablero. Si seleccionas esta última opción podrás reacomodar los tipos para ver en qué te equivocaste.<br>
-		// 	Si presionas en alguna de las zonas, se enviarán todos los tipos que aún no estén asignados. En caso de no haber ninguno, se desasignarán todos los tipos de esa zona.
-		// 	<br><br><br><br>
-		// 	<span class='text-sm text-gray-400'>
-		// 	Psst! No me acabas de dar una pista si me toca el tipo Fuego?
-		// 	</span><br>
-		// 	<span class='text-sm text-black'>
-		// 	Si, pero si no sabías esa debilidad, capaz incluso necesites otra pista.
-		// 	</span>
-		// 	`,
-		// 	showCancelButton: false,
-		// 	confirmButtonColor: 'rgb(99 102 241)',
-		// 	confirmButtonText: '¡Estoy listo!',
-		// });
 	};
 
 	return (
@@ -325,21 +311,20 @@ const TypesChallenge = () => {
 				gameStarted ? 'justify-start' : 'justify-between'
 			} sm:pt-16 sm:p-6 pt-20 px-1 pb-1 flex flex-col sm:gap-2 bg-gray-200 sm:h-screen min-h-screen text-black text-center`}>
 			{/* QUITAR CUANDO ACTUALICE EL DnD PARA TOUCH BACKEND */}
-			<div className='sm:hidden'>
-				{`De momento este juego no está disponible en dispositivos móbiles.
-					Disculpa el inconveniente 🥲`}
-			</div>
+			<div className='sm:hidden'>{t('types_challenge.html.unavailable')}</div>
 			{/* QUITAR CUANDO ACTUALICE EL DnD PARA TOUCH BACKEND */}
 			<h2
 				className={`sm:block hidden text-3xl font-pokemon text-slate-700 text-center`}>
-				Desafío de Tipos
+				{t('types_challenge.html.title')}
 			</h2>
 			<div className='w-full sm:my-4 h-2/6 sm:block hidden text-black text-center'>
 				<div className='h-1/6 flex justify-center gap-2 items-center mb-4'>
 					{gameStarted ? (
 						<div className='h-[6vh] w-full flex sm:flex-row flex-col justify-center items-center gap-2'>
 							<div className='sm:w-2/6 h-full flex sm:justify-end justify-center items-center gap-2'>
-								<h2 className='font-bold text-lg'>Tipo seleccionado:</h2>
+								<h2 className='font-bold text-lg'>
+									{t('types_challenge.html.selected')}:
+								</h2>
 
 								<div
 									className={`border-2 text-sm font-bold border-white p-2 m-2 sm:w-2/6 h-full flex justify-evenly items-center text-white  rounded-lg gap-1 ${originalType.toLowerCase()}`}>
@@ -356,7 +341,7 @@ const TypesChallenge = () => {
 									className='bg-green-500 disabled:opacity-50 h-full px-10 sm:px-6 py-2 sm:py-0 rounded-lg text-white font-bold enabled:cursor-pointer enabled:hover:bg-green-600 enabled:active:bg-green-700 enabled:active:scale-95 flex justify-center items-center'
 									disabled={gameEnded}
 									onClick={handleGuess}>
-									Adivinar
+									{t('types_challenge.buttons.guess')}
 								</button>
 
 								{gameEnded && (
@@ -365,7 +350,7 @@ const TypesChallenge = () => {
 											gameEnded && 'animate-bounce'
 										}`}
 										onClick={handleRestart}>
-										Reiniciar
+										{t('types_challenge.buttons.restart')}
 									</button>
 								)}
 							</div>
@@ -375,13 +360,17 @@ const TypesChallenge = () => {
 							<div
 								className='bg-slate-700 py-6 px-10 rounded-lg text-white font-bold cursor-pointer hover:bg-slate-600 active:bg-slate-500 active:scale-95 shadow-lg shadow-slate-700'
 								onClick={startNewGame}>
-								Comenzar partida
+								{t('types_challenge.buttons.start_game')}
 							</div>
 							<div className='text-xl '>
-								{`Racha actual: ${getFromLocalStorage('types_streak')}`}
+								{`${t(
+									'types_challenge.html.current_streak'
+								)}: ${getFromLocalStorage('types_streak')}`}
 							</div>
 							<div className='text-xl '>
-								{`Racha más larga: ${getFromLocalStorage('types_highscore')}`}
+								{`${t(
+									'types_challenge.html.longest_streak'
+								)}: ${getFromLocalStorage('types_highscore')}`}
 							</div>
 						</div>
 					)}
@@ -440,13 +429,13 @@ const TypesChallenge = () => {
 				<div
 					className='w-full py-2 rounded-t-xl hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700'
 					onClick={openTypesChallengeTutorial}>
-					¿Cómo se juega?
+					{t('types_challenge.settings.how_to_play')}
 				</div>
 
 				<div
 					className='w-full py-2 bg-red-500 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 sm:rounded-b-xl'
 					onClick={() => setShowSettings(false)}>
-					Cerrar
+					{t('types_challenge.settings.close')}
 				</div>
 			</div>
 			{/* QUITAR CUANDO ACTUALICE EL DnD PARA TOUCH BACKEND Y FUNCIONE EL JUEGO EN MOBILE*/}

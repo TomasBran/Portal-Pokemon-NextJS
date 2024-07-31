@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import '../Type/type.css';
+import { useTranslation } from 'react-i18next';
 
 function TooltipImage({ src, alt, tooltipText, imgClasses, type_1, type_2 }) {
+	const { t } = useTranslation();
 	const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 	const [isTooltipPinned, setIsTooltipPinned] = useState(false);
 
@@ -42,13 +44,13 @@ function TooltipImage({ src, alt, tooltipText, imgClasses, type_1, type_2 }) {
 				className={`absolute top-full flex gap-0.5 transition-opacity duration-300 ${
 					isTooltipVisible || isTooltipPinned ? 'opacity-100' : 'opacity-0'
 				} hidden sm:flex`}>
-				{type_1 !== 'Ninguno' && (
+				{type_1 !== t('common.no_type') && (
 					<div
 						className={`mb-2 w-max px-2 py-1 ${type_1.toLowerCase()} text-white text-xs rounded shadow-lg`}>
 						{type_1}
 					</div>
 				)}
-				{type_2 !== 'Ninguno' && (
+				{type_2 !== t('common.no_type') && (
 					<div
 						className={`mb-2 w-max px-2 py-1 ${type_2.toLowerCase()} text-white text-xs rounded shadow-lg`}>
 						{type_2}

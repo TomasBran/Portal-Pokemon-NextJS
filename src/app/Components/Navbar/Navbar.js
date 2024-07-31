@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
+import '../../../../config/i18n';
 
 const routes = [
 	{
@@ -10,42 +13,49 @@ const routes = [
 		text: 'Inicio',
 		isDisabled: false,
 		category: 'home',
+		code: 'home',
 	},
 	{
 		url: '/games/gym',
 		text: 'Gimnasio',
 		isDisabled: false,
 		category: 'games',
+		code: 'gym',
 	},
 	{
 		url: '/games/pokedle',
 		text: 'Pokedle',
 		isDisabled: false,
 		category: 'games',
+		code: 'pokedle',
 	},
 	{
 		url: '/games/moveset',
 		text: 'Move Set',
 		isDisabled: false,
 		category: 'games',
+		code: 'moveset',
 	},
 	{
 		url: '/games/types-challenge',
 		text: 'Desafío de Tipos',
 		isDisabled: false,
 		category: 'games',
+		code: 'types_challenge',
 	},
 	{
 		url: '/games/build-pokemon',
 		text: 'Construye un Pokemon',
 		isDisabled: false,
 		category: 'games',
+		code: 'build_pokemon',
 	},
 	{
 		url: '/tools/calculator',
 		text: 'Calculadora',
 		isDisabled: false,
 		category: 'tools',
+		code: 'calculator',
 	},
 ];
 
@@ -62,26 +72,31 @@ const gamesRoutes = [
 		url: '/games/gym',
 		text: 'Gimnasio',
 		isDisabled: false,
+		code: 'gym',
 	},
 	{
 		url: '/games/pokedle',
 		text: 'Pokedle',
 		isDisabled: false,
+		code: 'pokedle',
 	},
 	{
 		url: '/games/moveset',
 		text: 'Move Set',
 		isDisabled: false,
+		code: 'moveset',
 	},
 	{
 		url: '/games/types-challenge',
 		text: 'Desafío de Tipos',
 		isDisabled: false,
+		code: 'types_challenge',
 	},
 	{
 		url: '/games/build-pokemon',
 		text: 'Construye un Pokemon',
 		isDisabled: false,
+		code: 'build_pokemon',
 	},
 ];
 
@@ -90,10 +105,13 @@ const toolsRoutes = [
 		url: '/tools/calculator',
 		text: 'Calculadora',
 		isDisabled: false,
+		code: 'calculator',
 	},
 ];
 
 const Navbar = () => {
+	const { t } = useTranslation();
+
 	const [isOpen, setIsOpen] = useState(false);
 	const [isOpenGames, setIsOpenGames] = useState(false);
 	const [isOpenTools, setIsOpenTools] = useState(false);
@@ -143,7 +161,7 @@ const Navbar = () => {
 					href='/'
 					className='text-white font-bold text-xs h-full'
 					onClick={() => setIsOpen(false)}>
-					Portal Pokemon
+					{t('home.portal')}
 				</Link>
 				<button
 					className='block md:hidden text-white focus:outline-none'
@@ -185,7 +203,7 @@ const Navbar = () => {
 								href={route.url}
 								className='block py-3 px-4 text-white hover:bg-blue-400 text-sm'
 								onClick={toggleMenu}>
-								{route.text}
+								{t(`navbar.routes.${route.code}`)}
 							</Link>
 						</li>
 					))}
@@ -200,7 +218,7 @@ const Navbar = () => {
 						<Link
 							href={route.url}
 							className='font-pokemon text-sm font-medium px-4 text-white hover:bg-slate-600 w-full md:w-[15vw] h-full flex justify-center gap-2 items-center'>
-							{route.text}
+							{t('navbar.navbar.home')}
 						</Link>
 					</li>
 				))}
@@ -212,7 +230,7 @@ const Navbar = () => {
 						className={`font-pokemon text-sm font-medium px-4 text-white hover:bg-slate-600 w-full md:w-[15vw] h-full flex justify-center gap-1 items-center relative z-20 ${
 							isOpenGames ? 'bg-gray-900' : ' bg-gray-800'
 						}`}>
-						Juegos
+						{t('navbar.navbar.games')}
 						<div className='text-white text-xl'>
 							{isOpenGames ? <MdArrowDropUp /> : <MdArrowDropDown />}
 						</div>
@@ -232,7 +250,7 @@ const Navbar = () => {
 								<Link
 									href={route.url}
 									className='px-2 py-4 text-white hover:bg-gray-700 text- w-full md:max-w-[15vw] h-full flex justify-center items-center '>
-									{route.text}
+									{t(`navbar.routes.${route.code}`)}
 								</Link>
 							</li>
 						))}
@@ -246,7 +264,7 @@ const Navbar = () => {
 						className={`font-pokemon text-sm font-medium px-4 text-white hover:bg-slate-600 w-full md:w-[15vw] h-full flex justify-center gap-1 items-center relative z-20 ${
 							isOpenTools ? 'bg-slate-600' : 'bg-gray-800'
 						}`}>
-						Herramientas
+						{t('navbar.navbar.tools')}
 						<div className='text-white text-xl'>
 							{isOpenTools ? <MdArrowDropUp /> : <MdArrowDropDown />}
 						</div>
@@ -266,13 +284,14 @@ const Navbar = () => {
 								<Link
 									href={route.url}
 									className='px-2 py-4 text-white hover:bg-gray-700 text- w-full md:max-w-[15vw] h-full flex justify-center items-center text-xs text-center'>
-									{route.text}
+									{t(`navbar.routes.${route.code}`)}
 								</Link>
 							</li>
 						))}
 					</ul>
 				</div>
 			</ul>
+			<LanguageSwitcher />
 		</nav>
 	);
 };

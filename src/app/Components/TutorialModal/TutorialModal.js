@@ -4,15 +4,15 @@ import {
 } from '@/app/utils/services/localStorage';
 import Image from 'next/image';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const TutorialModal = ({ steps, isOpen, onClose, localStorageKey }) => {
+	const { t } = useTranslation();
 	const [currentStep, setCurrentStep] = useState(0);
 
 	const initialDontShow = getFromLocalStorage(localStorageKey) === 'true';
 
 	const [dontShowAgain, setDontShowAgain] = useState(initialDontShow);
-
-	console.log(dontShowAgain);
 
 	if (!isOpen) return null;
 
@@ -54,13 +54,13 @@ const TutorialModal = ({ steps, isOpen, onClose, localStorageKey }) => {
 							onClick={prevStep}
 							disabled={currentStep === 0}
 							className='px-8 py-2 bg-indigo-500 enabled:hover:bg-indigo-600 enabled:active:bg-indigo-700 enabled:active:scale-95 transition-all duration-150 text-white rounded-lg disabled:opacity-30'>
-							Anterior
+							{t('tutorial.buttons.previous')}
 						</button>
 						<button
 							onClick={nextStep}
 							disabled={currentStep === steps.length - 1}
 							className='px-8 py-2 bg-indigo-500 enabled:hover:bg-indigo-600 enabled:active:bg-indigo-700 enabled:active:scale-95 transition-all duration-150 text-white rounded-lg disabled:opacity-30'>
-							Siguiente
+							{t('tutorial.buttons.next')}
 						</button>
 					</div>
 					<div className='mt-6 flex flex-col gap-1'>
@@ -71,7 +71,7 @@ const TutorialModal = ({ steps, isOpen, onClose, localStorageKey }) => {
 								checked={dontShowAgain}
 								onChange={handleCheckboxChange}
 							/>
-							No volver a mostrar
+							{t('tutorial.buttons.dont_show')}
 						</label>
 						<button
 							onClick={() => {
@@ -79,7 +79,7 @@ const TutorialModal = ({ steps, isOpen, onClose, localStorageKey }) => {
 								setCurrentStep(0);
 							}}
 							className='text-red-500 border border-red-500 py-2 rounded-lg hover:bg-red-500 hover:text-white transition-all duration-150'>
-							Cerrar
+							{t('tutorial.buttons.close')}
 						</button>
 					</div>
 				</div>

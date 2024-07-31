@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 const Generations = ({ getGenerations, resetGame, padding = 4 }) => {
+	const { t } = useTranslation();
 	const MySwal = withReactContent(Swal);
 	const [showGenerationsContainer, setShowGenerationsContainer] =
 		useState(false);
@@ -28,7 +30,7 @@ const Generations = ({ getGenerations, resetGame, padding = 4 }) => {
 		).length;
 
 		if (trueCount === 1 && currentGenerations[index]) {
-			toast.error(`Se necesita por lo menos 1 generación disponible`);
+			toast.error(t('generations.messages.error'));
 			return;
 		}
 
@@ -49,13 +51,13 @@ const Generations = ({ getGenerations, resetGame, padding = 4 }) => {
 		}
 
 		let result = await MySwal.fire({
-			title: 'Quieres cambiar las generaciones disponibles?',
-			text: 'Si comenzaste una partida, se reiniciará.',
+			title: t('generations.messages.warn_title'),
+			text: t('generations.messages.warn_text'),
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: 'rgb(99 102 241)',
 			cancelButtonColor: 'rgb(239 68 68)',
-			confirmButtonText: 'Cambiar',
+			confirmButtonText: t('generations.buttons.confirm'),
 		});
 
 		if (result.isConfirmed) {
@@ -69,7 +71,7 @@ const Generations = ({ getGenerations, resetGame, padding = 4 }) => {
 			<div
 				className={`w-full p-${padding} cursor-pointer`}
 				onClick={toggleGenerationPanel}>
-				<button className='w-full'>Cambiar Generación</button>
+				<button className='w-full'>{t('generations.buttons.base_text')}</button>
 			</div>
 
 			<div
@@ -86,10 +88,7 @@ const Generations = ({ getGenerations, resetGame, padding = 4 }) => {
 									: 'bg-red-600 hover:bg-red-500 active:bg-red-400'
 							}`}
 							onClick={() => toggleGeneration(index)}>
-							<span>
-								{index + 1}° Gen
-								<span className='sm:inline hidden'>eración</span>
-							</span>
+							<span>Gen. {index + 1}</span>
 						</div>
 					))}
 				</div>
@@ -100,7 +99,7 @@ const Generations = ({ getGenerations, resetGame, padding = 4 }) => {
 						toggleGenerationPanel();
 						resetGame(false);
 					}}>
-					Guardar
+					{t('generations.buttons.save')}
 				</button>
 			</div>
 		</div>

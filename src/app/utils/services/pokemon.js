@@ -1,10 +1,16 @@
+'use client';
+
 import unknown_pokemon from '../../../../public/assets/unknown_pokemon.png';
 import { toast } from 'sonner';
 import { capitalizeFirstLetter } from '../functions.js';
+import i18next from 'i18next';
 
 const pokemonNumberLimits = [151, 251, 386, 493, 649, 721, 809, 898, 1025];
 
 async function pokemonExists(pokemonName) {
+	const doesntExist = i18next.t('pokemon_search.messages.doesnt_exist', {
+		pokemonName,
+	});
 	const response = await fetch(
 		'https://pokeapi.co/api/v2/pokemon?limit=1025&offset=0'
 	);
@@ -18,7 +24,7 @@ async function pokemonExists(pokemonName) {
 	) {
 		return true;
 	} else {
-		toast.error(`El pokemon "${pokemonName.toUpperCase()}" no existe`);
+		toast.error(doesntExist);
 		return false;
 	}
 }
@@ -38,11 +44,16 @@ function getPokemonsGeneration(pokemonId) {
 }
 
 async function getPokemon(pokemonName) {
+	const no_type = i18next.t('common.no_type');
+	const doesntExist = i18next.t('pokemon_search.messages.doesnt_exist', {
+		pokemonName,
+	});
+	const search_empty = i18next.t('pokemon_search.messages.empty');
 	let pokemon = {};
 	pokemonName += '';
 
 	if (pokemonName === '') {
-		toast.error(`El buscador está vacio.`);
+		toast.error(search_empty);
 		return;
 	}
 
@@ -80,7 +91,7 @@ async function getPokemon(pokemonName) {
 			pokemon.type_2 =
 				fetchedPokemon.types.length > 1
 					? capitalizeFirstLetter(fetchedPokemon.types[1].type.name)
-					: 'Ninguno';
+					: no_type;
 			pokemon.power = totalStats;
 			pokemon.weight = fetchedPokemon.weight / 10;
 			pokemon.height = fetchedPokemon.height / 10;
@@ -88,7 +99,7 @@ async function getPokemon(pokemonName) {
 			pokemon.hasBeenChosen = false;
 		})
 		.catch((err) => {
-			toast.error(`El pokemon "${pokemonName.toUpperCase()}" no existe`);
+			toast.error(doesntExist);
 		});
 
 	return pokemon;
