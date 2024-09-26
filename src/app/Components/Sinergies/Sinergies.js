@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import starIcon from '../../../../public/assets/star_svg.svg';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 function calculateTypePower(percentageType) {
 	return Math.exp(-percentageType);
@@ -28,14 +29,14 @@ function resetGenerationAmounts(synergiesObjectToReset) {
 	return generations;
 }
 
-function addTypes(team, synergyObject) {
+function addTypes(team, synergyObject, t) {
 	resetTypeAmounts(synergyObject.sameTypeAmount.types);
 
 	team.forEach((pokemon) => {
 		const type1 = pokemon.type_1.toLowerCase();
 		synergyObject.sameTypeAmount.types[type1].amount++;
 
-		if (pokemon.type_2 !== 'Ninguno') {
+		if (pokemon.type_2 !== t('common.no_type')) {
 			const type2 = pokemon.type_2.toLowerCase();
 			synergyObject.sameTypeAmount.types[type2].amount++;
 		}
@@ -170,12 +171,12 @@ function calculateLegendary(team, synergyObject) {
 	return synergyObject;
 }
 
-function calculateElementalPerfection(team, synergyObject) {
+function calculateElementalPerfection(team, synergyObject, t) {
 	const typesSet = new Set();
 
 	team.forEach((pokemon) => {
 		typesSet.add(pokemon.type_1.toLowerCase());
-		if (pokemon.type_2 !== 'Ninguno') {
+		if (pokemon.type_2 !== t('common.no_type')) {
 			typesSet.add(pokemon.type_2.toLowerCase());
 		}
 	});
@@ -237,6 +238,8 @@ const Synergies = ({
 	allGenerations,
 	onSynergiesCalculate,
 }) => {
+	const { t, i18n } = useTranslation();
+
 	const initialSynergiesObject = {
 		sameTypeAmount: {
 			types: {
@@ -259,7 +262,7 @@ const Synergies = ({
 				fairy: { name: 'fairy', amount: 0, percentageType: 4.25 },
 				ice: { name: 'ice', amount: 0, percentageType: 3.58 },
 			},
-			displayName: 'Bonus de mismo tipo',
+			displayName: t('synergies.list.same_type'),
 			active: false,
 			synergyPower: 1,
 		},
@@ -275,77 +278,77 @@ const Synergies = ({
 				8: 0,
 				9: 0,
 			},
-			displayName: 'Bonus de misma generación',
+			displayName: t('synergies.list.same_generation'),
 			active: false,
 			synergyPower: 1,
 		},
 
 		legendaryAmount: {
 			value: 0,
-			displayName: 'Bonus equipo sin Legendarios',
+			displayName: t('synergies.list.legendary'),
 			active: false,
 			synergyPower: 2,
 		},
 		rerollsLeft: {
 			value: 3,
-			displayName: 'Bonus 1-Shot',
+			displayName: t('synergies.list.rerolls_left'),
 			active: false,
 			synergyPower: 2,
 		},
 		lastRerollPokemonAmount: {
 			value: 4,
-			displayName: 'Bonus desesperación',
+			displayName: t('synergies.list.last_reroll'),
 			active: false,
 			synergyPower: 2,
 		},
 		elementalTrinity1: {
 			active: false,
-			displayName: 'Trinidad Elemental Nivel 1',
+			displayName: t('synergies.list.elemental_trinity_1'),
 			synergyPower: 1,
 		},
 		elementalTrinity2: {
 			active: false,
-			displayName: 'Trinidad Elemental Nivel 2',
+			displayName: t('synergies.list.elemental_trinity_2'),
 			synergyPower: 3,
 		},
 		elementalTrinity3: {
 			active: false,
-			displayName: 'Trinidad Elemental Nivel 3',
+			displayName: t('synergies.list.elemental_trinity_3'),
 			synergyPower: 4,
 		},
 		martialMindset1: {
 			active: false,
-			displayName: 'Mentalidad Marcial Nivel 1',
+			displayName: t('synergies.list.martial_mindset_1'),
 			synergyPower: 1,
 		},
 		martialMindset2: {
 			active: false,
-			displayName: 'Mentalidad Marcial Nivel 2',
+			displayName: t('synergies.list.martial_mindset_2'),
 			synergyPower: 3,
 		},
 		martialMindset3: {
 			active: false,
-			displayName: 'Mentalidad Marcial Nivel 3',
+			displayName: t('synergies.list.martial_mindset_3'),
 			synergyPower: 4,
 		},
 		frozenFortress1: {
 			active: false,
-			displayName: 'Fortaleza Helada Nivel 1',
+			displayName: t('synergies.list.frozen_fortress_1'),
 			synergyPower: 1,
 		},
 		frozenFortress2: {
 			active: false,
-			displayName: 'Fortaleza Helada Nivel 2',
+			displayName: t('synergies.list.frozen_fortress_2'),
 			synergyPower: 3,
 		},
 		frozenFortress3: {
 			active: false,
-			displayName: 'Fortaleza Helada Nivel 3',
+			displayName: t('synergies.list.frozen_fortress_3'),
 			synergyPower: 4,
 		},
 		elementalPerfection: {
 			active: false,
-			displayName: 'Perfección Elemental',
+			displayName: t('synergies.list.elemental_perfection'),
 			synergyPower: 5,
 		},
 	};
@@ -356,7 +359,7 @@ const Synergies = ({
 	const [synergyPower, setSynergyPower] = useState(0);
 
 	useEffect(() => {
-		setSynergyObject(addTypes(team, synergyObject));
+		setSynergyObject(addTypes(team, synergyObject, t));
 		setSynergyObject(addGenerations(team, synergyObject));
 		setSynergyObject(calculateElementalTrinity(synergyObject));
 		setSynergyObject(calculateMartialMindset(synergyObject));
@@ -364,11 +367,11 @@ const Synergies = ({
 		setSynergyObject(calculateSameTypeSynergy(synergyObject));
 		setSynergyObject(calculateSameGenerations(synergyObject, allGenerations));
 		setSynergyObject(calculateLegendary(team, synergyObject));
-		setSynergyObject(calculateElementalPerfection(team, synergyObject));
+		setSynergyObject(calculateElementalPerfection(team, synergyObject, t));
 		setSynergyObject(calculateRerollsLeft(rerollsLeft, synergyObject));
 
 		setSynergyPower(calculateSynergyPower(synergyObject));
-	}, [team]);
+	}, [team, i18n.language]);
 
 	useEffect(() => {
 		onSynergiesCalculate(synergyPower);
@@ -399,9 +402,7 @@ const Synergies = ({
 
 	return (
 		<div
-			className={` bg-slate-700 sm:bg-indigo-500 rounded-lg ${
-				showSynergies && 'sm:border-4 border-indigo-900 '
-			}`}
+			className={`bg-slate-700 active:scale-95 transition duration-150 rounded-lg `}
 			ref={synergiesRef}>
 			<div
 				className={`rounded-xl transition-all duration-150 overflow-hidden ${
@@ -413,7 +414,7 @@ const Synergies = ({
 							<div className='flex flex-col justify-between h-full'>
 								<div className='flex flex-col gap-1'>
 									<span className='text-white underline text-lg'>
-										Sinergias activas:
+										{t('synergies.text.title')}:
 									</span>
 									<ul className='list-disc list-inside px-2'>
 										{Object.values(synergyObject).map((item, index) => (
@@ -428,13 +429,13 @@ const Synergies = ({
 									</ul>
 								</div>
 								<span className='text-white font-semibold'>
-									Bonus total:{' '}
+									{t('synergies.text.total_bonus')}:{' '}
 									<span className='text-yellow-400'>+{synergyPower}</span>
 								</span>
 							</div>
 						) : (
 							<div className='text-white h-full px-8 flex justify-center items-center'>
-								Inicia una partida para ver las sinergias aqui
+								{t('synergies.text.pre_title')}
 							</div>
 						)}
 					</div>
@@ -445,7 +446,7 @@ const Synergies = ({
 					src={starIcon}
 					alt='synergies'
 					onClick={() => setShowSynergies((prev) => !prev)}
-					className={`bg-slate-700 active:bg-slate-600 w-10 p-2 cursor-pointer rounded-lg rounded-lg sm:bg-indigo-500 sm:hover:bg-indigo-400 active:scale-95 sm:active:hover:bg-indigo-300 transition-all ease-in-out duration-150`}
+					className={`bg-slate-700 hover:bg-slate-600 active:bg-slate-500 w-10 p-2 cursor-pointer rounded-lg transition-all ease-in-out duration-150`}
 				/>
 			</div>
 		</div>

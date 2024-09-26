@@ -1,0 +1,463 @@
+{
+	"common": {
+		"activate": "activar",
+		"deactivate": "desactivar",
+		"Activate": "Activar",
+		"Deactivate": "Desactivar",
+		"activated": "activada",
+		"deactivated": "desactivada",
+		"activated_plural": "activadas",
+		"deactivated_plural": "desactivadas",
+		"no_type": "Ninguno",
+		"close": "Cerrar"
+	},
+	"home": {
+		"portal": "Portal Pokemon",
+		"buttons": {
+			"gym": "Gimnasio",
+			"pokedle": "Pokedle",
+			"moveset": "Adivina el MoveSet",
+			"types_challenge": "Desafío de Tipos",
+			"build_pokemon": "Construye un Pokemon",
+			"calculator": "Calculadora"
+		},
+		"modals": {
+			"gym": {
+				"description": "En el gimnasio pokemon podrás mostrar tu valía, buscando el mejor equipo posible para intengar ganas las 8 medallas. Podrás lograrlo?",
+				"button": "JUGAR"
+			},
+			"pokedle": {
+				"description": "Una versión Pokemon del famoso juego Wordle. Serás capaz de encontrar el Pokemon escondido?",
+				"button": "JUGAR"
+			},
+			"moveset": {
+				"description": "Hay un Pokemon oculto, y las únicas pistas que tenemos son sus ataques, su habilidad y su generación. Podrás adivinar cuál es?",
+				"button": "JUGAR"
+			},
+			"types_challenge": {
+				"description": "Pon a prueba tu conocimiento sobre la tabla de tipos.",
+				"button": "JUGAR"
+			},
+			"build_pokemon": {
+				"description": "Con la velocidad de Regieleki, la defensa de Stakataka y el ataque de Rayquaza formarás el Pokemon más fuerte!",
+				"button": "JUGAR"
+			},
+			"calculator": {
+				"description": "Herramienta para buscar las fortalezas y debilidades de cualquier pokemon. También útil para aprenderse la tabla de tipos.",
+				"button": "USAR"
+			}
+		},
+		"type": {
+			"game": "Juego",
+			"tool": "Herramienta"
+		}
+	},
+	"navbar": {
+		"navbar": {
+			"home": "Inicio",
+			"games": "Juegos",
+			"tools": "Herramientas"
+		},
+		"routes": {
+			"home": "Inicio",
+			"gym": "Gimnasio",
+			"pokedle": "Pokedle",
+			"moveset": "Move Set",
+			"types_challenge": "Desafío de Tipos",
+			"build_pokemon": "Construye un Pokémon",
+			"calculator": "Calculadora"
+		}
+	},
+	"gym": {
+		"html": {
+			"title": "Gimnasio Pokemon"
+		},
+		"tutorial": {
+			"1": "Para empezar a jugar al Gimnasio Pokemon, lo primero es apretar el botón iniciar.",
+			"2": "Luego, empezarás a elegir todos los Pokemon que quieras entre las 6 opciones.",
+			"3": "Cuando lo decidas, si aun no completaste tu equipo, podrás rollear 3 veces más. Abajo a la izquierda podrás ver como viene tu equipo.",
+			"4": "Y cuando completes tu equipo, a pelear!"
+		},
+		"buttons": {
+			"roll_button": "Generar {{count}} pokemon (3 REROLL)",
+			"roll_button_active": "Generar {{quantity}} pokemon ({{rerolls}} REROLL)",
+			"roll_button_start": "Iniciar Juego",
+			"roll_button_wait": "Espera",
+			"roll_button_empty": "NO QUEDAN REROLLS",
+			"roll_button_full_team": "EQUIPO COMPLETO",
+			"end_game_confirm": "Jugar otra vez",
+			"end_game_cancel": "Ver el tablero",
+			"cancel": "Cancelar",
+			"reset_confirm": "Reiniciar",
+			"difficulty_on": "Cambiar a normal",
+			"difficulty_off": "Cambiar a difícil",
+			"luck_confirm": "Cambiar",
+			"synergies_confirm": "Cambiar",
+			"fight": "PELEAR",
+			"fight_incomplete": " (Necesitas 6 Pokemon)",
+			"restart_game": " REINICIAR JUEGO"
+		},
+		"messages": {
+			"error": "Necesitas {{quantity}} Pokemon más para poder pelear",
+			"reset": {
+				"title": "Quieres reiniciar el juego?",
+				"text": "Esto borrará todos los pokemon elegidos y ofrecidos"
+			},
+			"difficulty": {
+				"title": "Quieres cambiar la dificultad?",
+				"text": "En el modo difícil no se puede ver el poder de los Pokemon. Si comenzaste una partida, se reiniciará.",
+				"confirmed": "Modo difícil {{isHardmode}}."
+			},
+			"luck": {
+				"title": "Quieres {{luck}} la suerte?",
+				"text": "El factor suerte varía al azar entre -3% y +5%. Si comenzaste una partida, se reiniciará.",
+				"confirmed": "Suerte {{newLuck}}"
+			},
+			"synergies": {
+				"warning": "Habilita todas las generaciones para tener sinergias.",
+				"title": "Quieres {{synergies}} las sinergias?",
+				"text": "Se recomienda dejar las sinergias activadas, representan efectos beneficiosos para el jugador, sin ninguna contra. Si comenzaste una partida, se reiniciará.",
+				"confirmed": "Sinergias {{newSynergies}}"
+			},
+			"end_game_message": {
+				"base_message": "Gimnasios vencidos: ",
+				"eight_medals": "Felicitaciones! Conquistaste los <span style='color: green;'>8</span> gimnasios. Un maestro pokemon!\n- Te sobró un <span style='color: green;'>{{excessPower}}%</span> de poder.",
+				"six_medals": "<span style='color: green;'>{{beatenGyms}}</span>. Impresionante!",
+				"less_than_six": "<span style='color: red;'>{{beatenGyms}}.</span>",
+				"five_medals": " Nada mal.",
+				"less_than_four": " Aun queda trabajo por hacer.",
+				"zero_medals": "\nTe faltó un <span style='color: blue;'>~{{remainingPower}}%</span> de progreso para conseguir la primera medalla.",
+				"one_to_seven": "\n- Progreso hacia la {{nextMedal}}° medalla: <span style='color: blue;'>~{{remainingPower}}%</span>",
+				"luck": "- Bonus Suerte: <span style='color: {{color}}'>{{bonusLuck}}%</span>"
+			}
+		},
+		"modals": {
+			"synergies": {
+				"title": "Lista de Sinergias",
+				"text": "<span class='font-bold sm:text-2xl text-lg text-green-400'>Bonus de mismo tipo</span> <br> Se consigue cuando posees 3 pokemon que compartan 1 mismo tipo <br> <span class='font-bold sm:text-2xl text-lg text-green-400'>Bonus de misma generación</span> <br> Se consigue cuando posees 3 pokemon que pertenezcan a la misma generación <br> <span class='font-bold sm:text-2xl text-lg text-blue-400'>Bonus equipo sin Legendarios</span> <br> Se consigue cuando ningún pokemon en tu equipo es ni Legendario ni Singular <br> <span class='font-bold sm:text-2xl text-lg text-blue-400'>Bonus 1-Shot</span> <br> Se consigue solo cuando aún te quedan los 3 rerolls disponibles <br> <span class='font-bold sm:text-2xl text-lg text-blue-400'>Bonus desesperación</span> <br> Se consigue si al momento de utilizar el último reroll, aún te faltan 4 miembros del equipo <br> <span class='font-bold sm:text-2xl text-lg text-purple-400'>Trinidad Elemental</span> <br> Se consigue cuando posees los siguientes tipos en tu equipo: Fuego - Agua - Hoja. Tiene nivel 1, 2 y 3 <br> <span class='font-bold sm:text-2xl text-lg text-purple-400'>Mentalidad Marcial</span> <br> Se consigue cuando posees los siguientes tipos en tu equipo: Lucha - Psíquico - Siniestro. Tiene nivel 1, 2 y 3 <br> <span class='font-bold sm:text-2xl text-lg text-purple-400'>Fortaleza Helada</span> <br> Se consigue cuando posees los siguientes tipos en tu equipo: Tierra - Hielo - Acero. Tiene nivel 1, 2 y 3 <br> <span class='font-bold sm:text-2xl text-lg text-red-400'>Perfección Elemental</span> <br> Se consigue cuando posees 10 tipos distintos en tu equipo",
+				"confirm_button": "¡Estoy listo!"
+			},
+			"stats": {
+				"title": "Estadística de gimnasios derrotados",
+				"text": "<div class='flex w-full justify-evenly'> <div> <span class='font-bold'>Modo normal:</span> <br><br> 0 Gimnasios: <span class='font-semibold text-blue-800'>{{easy_0}} </span><br> 1 Gimnasios: <span class='font-semibold text-blue-800'>{{easy_1}} </span><br> 2 Gimnasios: <span class='font-semibold text-blue-800'>{{easy_2}} </span><br> 3 Gimnasios: <span class='font-semibold text-blue-800'>{{easy_3}} </span><br> 4 Gimnasios: <span class='font-semibold text-blue-800'>{{easy_4}} </span><br> 5 Gimnasios: <span class='font-semibold text-blue-800'>{{easy_5}} </span><br> 6 Gimnasios: <span class='font-semibold text-blue-800'>{{easy_6}} </span><br> 7 Gimnasios: <span class='font-semibold text-blue-800'>{{easy_7}} </span><br> 8 Gimnasios: <span class='font-semibold text-blue-800'>{{easy_8}} </span><br> </div> <div> <span class='font-bold'>Modo Difícil:</span> <br><br> 0 Gimnasios: <span class='font-semibold text-blue-800'>{{hard_0}} </span><br> 1 Gimnasios: <span class='font-semibold text-blue-800'>{{hard_1}} </span><br> 2 Gimnasios: <span class='font-semibold text-blue-800'>{{hard_2}} </span><br> 3 Gimnasios: <span class='font-semibold text-blue-800'>{{hard_3}} </span><br> 4 Gimnasios: <span class='font-semibold text-blue-800'>{{hard_4}} </span><br> 5 Gimnasios: <span class='font-semibold text-blue-800'>{{hard_5}} </span><br> 6 Gimnasios: <span class='font-semibold text-blue-800'>{{hard_6}} </span><br> 7 Gimnasios: <span class='font-semibold text-blue-800'>{{hard_7}} </span><br> 8 Gimnasios: <span class='font-semibold text-blue-800'>{{hard_8}} </span><br> </div> </div><br><br> <span class='font-bold'>Partidas reiniciadas: {{games_restarted}} </span>",
+				"button": "¡A seguir ganando!"
+			},
+			"faq": {
+				"title": "Preguntas Frecuentes",
+				"text": "<span class='font-bold sm:text-2xl text-lg'>¿Como se juega?</span><br>En las opciones está el <a class='font-semibold underline text-blue-400' href='#' id='tutorialLink'>tutorial<a><br><br><span class='font-bold sm:text-2xl text-lg'>¿Qué es el modo difícil?</span><br>En el modo difícil no se muestran las estrellas que indican el poder de un Pokemon. Se puede activar y desactivar en las opciones.<br><br><span class='font-bold sm:text-2xl text-lg'>¿Cómo funciona la suerte?</span><br>La suerte es un factor al azar que potencia o desmejora tu puntaje final. Varía desde un -3% a un +5%, por lo que en promedio, te beneficiará. Se puede activar y desactivar en las opciones.<br><br><span class='font-bold sm:text-2xl text-lg'>¿Cómo funcionan las sinergias?</span><br><br>Con algunas combinaciones de Pokemon, podes conseguir mas puntos que solamente con fuerza bruta. Para poder usarlas, las generaciones deben estar todas habilitadas. Para más información mirá la sección de <span class='font-bold'>Listado de Sinergias</span>",
+				"button": "¡Estoy listo!"
+			}
+		},
+		"settings": {
+			"hardmode": "Modo difícil",
+			"luck": "Suerte",
+			"synergies": "Sinergias",
+			"how_to_play": "¿Cómo se juega?",
+			"faq": "Preguntas Frecuentes",
+			"synergies_list": "Listado de Sinergias",
+			"stats": "Estadísticas",
+			"close": "Cerrar"
+		}
+	},
+	"generations": {
+		"messages": {
+			"error": "Se necesita por lo menos 1 generación disponible",
+			"warn_title": "Quieres cambiar las generaciones disponibles?",
+			"warn_text": "Si comenzaste una partida, se reiniciará."
+		},
+		"buttons": {
+			"confirm": "Cambiar",
+			"base_text": "Cambiar Generación",
+			"save": "Guardar"
+		}
+	},
+	"synergies": {
+		"list": {
+			"same_type": "Bonus de mismo tipo",
+			"same_generation": "Bonus de misma generación",
+			"legendary": "Bonus equipo sin Legendarios",
+			"rerolls_left": "Bonus 1-Shot",
+			"last_reroll": "Bonus desesperación",
+			"elemental_trinity_1": "Trinidad Elemental Nivel 1",
+			"elemental_trinity_2": "Trinidad Elemental Nivel 2",
+			"elemental_trinity_3": "Trinidad Elemental Nivel 3",
+			"martial_mindset_1": "Mentalidad Marcial Nivel 1",
+			"martial_mindset_2": "Mentalidad Marcial Nivel 2",
+			"martial_mindset_3": "Mentalidad Marcial Nivel 3",
+			"frozen_fortress_1": "Fortaleza Helada Nivel 1",
+			"frozen_fortress_2": "Fortaleza Helada Nivel 2",
+			"frozen_fortress_3": "Fortaleza Helada Nivel 3",
+			"elemental_perfection": "Perfección Elemental"
+		},
+		"text": {
+			"title": "Sinergias activas",
+			"pre_title": "Inicia una partida para ver las sinergias aqui",
+			"total_bonus": "Bonus total"
+		}
+	},
+	"tutorial": {
+		"buttons": {
+			"previous": "Anterior",
+			"next": "Siguiente",
+			"dont_show": "No volver a mostrar",
+			"close": "Cerrar"
+		}
+	},
+	"team_container_title": {
+		"text": "Equipo Vacio"
+	},
+	"pokedle": {
+		"tutorial": {
+			"1": "Para empezar a jugar al Pokedle, elegí cualquier pokemon.",
+			"2": "Con las pistas que consigas (como su fuerza, peso, etc) poco a poco te irás acercando al pokemon escondido.",
+			"3": "Hasta que finalmente aciertes el Pokemon y ganes la partida!"
+		},
+		"attributes": {
+			"image": "Foto",
+			"name": "Nombre",
+			"generation": "Generación",
+			"type_1": "Tipo 1",
+			"type_2": "Tipo 2",
+			"power": "Fuerza",
+			"weight": "Peso (kg)",
+			"height": "Altura (mts)"
+		},
+		"messages": {
+			"win": {
+				"title": "Felicitaciones! El Pokemon era <span class='text-green-500 font-bold'>{{pokemon}}</span>.",
+				"text": {
+					"one_try": "Adivinaste a la primera. Wow.",
+					"more_tries": "Adivinaste en {{tries}} intentos."
+				}
+			},
+			"restart": {
+				"title": "Seguro que quieres reiniciar la partida?",
+				"text": "Esto borrará tu progreso e iniciará una nueva partida"
+			},
+			"lose": {
+				"title": "La partida ha finalizado.",
+				"text": "No has adivinado. El Pokémon era <span class='text-red-500 font-bold'>{{pokemon}}</span>"
+			}
+		},
+		"buttons": {
+			"play_again": "Jugar otra vez",
+			"see_board": "Ver el tablero",
+			"confirm": "Confirmar",
+			"cancel": "Cancelar",
+			"keep_winning": "¡A seguir ganando!",
+			"guess": "ADIVINAR",
+			"restart": "REINICIAR"
+		},
+		"modals": {
+			"stats": {
+				"title": "Estadísticas de Pokedle",
+				"text": "1 Intento: <span class='font-semibold text-blue-800'>{{guesses_1}} </span><br>2 Intentos: <span class='font-semibold text-blue-800'>{{guesses_2}} </span><br>3 Intentos: <span class='font-semibold text-blue-800'>{{guesses_3}} </span><br>4 Intentos: <span class='font-semibold text-blue-800'>{{guesses_4}} </span><br>5 Intentos: <span class='font-semibold text-blue-800'>{{guesses_5}} </span><br>6 Intentos: <span class='font-semibold text-blue-800'>{{guesses_6}} </span><br>7 Intentos: <span class='font-semibold text-blue-800'>{{guesses_7}} </span><br>8 Intentos: <span class='font-semibold text-blue-800'>{{guesses_8}} </span><br>9 Intentos: <span class='font-semibold text-blue-800'>{{guesses_9}} </span><br>10+ Intentos: <span class='font-semibold text-blue-800'>{{guesses_10}} </span><br> <br><br> <span class='font-bold'>Partidas reiniciadas: {{restarts}} </span><br>"
+			}
+		},
+		"text": {
+			"choose_pokemon": "Elige un Pokemon"
+		},
+		"settings": {
+			"how_to_play": "¿Cómo se juega?",
+			"stats": "Estadísticas",
+			"close": "Cerrar"
+		}
+	},
+	"pokemon_search": {
+		"messages": {
+			"empty": "El buscador está vacío.",
+			"doesnt_exist": "El Pokemon '{{pokemonName}}' no existe"
+		},
+		"placeholder": "Ej: Pikachu",
+		"buttons": {
+			"search": "Buscar"
+		}
+	},
+	"moveset": {
+		"tutorial": {
+			"1": "Para empezar a jugar a Adivina el Moveset, elegí cualquier pokemon viendo la primera pista.",
+			"2": "Por cada intento fallido, te daran una nueva pista, hasta tener los 4 movimientos y la habilidad.",
+			"3": "Hasta que finalmente aciertes el Pokemon y ganes la partida!"
+		},
+		"messages": {
+			"restart": {
+				"title": "Quieres reiniciar el juego?",
+				"text": "Esto borrará la lista de pokemon y elegirá uno nuevo.",
+				"confirmed": {
+					"title": "Estuviste cerca! El Pokemon era <span class='text-red-400'>{{pokemon}}</span>.",
+					"text": "La próxima seguro lo adivinas!"
+				}
+			},
+			"win": {
+				"title": "Felicitaciones! El Pokemon era {{pokemon}}.",
+				"text": {
+					"one_try": "Adivinaste con 1 solo movimiento? Quizá pueda aprender una cosa o dos al verte.",
+					"more_tries": "Adivinaste en {{tries}} intentos."
+				}
+			}
+		},
+		"buttons": {
+			"restart": "Reiniciar",
+			"cancel": "Cancelar",
+			"confirm": "Confirmar",
+			"play_again": "Jugar otra vez",
+			"see_board": "Ver el tablero",
+			"keep_winning": "¡A seguir ganando!",
+			"guess": "ADIVINAR"
+		},
+		"html": {
+			"title": "Adivina el Moveset",
+			"tries": "Intentos",
+			"generation": "Generación",
+			"movement": "Movimiento",
+			"ability": "Habilidad"
+		},
+		"settings": {
+			"how_to_play": "¿Cómo se juega?",
+			"stats": "Estadísticas",
+			"close": "Cerrar"
+		},
+		"modals": {
+			"stats": {
+				"title": "Estadísticas de Move Set",
+				"text": "1 Intento: <span class='font-semibold text-blue-800'>{{guesses_1}} </span><br>2 Intentos: <span class='font-semibold text-blue-800'>{{guesses_2}} </span><br>3 Intentos: <span class='font-semibold text-blue-800'>{{guesses_3}} </span><br>4 Intentos: <span class='font-semibold text-blue-800'>{{guesses_4}} </span><br>5 Intentos: <span class='font-semibold text-blue-800'>{{guesses_5}} </span><br>6 Intentos: <span class='font-semibold text-blue-800'>{{guesses_6}} </span><br>7 Intentos: <span class='font-semibold text-blue-800'>{{guesses_7}} </span><br>8 Intentos: <span class='font-semibold text-blue-800'>{{guesses_8}} </span><br>9 Intentos: <span class='font-semibold text-blue-800'>{{guesses_9}} </span><br>10+ Intentos: <span class='font-semibold text-blue-800'>{{guesses_10}} </span><br> <br><br> <span class='font-bold'>Partidas reiniciadas: {{restarts}} </span><br>"
+			}
+		}
+	},
+	"types_challenge": {
+		"zones_title": {
+			"zone_1": "Efectivo",
+			"zone_2": "Neutral",
+			"zone_3": "Poco efectivo",
+			"zone_4": "Inmune"
+		},
+		"tutorial": {
+			"1": "Para empezar a jugar al Desafio de Tipos, clickeá en 'Comenzar Partida'.",
+			"2": "Se te asignará un tipo y tendrás que completar sus debilidades, quien le pega neutral, etc.",
+			"3": "Cuando termines de asignar todos, tocá el boton 'Adivinar'.",
+			"4": "Te aparecerá un cartel indicando como te fue. A ganar!"
+		},
+		"messages": {
+			"unassigned": "Aun hay tipos sin asignar.",
+			"win": {
+				"title": "Excelente",
+				"text": "Hiciste todo correcto al 100%. Racha actual: {{currentStreak}}"
+			},
+			"lose": {
+				"title": "Todavia te falta.",
+				"text": "Tuviste algunos errores. A practicar! Racha actual: 0"
+			}
+		},
+		"buttons": {
+			"play_again": "Jugar otra vez",
+			"see_board": "Ver el tablero",
+			"guess": "Adivinar",
+			"restart": "Reiniciar",
+			"start_game": "Comenzar Partida"
+		},
+		"html": {
+			"unavailable": "De momento este juego no está disponible en dispositivos móbiles. Disculpa el inconveniente 🥲",
+			"title": "Desafío de Tipos",
+			"selected": "Tipo seleccionado",
+			"current_streak": "Racha actual",
+			"longest_streak": "Racha más larga"
+		},
+		"settings": {
+			"how_to_play": "¿Cómo se juega?",
+			"close": "Cerrar"
+		}
+	},
+	"build_pokemon": {
+		"tutorial": {
+			"1": "Para empezar a jugar a Construye un Pokemon, clickeá en 'Comenzar Partida'.",
+			"2": "Se te darán diferentes pokemon, los debés asignar a la mejor estadística posible, o saltearlos (hasta 3 veces).",
+			"3": "Cuando termines de asignar todas las estadísticas, tocá el boton 'Calcular Fuerza'.",
+			"4": "Te aparecerá un cartel indicando tu puntaje. A ganar!"
+		},
+		"stats": {
+			"hp": "Vida",
+			"atk": "Ataque",
+			"def": "Defensa",
+			"spa": "Ataque Especial",
+			"spd": "Defensa Especial",
+			"spe": "Velocidad"
+		},
+		"messages": {
+			"wait": "Por favor espera un segundo.",
+			"error": "No se puede asignar un nuevo Pokémon a '{{statLabel}}' porque ya tiene uno.",
+			"total_power": "PODER TOTAL:"
+		},
+		"modals": {
+			"game_end": {
+				"title": "Estadísticas de los Pokémon asignados",
+				"record": "NUEVO RECORD"
+			},
+			"no_score": "No hay puntajes registrados aún. Juega alguna partida primero!",
+			"best_scores": "Mejores puntajes"
+		},
+		"buttons": {
+			"play_again": "Jugar otra vez",
+			"see_board": "Ver el tablero",
+			"close": "Cerrar",
+			"skip": "SALTAR POKEMON ({{rerolls}} REROLLS)",
+			"result": "VER RESULTADO",
+			"calculate": "CALCULAR FUERZA",
+			"restart": "REINICIAR",
+			"assign": "Asignar a",
+			"start_game": "Comenzar Partida"
+		},
+		"html": {
+			"title": "Construye un Pokemon"
+		},
+		"settings": {
+			"how_to_play": "¿Cómo se juega?",
+			"show_companion": {
+				"text": "Mostrar compañero ayudante:",
+				"yes": "SI",
+				"no": "NO"
+			},
+			"size": "Tamaño",
+			"disabled": "Compañero deshabilitado",
+			"stats": "Estadísticas",
+			"close": "Cerrar"
+		}
+	},
+	"calculator": {
+		"messages": {
+			"2_types": "Ya estás utilizando 2 tipos. Elimina uno primero"
+		},
+		"modals": {
+			"tutorial": {
+				"title": "¿Cómo funciona la Calculadora Pokemon?",
+				"text": "Debes elegir uno o dos tipos para que te muestre sus puntos débiles, inmunidades, o fortalezas frente a otros ataques.<br>Existe la opción de dejar que se elija al azar, o buscar al Pokemon en cuestión en la Pokedex en caso de que no sepas sus tipos!<br><br>Formas Gimmick: Son las formas especiales de los Pokemon (por ej. Mega evoluciones). Se puede elegir verlas o no en la Pokedex."
+			}
+		},
+		"buttons": {
+			"confirm_1": "Excelente!",
+			"confirm_2": "Magnífico!",
+			"random_1": "1 Random",
+			"random_2": "2 Random"
+		},
+		"html": {
+			"title": "Calculadora",
+			"selected": "Seleccionados",
+			"select_types": "Selecciona un tipo, o random",
+			"effectiveness": {
+				"effective": "Efectivo",
+				"neutral": "Neutral",
+				"ineffective": "Poco efectivo",
+				"immune": "Inmune"
+			}
+		},
+		"settings": {
+			"how_to_use": "¿Cómo funciona?",
+			"show_names": "Mostrar nombres",
+			"show_icons": "Mostrar iconos",
+			"gimmick_forms": "Formas Gimmick en Pokedex: {{value}}",
+			"yes": "SI",
+			"no": "NO",
+			"volume": "Volumen",
+			"close": "Cerrar"
+		}
+	}
+}

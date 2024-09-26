@@ -22,8 +22,11 @@ import {
 	saveToLocalStorage,
 } from '@/app/utils/services/localStorage';
 import Image from 'next/image';
+import TutorialModal from '@/app/Components/TutorialModal/TutorialModal';
+import { useTranslation } from 'react-i18next';
 
 const MoveSet = () => {
+	const { t } = useTranslation();
 	// ***IMPORTANTE*** DESHABILITAR CUANDO NO ESTE TESTEANDO //
 	const testing = false; // PONER FALSE AL NO TESTEAR
 	if (testing) console.log('EL MODO TESTING ESTA ON');
@@ -48,6 +51,25 @@ const MoveSet = () => {
 	const [showSettings, setShowSettings] = useState(false);
 	const settingsRef = useRef(null);
 	const [guessButtonDisabled, setGuessButtonDisabled] = useState(false);
+
+	const tutorialModalOpened =
+		getFromLocalStorage('moveset_tutorial') === 'true';
+	const [isModalOpen, setIsModalOpen] = useState(!tutorialModalOpened);
+
+	const tutorialSteps = [
+		{
+			image: '/assets/tutorial/moveset/tutorial_1.png',
+			text: t('moveset.tutorial.1'),
+		},
+		{
+			image: '/assets/tutorial/moveset/tutorial_2.png',
+			text: t('moveset.tutorial.2'),
+		},
+		{
+			image: '/assets/tutorial/moveset/tutorial_3.png',
+			text: t('moveset.tutorial.3'),
+		},
+	];
 
 	useEffect(() => {
 		if (getFromLocalStorage('moveset_streak') === null) {
@@ -93,25 +115,25 @@ const MoveSet = () => {
 		let result = false;
 		if (shouldAsk) {
 			result = await MySwal.fire({
-				title: '¿Querés reiniciar el juego?',
-				text: 'Esto borrará la lista de pokemon, y elegirá uno nuevo.',
+				title: t('moveset.messages.restart.title'),
+				text: t('moveset.messages.restart.text'),
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
 				cancelButtonColor: '#d33',
-				confirmButtonText: 'Reiniciar',
+				cancelButtonText: t('moveset.buttons.cancel'),
+				confirmButtonText: t('moveset.buttons.confirm'),
 			});
 			if (result.isConfirmed) {
 				updateMovesetResetNumber();
+				const pokemon = capitalizeFirstLetter(originalPokemonMovements[5]);
 				await MySwal.fire({
-					title: `Estuviste cerca! El Pokemon era <span class='text-red-400'>${capitalizeFirstLetter(
-						originalPokemonMovements[5]
-					)}</span>.`,
-					text: 'La próxima seguro lo adivinas!',
+					title: t('moveset.messages.restart.confirmed.title', { pokemon }),
+					text: t('moveset.messages.restart.confirmed.text'),
 					icon: 'error',
 					showCancelButton: false,
 					confirmButtonColor: '#3085d6',
-					confirmButtonText: ':(',
+					confirmButtonText: t('moveset.buttons.play_again'),
 				});
 			} else {
 				return;
@@ -138,7 +160,7 @@ const MoveSet = () => {
 
 	const guess = async (pokemon) => {
 		if (pokemon === '') {
-			toast.error(`El buscador está vacío.`);
+			toast.error(t('pokemon_search.messages.empty'));
 			return;
 		}
 
@@ -148,19 +170,20 @@ const MoveSet = () => {
 		}
 		setGuessedPokemons((prev) => [...prev, pokemon]);
 		if (pokemon.toLowerCase() === originalPokemonMovements[5]) {
+			const tries = guessedPokemons.length + 1;
 			await MySwal.fire({
-				title: `Felicitaciones! El Pokemon era ${pokemon}.`,
+				title: t('moveset.messages.win.title', { pokemon }),
 				text: `${
-					guessedPokemons.length !== 0
-						? `Adivinaste en ${guessedPokemons.length + 1} intentos`
-						: 'Adivinaste con 1 solo movimiento? Quizá pueda aprender una cosa o dos al verte.'
+					guessedPokemons.length === 0
+						? t('moveset.messages.win.text.one_try')
+						: t('moveset.messages.win.text.more_tries', { tries })
 				}`,
 				icon: 'success',
 				showCancelButton: true,
 				confirmButtonColor: '#007bff',
 				cancelButtonColor: '#787878',
-				confirmButtonText: 'Jugar otra vez',
-				cancelButtonText: 'Ver el tablero',
+				confirmButtonText: t('moveset.buttons.play_again'),
+				cancelButtonText: t('moveset.buttons.see_board'),
 			}).then((response) => {
 				updateMovesetStats(guessedPokemons.length + 1);
 				if (response.isConfirmed) {
@@ -205,15 +228,7 @@ const MoveSet = () => {
 
 	const openMovesetTutorial = () => {
 		setShowSettings(false);
-		MySwal.fire({
-			title: '¿Cómo se juega?',
-			html: `Debes adivinar el Pokemon escondido. Comienza eligiendo uno y continúa a partir de las pistas que éste te otorgue.<br>
-			Las pistas serán 5, y se te otorgará una por cada intento. Las primeras 4 serán movimientos que el Pokemon oculto sea capaz de aprender por nivel, y la última pista será una de las habilidades que este Pokemon pueda tener (incluso habilidades ocultas).<br><br>
-			<span class='font-bold text-green-500'>Dato</span>: Puedes cambiar las generaciones a las que gustes, para que el pokemon a adivinar pertenezca a esas generaciones.`,
-			showCancelButton: false,
-			confirmButtonColor: 'rgb(99 102 241)',
-			confirmButtonText: '¡Estoy listo!',
-		});
+		setIsModalOpen(true);
 	};
 
 	const updateMovesetResetNumber = () => {
@@ -265,32 +280,43 @@ const MoveSet = () => {
 		const movesetStats = getFromLocalStorage('moveset_stats');
 		setShowSettings(false);
 
+		const guesses_1 = movesetStats.guesses[1];
+		const guesses_2 = movesetStats.guesses[2];
+		const guesses_3 = movesetStats.guesses[3];
+		const guesses_4 = movesetStats.guesses[4];
+		const guesses_5 = movesetStats.guesses[5];
+		const guesses_6 = movesetStats.guesses[6];
+		const guesses_7 = movesetStats.guesses[7];
+		const guesses_8 = movesetStats.guesses[8];
+		const guesses_9 = movesetStats.guesses[9];
+		const guesses_10 = movesetStats.guesses[10];
+		const restarts = movesetStats.games_restarted;
+
 		MySwal.fire({
-			title: 'Estadísticas de Move Set',
-			html: `
-					1 Intento: <span class='font-semibold text-blue-800'>${movesetStats.guesses[1]} </span><br>
-					2 Intentos: <span class='font-semibold text-blue-800'>${movesetStats.guesses[2]} </span><br>
-					3 Intentos: <span class='font-semibold text-blue-800'>${movesetStats.guesses[3]} </span><br>
-					4 Intentos: <span class='font-semibold text-blue-800'>${movesetStats.guesses[4]} </span><br>
-					5 Intentos: <span class='font-semibold text-blue-800'>${movesetStats.guesses[5]} </span><br>
-					6 Intentos: <span class='font-semibold text-blue-800'>${movesetStats.guesses[6]} </span><br>
-					7 Intentos: <span class='font-semibold text-blue-800'>${movesetStats.guesses[7]} </span><br>
-					8 Intentos: <span class='font-semibold text-blue-800'>${movesetStats.guesses[8]} </span><br>
-					9 Intentos: <span class='font-semibold text-blue-800'>${movesetStats.guesses[9]} </span><br>
-					10+ Intentos: <span class='font-semibold text-blue-800'>${movesetStats.guesses[10]} </span><br>
-			<br><br>
-			<span class='font-bold'>Partidas reiniciadas: ${movesetStats.games_restarted} </span><br>
-			`,
+			title: t('moveset.modals.stats.title'),
+			html: t('moveset.modals.stats.text', {
+				guesses_1,
+				guesses_2,
+				guesses_3,
+				guesses_4,
+				guesses_5,
+				guesses_6,
+				guesses_7,
+				guesses_8,
+				guesses_9,
+				guesses_10,
+				restarts,
+			}),
 			showCancelButton: false,
 			confirmButtonColor: 'rgb(99 102 241)',
-			confirmButtonText: '¡A seguir ganando!',
+			confirmButtonText: t('moveset.buttons.keep_winning'),
 		});
 	};
 
 	return (
-		<div className='sm:h-screen min-h-screen pt-14 p-1 sm:pt-0 bg-indigo-100 w-full flex flex-col sm:items-center sm:justify-center text-center text-black'>
-			<h2 className='sm:text-3xl text-lg sm:pt-20 sm:mb-0 font-pokemon text-indigo-600 text-center'>
-				Adivina el MoveSet
+		<div className='sm:h-screen min-h-screen pt-14 p-1 sm:pt-0 bg-gray-200 w-full flex flex-col sm:items-center sm:justify-center text-center text-black'>
+			<h2 className='sm:text-3xl text-lg sm:pt-20 sm:mb-0 font-pokemon text-slate-700 text-center'>
+				{t('moveset.html.title')}
 			</h2>
 			<div className='w-full sm:h-9/12 h-full flex sm:flex-row flex-col justify-center gap-4 items-center'>
 				<div className='sm:w-3/12 h-full flex flex-col justify-center items-center gap-4'>
@@ -311,21 +337,23 @@ const MoveSet = () => {
 						<button
 							disabled={guessButtonDisabled}
 							onClick={() => guess(inputValue)}
-							className='rounded-lg disabled:opacity-40 bg-indigo-500 font-bold enabled:hover:bg-indigo-400 enabled:active:bg-indigo-300 enabled:cursor-pointer py-4 px-4 flex items-center justify-center'>
-							ADIVINAR
+							className='rounded-lg disabled:opacity-40 bg-green-500 font-bold enabled:hover:bg-green-400 enabled:active:bg-green-300 enabled:cursor-pointer py-4 px-4 flex items-center justify-center'>
+							{t('moveset.buttons.guess')}
 						</button>
 						<button
-							className='bg-indigo-500 hover:bg-indigo-400 active:bg-indigo-300 cursor-pointer py-4 px-4 rounded-lg flex items-center justify-center font-bold'
+							className={`bg-red-500 hover:bg-red-400 active:bg-red-300 cursor-pointer py-4 px-4 rounded-lg flex items-center justify-center font-bold ${
+								guessButtonDisabled && 'animate-bounce'
+							}`}
 							onClick={() => resetGame(true)}>
-							REINICIAR
+							{t('moveset.buttons.restart').toUpperCase()}
 						</button>
 					</div>
 				</div>
 
-				<div className='flex flex-col sm:flex-row flex-col-reverse sm:w-3/6 w-full sm:gap-16 gap-4'>
+				<div className='flex sm:flex-row flex-col-reverse sm:w-3/6 w-full sm:gap-16 gap-4'>
 					<div className='sm:w-3/6 w-full sm:pb-0 pb-2 sm:h-[50vh] sm:max-h-[50vh] max-h-60 bg-white text-white sm:rounded-2xl border-2 border-gray-900 flex flex-col items-center overflow-y-auto'>
 						<div className='text-gray-800 font-bold border-b-2 border-black sm:w-1/6 h-2/12 sm:fixed bg-white flex justify-center pt-2 items-center'>
-							Intentos ({guessedPokemons.length}):
+							{t('moveset.html.tries')} ({guessedPokemons.length}):
 						</div>
 						<div className='flex flex-col-reverse items-center gap-1 sm:mt-10 mt-2'>
 							{guessedPokemons.map((pokemon, index) => (
@@ -344,18 +372,19 @@ const MoveSet = () => {
 					</div>
 
 					<div className='sm:w-3/6 w-full h-full flex flex-col flex-wrap items-center justify-center sm:gap-10 gap-4'>
-						<div className='bg-stone-500 rounded px-10 py-3 text-white font-medium'>
-							Generación: {getPokemonsGeneration(originalPokemonMovements[6])}{' '}
+						<div className='bg-slate-700 rounded px-10 py-3 text-white font-medium'>
+							{t('moveset.html.generation')}:{' '}
+							{getPokemonsGeneration(originalPokemonMovements[6])}{' '}
 						</div>
 						<div className='flex flex-wrap w-full justify-center items-center sm:gap-3 gap-1 text-sm sm:text-base'>
 							{originalPokemonMovements.slice(0, 4).map((movement, index) => (
 								<div
 									key={index}
 									className={`p-4 rounded-xl capitalize text-white font-medium flex justify-center items-center sm:h-3/6 h-24 w-5/12 ${
-										movesShown >= index ? 'bg-blue-500' : 'bg-red-500'
+										movesShown >= index ? 'bg-blue-400' : 'bg-slate-800'
 									}`}>
 									<span>
-										{`Movimiento ${index + 1}:`}
+										{`${t('moveset.html.movement')} ${index + 1}:`}
 										<br />
 										{movesShown >= index ? movement : '???'}
 									</span>
@@ -364,8 +393,8 @@ const MoveSet = () => {
 						</div>
 						<div
 							className={`p-4 rounded-xl capitalize text-white font-medium flex justify-center items-center w-full ${
-								movesShown >= 4 ? 'bg-blue-500' : 'bg-red-500'
-							}`}>{`Habilidad: ${
+								movesShown >= 4 ? 'bg-blue-500' : 'bg-slate-800'
+							}`}>{`${t('moveset.html.ability')}: ${
 							movesShown >= 4 ? originalPokemonMovements[4] : '???'
 						}`}</div>
 					</div>
@@ -378,8 +407,8 @@ const MoveSet = () => {
 					showSettings
 						? 'scale-100 translate-y-0 translate-x-0'
 						: 'scale-0 translate-y-full translate-x-40'
-				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-4 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-xl text-white font-medium`}>
-				<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-t-xl'>
+				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-4 bg-slate-700 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-2xl text-white font-medium`}>
+				<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 sm:rounded-t-xl'>
 					<Generations
 						getGenerations={getGenerations}
 						resetGame={resetGame}
@@ -388,26 +417,26 @@ const MoveSet = () => {
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700'
 					onClick={openMovesetTutorial}>
-					¿Cómo se juega?
+					{t('moveset.settings.how_to_play')}
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700'
 					onClick={openStats}>
-					Estadísticas
+					{t('moveset.settings.stats')}
 				</div>
 
 				<div
-					className='w-full py-2 bg-orange-400 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-b-xl'
+					className='w-full py-2 bg-red-500 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 sm:rounded-b-xl'
 					onClick={() => setShowSettings(false)}>
-					Cerrar
+					{t('moveset.settings.close')}
 				</div>
 			</div>
 
 			<div
-				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer sm:bg-indigo-500 bg-gray-700 rounded-lg p-2 sm:hover:bg-indigo-400 active:scale-95 active:hover:bg-gray-500 sm:active:hover:bg-indigo-300 transition-all ease-in-out duration-150 transform
+				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer bg-slate-700 rounded-lg p-2 hover:bg-slate-600 active:scale-95  active:hover:bg-slate-500 transition-all ease-in-out duration-150 transform
 					${!showSettings ? 'scale-100' : 'scale-0'}`}
 				onClick={handleShowSettings}>
 				<Image
@@ -415,6 +444,12 @@ const MoveSet = () => {
 					alt='settings'
 				/>
 			</div>
+			<TutorialModal
+				steps={tutorialSteps}
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				localStorageKey='moveset_tutorial'
+			/>
 		</div>
 	);
 };

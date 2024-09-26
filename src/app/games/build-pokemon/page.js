@@ -14,51 +14,64 @@ import {
 import Image from 'next/image';
 import '@/app/Components/Type/type.css';
 import Companion from '@/app/Components/BuildPokemon/Companion';
+import TutorialModal from '@/app/Components/TutorialModal/TutorialModal';
+import { useTranslation } from 'react-i18next';
 
 const BuildPokemon = () => {
+	const { t } = useTranslation();
 	const MySwal = withReactContent(Swal);
 	const [gameStarted, setGameStarted] = useState(false);
 	const [gameEnded, setGameEnded] = useState(false);
 	const [score, setScore] = useState(undefined);
-	// const [currentGenerations, setCurrentGenerations] = useState([
-	// 	true,
-	// 	true,
-	// 	true,
-	// 	true,
-	// 	true,
-	// 	true,
-	// 	true,
-	// 	true,
-	// ]);
+
+	const tutorialSteps = [
+		{
+			image: '/assets/tutorial/build/tutorial_1.png',
+			text: t('build_pokemon.tutorial.1'),
+		},
+		{
+			image: '/assets/tutorial/build/tutorial_2.png',
+			text: t('build_pokemon.tutorial.2'),
+		},
+		{
+			image: '/assets/tutorial/build/tutorial_3.png',
+			text: t('build_pokemon.tutorial.3'),
+		},
+		{
+			image: '/assets/tutorial/build/tutorial_4.png',
+			text: t('build_pokemon.tutorial.4'),
+		},
+	];
+
 	const [stats, setStats] = useState([
 		{
 			statName: 'hp',
-			statLabel: 'Vida',
+			statLabel: t('build_pokemon.stats.hp'),
 			pokemonAssigned: {},
 		},
 		{
 			statName: 'attack',
-			statLabel: 'Ataque',
+			statLabel: t('build_pokemon.stats.atk'),
 			pokemonAssigned: {},
 		},
 		{
 			statName: 'defense',
-			statLabel: 'Defensa',
+			statLabel: t('build_pokemon.stats.def'),
 			pokemonAssigned: {},
 		},
 		{
 			statName: 'special-attack',
-			statLabel: 'Ataque Especial',
+			statLabel: t('build_pokemon.stats.spa'),
 			pokemonAssigned: {},
 		},
 		{
 			statName: 'special-defense',
-			statLabel: 'Defensa Especial',
+			statLabel: t('build_pokemon.stats.spd'),
 			pokemonAssigned: {},
 		},
 		{
 			statName: 'speed',
-			statLabel: 'Velocidad',
+			statLabel: t('build_pokemon.stats.spe'),
 			pokemonAssigned: {},
 		},
 	]);
@@ -69,6 +82,10 @@ const BuildPokemon = () => {
 	const [loading, setLoading] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
 	const [showCompanion, setShowCompanion] = useState(true);
+	const [companionSize, setCompanionSize] = useState(0.5);
+
+	const tutorialModalOpened = getFromLocalStorage('build_tutorial') === 'true';
+	const [isModalOpen, setIsModalOpen] = useState(!tutorialModalOpened);
 
 	const registerHighScore = (newScore) => {
 		const highScores = getFromLocalStorage('buildpokemon_highscores') || [];
@@ -102,32 +119,32 @@ const BuildPokemon = () => {
 		setStats([
 			{
 				statName: 'hp',
-				statLabel: 'Vida',
+				statLabel: t('build_pokemon.stats.hp'),
 				pokemonAssigned: {},
 			},
 			{
 				statName: 'attack',
-				statLabel: 'Ataque',
+				statLabel: t('build_pokemon.stats.atk'),
 				pokemonAssigned: {},
 			},
 			{
 				statName: 'defense',
-				statLabel: 'Defensa',
+				statLabel: t('build_pokemon.stats.def'),
 				pokemonAssigned: {},
 			},
 			{
 				statName: 'special-attack',
-				statLabel: 'Ataque Especial',
+				statLabel: t('build_pokemon.stats.spa'),
 				pokemonAssigned: {},
 			},
 			{
 				statName: 'special-defense',
-				statLabel: 'Defensa Especial',
+				statLabel: t('build_pokemon.stats.spd'),
 				pokemonAssigned: {},
 			},
 			{
 				statName: 'speed',
-				statLabel: 'Velocidad',
+				statLabel: t('build_pokemon.stats.spe'),
 				pokemonAssigned: {},
 			},
 		]);
@@ -143,16 +160,14 @@ const BuildPokemon = () => {
 
 	const assignPokemon = (statLabel, pokemon, statName) => {
 		if (loading) {
-			toast.warning('Por favor espera un segundo.');
+			toast.warning(t('build_pokemon.messages.wait'));
 			return;
 		}
 
 		const updatedStats = stats.map((stat) => {
 			if (stat.statLabel === statLabel) {
 				if (Object.keys(stat.pokemonAssigned).length !== 0) {
-					toast.warning(
-						`No se puede asignar un nuevo Pokémon a ${statLabel} porque ya tiene uno.`
-					);
+					toast.warning(t('build_pokemon.messages.error', { statLabel }));
 					return stat;
 				} else {
 					getNewpokemon();
@@ -270,14 +285,18 @@ const BuildPokemon = () => {
 			})
 			.join('\n');
 
-		const messageWithTotal = `${message}\n\nPODER TOTAL: ${totalPower}`;
+		const messageWithTotal = `${message}\n\n${t(
+			'build_pokemon.messages.total_power'
+		)} ${totalPower}`;
 
 		let result = await MySwal.fire({
-			title: 'Estadísticas de los Pokémon asignados',
+			title: t('build_pokemon.modals.game_end.title'),
 			html: `<pre>${messageWithTotal}
 			${
 				isNewHighscore
-					? `<br><span class='text-green-500 font-bold'>NUEVO RECORD</span>`
+					? `<br><span class='text-green-500 font-bold'>${t(
+							'build_pokemon.modals.game_end.record'
+					  )}</span>`
 					: ''
 			}
 			</pre>`,
@@ -285,8 +304,8 @@ const BuildPokemon = () => {
 			showCancelButton: true,
 			confirmButtonColor: '#007bff',
 			cancelButtonColor: '#787878',
-			confirmButtonText: 'Jugar otra vez',
-			cancelButtonText: 'Ver el tablero',
+			confirmButtonText: t('build_pokemon.buttons.play_again'),
+			cancelButtonText: t('build_pokemon.buttons.see_board'),
 		});
 
 		if (result.isConfirmed) {
@@ -313,15 +332,35 @@ const BuildPokemon = () => {
 				}'>${score}</span></div>`;
 			});
 		} else {
-			message =
-				'No hay puntajes registrados aún. Juega alguna partida primero!';
+			message = t('build_pokemon.modals.no_score');
 		}
 
 		MySwal.fire({
-			title: 'Mejores puntajes',
+			title: t('build_pokemon.modals.best_scores'),
 			html: `<div class='flex flex-col gap-4'>${message}</div>`,
-			confirmButtonText: 'Cerrar',
+			confirmButtonText: t('build_pokemon.buttons.close'),
 		});
+	};
+
+	const handleCompanionSize = (event) => {
+		setCompanionSize(parseFloat(event.target.value));
+	};
+
+	const handleCompanionClassname = () => {
+		switch (companionSize) {
+			case 0:
+				return 'sm:w-16 w-[18vw]';
+			case 0.25:
+				return 'sm:w-20 w-[20vw]';
+			case 0.5:
+				return 'sm:w-24 w-[22vw]';
+			case 0.75:
+				return 'sm:w-28 w-[24vw]';
+			case 1:
+				return 'sm:w-32 w-[26vw]';
+			default:
+				return 'sm:w-20 w-[20vw]';
+		}
 	};
 
 	const handleShowSettings = () => {
@@ -333,25 +372,13 @@ const BuildPokemon = () => {
 	};
 
 	const openBuildPokemonTutorial = () => {
-		MySwal.fire({
-			title: `¿Cómo se juega a <span class='text-blue-600'>Construye Un Pokemon</span>?`,
-			html: `Al comenzar una partida te mostrará un Pokemon, el cual debes asignar a una estadística que elijas, en la que creas que este Pokemon es bueno. Por ejemplo, si te toca <span class='font-semibold text-purple-500'>Mewtwo</span>, lo mejor sería enviarlo a Ataque Especial (Si aun esta disponible).<br>
-			Una vez que una estadística sea ocupada, no podrá volver a ser elegida, así que elige con cautela!<br>
-			Al final, podrás ver el poder total del Pokemon que construiste. Si tiene 600 o más, es de poder <span class='font-semibold text-red-500'>Legendario</span>!!<br><br>
-
-			PD: Si tienes el compañero activado, préstale atención a sus reacciones. Podrían darte una pista de que tan buena fue tu jugada.`,
-			showCancelButton: true,
-			confirmButtonColor: 'rgb(99 102 241)',
-			cancelButtonColor: 'rgb(69 168 68)',
-			confirmButtonText: 'Excelente!',
-			cancelButtonText: 'Magnífico!',
-		});
+		setIsModalOpen(true);
 	};
 
 	return (
-		<div className='sm:h-screen min-h-screen bg-indigo-100 pt-14 px-1 text-black text-center'>
-			<h2 className='sm:text-3xl text-sm sm:pt-4 sm:mb-0 font-pokemon text-indigo-600 text-center'>
-				Construye un Pokemon
+		<div className='sm:h-screen min-h-screen bg-gray-200 pt-14 px-1 text-black text-center'>
+			<h2 className='sm:text-3xl text-sm sm:pt-4 sm:mb-0 font-pokemon text-slate-700 text-center'>
+				{t('build_pokemon.html.title')}
 			</h2>
 			{gameStarted ? (
 				<div className='flex flex-col sm:flex-row justify-evenly items-center h-5/6 '>
@@ -381,7 +408,8 @@ const BuildPokemon = () => {
 									<div className='flex justify-evenly'>
 										<div
 											className={`${offeredPokemon.type_1.toLowerCase()} h-14 sm:rounded-xl sm:px-4 sm:py-1 sm:border-4 border-y-4 border-l-4  border-black/20 ${
-												offeredPokemon.type_2 === 'Ninguno' && 'border-r-4'
+												offeredPokemon.type_2 === t('common.no_type') &&
+												'border-r-4'
 											} `}>
 											<Image
 												className='h-full w-auto'
@@ -389,7 +417,7 @@ const BuildPokemon = () => {
 												alt=''
 											/>
 										</div>
-										{offeredPokemon.type_2 !== 'Ninguno' && (
+										{offeredPokemon.type_2 !== t('common.no_type') && (
 											<div
 												className={`${offeredPokemon.type_2.toLowerCase()} h-14 sm:rounded-xl sm:px-4 sm:py-1 sm:border-4 border-y-4 border-r-4 border-black/20`}>
 												<Image
@@ -413,21 +441,23 @@ const BuildPokemon = () => {
 									setRerolls((prev) => prev - 1);
 								}}
 								disabled={rerolls === 0}
-								className='bg-indigo-500 sm:p-4 p-2 sm:mt-0 mt-2 rounded-lg text-white font-semibold sm:w-5/12 w-full enabled:cursor-pointer cursor-not-allowed enabled:hover:bg-indigo-600 enabled:active:bg-indigo-700 enabled:active:scale-95 sm:shadow-lg shadow-indigo-500 transition enabled:opacity-100 opacity-60'>
-								SALTAR POKEMON ({rerolls} REROLLS)
+								className='bg-blue-600 sm:p-4 p-2 sm:mt-0 mt-2 rounded-lg text-white font-semibold sm:w-5/12 w-full enabled:cursor-pointer cursor-not-allowed enabled:hover:bg-blue-500 enabled:active:bg-blue-400 enabled:active:scale-95 sm:shadow-lg shadow-blue-600 transition enabled:opacity-100 opacity-60'>
+								{t('build_pokemon.buttons.skip', { rerolls })}
 							</button>
 						) : (
 							<div className='w-full flex sm:flex-row flex-col items-center justify-around sm:gap-0 gap-3 sm:mt-0 mt-24'>
 								<button
 									onClick={() => showPokemonStats(stats)}
 									className='bg-green-500 p-4 rounded-lg text-white font-semibold sm:w-5/12 w-full cursor-pointer hover:bg-green-600 active:bg-green-700 active:scale-95 sm:shadow-lg shadow-md shadow-black sm:shadow-green-500 hover:shadow-green-600 transition'>
-									CALCULAR FUERZA
+									{gameEnded
+										? t('build_pokemon.buttons.result')
+										: t('build_pokemon.buttons.calculate')}
 								</button>
 								{gameEnded && (
 									<button
 										onClick={() => setGameStarted(false)}
-										className='bg-indigo-500 p-4 rounded-lg text-white font-semibold sm:w-5/12 w-full cursor-pointer hover:bg-indigo-600 active:bg-indigo-700 active:scale-95 sm:shadow-lg shadow-md shadow-black sm:shadow-indigo-500 hover:shadow-indigo-600 transition'>
-										REINICIAR
+										className='bg-red-500 p-4 rounded-lg text-white font-semibold sm:w-5/12 w-full cursor-pointer hover:bg-red-600 active:bg-red-700 active:scale-95 sm:shadow-lg shadow-md shadow-black sm:shadow-red-500 hover:shadow-red-600 transition animate-bounce'>
+										{t('build_pokemon.buttons.restart')}
 									</button>
 								)}
 							</div>
@@ -435,7 +465,7 @@ const BuildPokemon = () => {
 						<div className='grid grid-cols-2 sm:gap-4 gap-1 w-full'>
 							{stats.map((stat, index) => (
 								<div key={index}>
-									<div className='bg-slate-500 sm:p-4 sm:rounded-t-lg text-white font-semibold'>
+									<div className='bg-slate-600 sm:p-4 sm:rounded-t-lg text-white font-semibold'>
 										{stat.statLabel}
 									</div>
 									<div className='relative sm:rounded-b-lg group'>
@@ -455,9 +485,9 @@ const BuildPokemon = () => {
 												stat.pokemonAssigned.name
 											) : (
 												<>
-													Asignar
+													{t('build_pokemon.buttons.assign')}
 													<span className='hidden sm:inline'>
-														{` a ${stat.statLabel.toUpperCase()}`}
+														{` ${stat.statLabel.toUpperCase()}`}
 													</span>
 												</>
 											)}
@@ -478,7 +508,7 @@ const BuildPokemon = () => {
 												'animate-pulse group-hover:animate-none group-hover:bg-blue-400 bg-green-600 '
 											}  ${
 												stat.pokemonAssigned.type_2 &&
-												stat.pokemonAssigned.type_2 !== 'Ninguno'
+												stat.pokemonAssigned.type_2 !== t('common.no_type')
 													? stat.pokemonAssigned.type_2.toLowerCase()
 													: stat.pokemonAssigned.type_1
 													? stat.pokemonAssigned.type_1.toLowerCase()
@@ -493,9 +523,9 @@ const BuildPokemon = () => {
 					<div
 						className={`${
 							showCompanion
-								? 'sm:w-24 w-[22vw] h-auto border-double rounded-xl border-gray-600 border-4 '
+								? ` ${handleCompanionClassname()} h-auto border-double rounded-xl border-gray-600 border-4 `
 								: 'w-0 h-0 '
-						} absolute sm:top-16 top-12 sm:right-2 right-1 transition-all ease-in-out duration-150 transform `}>
+						} absolute sm:top-16 top-20 sm:right-2 right-1 transition-all ease-in-out duration-150 transform `}>
 						<Companion
 							score={score}
 							stats={stats}
@@ -505,9 +535,9 @@ const BuildPokemon = () => {
 			) : (
 				<div className='flex items-center justify-center sm:h-4/6 h-[80vh] '>
 					<div
-						className='bg-indigo-500 py-6 px-10 rounded-lg text-white font-bold cursor-pointer hover:bg-indigo-600 active:bg-indigo-700 active:scale-95 shadow-lg shadow-indigo-500'
+						className='bg-slate-700 py-6 px-10 rounded-lg text-white font-bold cursor-pointer hover:bg-slate-600 active:bg-slate-500 active:scale-95 shadow-lg shadow-slate-700'
 						onClick={() => startGame()}>
-						Comenzar Partida
+						{t('build_pokemon.buttons.start_game')}
 					</div>
 				</div>
 			)}
@@ -517,41 +547,63 @@ const BuildPokemon = () => {
 					showSettings
 						? 'scale-100 translate-y-0 translate-x-0'
 						: 'scale-0 translate-y-full translate-x-40'
-				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-4 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-xl text-white font-medium z-20`}>
+				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-4 bg-slate-700 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-xl text-white font-medium z-20`}>
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 rounded-t-xl'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 rounded-t-xl'
 					onClick={() => {
 						setShowSettings(false);
 						openBuildPokemonTutorial();
 					}}>
-					¿Cómo se juega?
+					{t('build_pokemon.settings.how_to_play')}
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700'
 					onClick={() => {
 						handleShowCompanion();
 					}}>
-					Mostrar compañero ayudante: {showCompanion ? 'SI' : 'NO'}
+					{t('build_pokemon.settings.show_companion.text')}{' '}
+					{showCompanion
+						? t('build_pokemon.settings.show_companion.yes')
+						: t('build_pokemon.settings.show_companion.no')}
+				</div>
+				<div className={`w-full py-2 ${!showCompanion && 'opacity-60'}`}>
+					{showCompanion ? (
+						<div className='flex justify-center items-center gap-2'>
+							<span>{t('build_pokemon.settings.size')}:</span>
+							<input
+								className={`range transition-all ease-in duration-300 cursor-pointer accent-blue-400`}
+								id='volume'
+								type='range'
+								min='0'
+								max='1'
+								step='0.25'
+								onChange={handleCompanionSize}
+								value={companionSize}
+							/>
+						</div>
+					) : (
+						<span>{t('build_pokemon.settings.disabled')}</span>
+					)}
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700'
 					onClick={() => {
 						setShowSettings(false);
 						showHighScores();
 					}}>
-					Estadísticas
+					{t('build_pokemon.settings.stats')}
 				</div>
 
 				<div
-					className='w-full py-2 bg-orange-400 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-b-xl'
+					className='w-full py-2 bg-red-500 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 sm:rounded-b-xl'
 					onClick={() => setShowSettings(false)}>
-					Cerrar
+					{t('build_pokemon.settings.close')}
 				</div>
 			</div>
 			<div
-				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer sm:bg-indigo-500 bg-gray-700 rounded-lg p-2 sm:hover:bg-indigo-400 active:scale-95 active:hover:bg-gray-500 sm:active:hover:bg-indigo-300 transition-all ease-in-out duration-150 transform
+				className={`fixed right-0 bottom-0 m-4 w-10 z-40 cursor-pointer bg-slate-700 rounded-lg p-2 hover:bg-slate-600 active:scale-95 active:hover:bg-slate-500 transition-all ease-in-out duration-150 transform
 					${!showSettings ? 'scale-100' : 'scale-0'}`}
 				onClick={handleShowSettings}>
 				<Image
@@ -559,6 +611,12 @@ const BuildPokemon = () => {
 					alt='settings'
 				/>
 			</div>
+			<TutorialModal
+				steps={tutorialSteps}
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				localStorageKey='build_tutorial'
+			/>
 		</div>
 	);
 };

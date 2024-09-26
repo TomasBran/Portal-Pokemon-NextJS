@@ -14,8 +14,12 @@ import { pokemonTypesArray } from '@/app/Components/Type/TypeArray';
 import Type from '@/app/Components/Type/Type';
 import pokedex from '@/../public/assets/pokedex.webp';
 import settings from '@/../public/assets/settings.png';
+import AudioPlayer from '@/app/Components/AudioPlayer/AudioPlayer';
+import { GoMute, GoUnmute } from 'react-icons/go';
+import { useTranslation } from 'react-i18next';
 
 const Calculator = () => {
+	const { t } = useTranslation();
 	const [loading, setLoading] = useState(false);
 	const [inputValue, setInputValue] = useState('');
 	const [isVisible, setIsVisible] = useState(false);
@@ -32,6 +36,10 @@ const Calculator = () => {
 	const [types_x05, setTypes_x05] = useState([]);
 	const [types_x025, setTypes_x025] = useState([]);
 	const [types_x0, setTypes_x0] = useState([]);
+	const [audioUrl, setAudioUrl] = useState([]);
+	const [shouldPlay, setShouldPlay] = useState(false);
+	const [volume, setVolume] = useState(0.3);
+	const [lastVolume, setLastVolume] = useState(0.3);
 
 	const MySwal = withReactContent(Swal);
 
@@ -77,6 +85,39 @@ const Calculator = () => {
 		};
 	}, [showSettings]);
 
+	useEffect(() => {
+		handleAudioChange(currentPokemonName);
+		setShouldPlay(true);
+	}, [currentPokemonName]);
+
+	const handleVolumeChange = (event) => {
+		setVolume(parseFloat(event.target.value));
+	};
+
+	const handleMute = () => {
+		if (volume === 0) {
+			setVolume(lastVolume);
+		} else {
+			setLastVolume(volume);
+			setVolume(0);
+		}
+	};
+
+	const handleAudioChange = (pokemon) => {
+		if (pokemon === '') {
+			return;
+		}
+		fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.toLowerCase()}`)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(`data=`, data);
+				setAudioUrl(data.cries.latest);
+			})
+			.catch((error) => {
+				console.error('Error fetching audio URLs:', error);
+			});
+	};
+
 	const handleClick = (type) => {
 		if (type === currentFirstSelection || type === currentSecondSelection) {
 			type === currentFirstSelection ? deleteSelection(1) : deleteSelection(2);
@@ -94,7 +135,7 @@ const Calculator = () => {
 				resetTypes();
 				setIsVisible(false);
 			} else {
-				toast.error(`Ya estás utilizando 2 tipos. Elimina uno primero`);
+				toast.error(t('calculator.messages.2_types'));
 			}
 		}
 	};
@@ -153,7 +194,7 @@ const Calculator = () => {
 				searchedPokemon.id
 			);
 			deleteBothTypes();
-			if (searchedPokemon.type_2 !== 'ninguno') {
+			if (searchedPokemon.type_2 !== t('common.no_type')) {
 				(searchedPokemon.type_1 !== currentFirstSelection ||
 					searchedPokemon.type_2 !== currentSecondSelection) &&
 					resetTypes();
@@ -208,15 +249,13 @@ const Calculator = () => {
 
 	const openCalculatorTutorial = () => {
 		MySwal.fire({
-			title: '¿Cómo funciona la Calculadora Pokemon?',
-			html: `Debes elegir uno o dos tipos para que te muestre sus puntos débiles, inmunidades, o fortalezas frente a otros ataques.<br>
-			Existe la opción de dejar que se elija al azar, o buscar al Pokemon en cuestión en la Pokedex en caso de que no sepas sus tipos!<br><br>
-			Formas Gimmick: Son las formas especiales de los Pokemon (por ej. Mega evoluciones). Se puede elegir verlas o no en la Pokedex.`,
+			title: t('calculator.modals.tutorial.title'),
+			html: t('calculator.modals.tutorial.text'),
 			showCancelButton: true,
 			confirmButtonColor: 'rgb(99 102 241)',
 			cancelButtonColor: 'rgb(69 168 68)',
-			confirmButtonText: 'Excelente!',
-			cancelButtonText: 'Magnífico!',
+			confirmButtonText: t('calculator.buttons.confirm_1'),
+			cancelButtonText: t('calculator.buttons.confirm_2'),
 		});
 	};
 
@@ -229,17 +268,13 @@ const Calculator = () => {
 	};
 
 	return (
-		<div className='min-h-screen sm:bg-teal-200 bg-teal-200/80 sm:pt-16 pt-12 p-1 sm:p-0 flex flex-col items-center w-screen text-black text-center'>
+		<div className='min-h-screen overflow-x-hidden sm:bg-teal-200 bg-teal-200/80 sm:pt-16 pt-12 p-1 sm:p-0 flex flex-col items-center w-screen text-black text-center'>
 			<h2
-				className={`${
-					currentFirstSelection === '' && currentSecondSelection === ''
-						? 'sm:block'
-						: 'sm:hidden'
-				} sm:text-3xl text-lg sm:py-2 font-pokemon text-teal-600 text-center`}>
-				Calculadora
+				className={`sm:text-3xl text-lg sm:py-2 font-pokemon text-teal-600 text-center`}>
+				{t('calculator.html.title')}
 			</h2>
 			<div className='flex justify-start flex-col items-center w-full h-full '>
-				<div className='flex justify-center sm:gap-14 gap-2 w-full sm:h-60 h-full sm:flex-row flex-col flex-col-reverse'>
+				<div className='flex justify-center sm:gap-14 gap-2 w-full sm:h-60 h-full sm:flex-row flex-col-reverse'>
 					<div className='flex justify-center items-center sm:w-6/12 w-full h-full flex-wrap gap-3 p-2 bg-teal-700 sm:rounded-lg overflow-auto'>
 						{pokemonTypesArray.map((type) => (
 							<button
@@ -336,7 +371,9 @@ const Calculator = () => {
 				<div className='bg-teal-700/80 sm:py-8 py-3 px-2 m-4 sm:rounded-2xl xl:w-4/12 lg:w-5/12 sm:w-7/12 w-full sm:h-2'>
 					{currentFirstSelection || currentSecondSelection ? (
 						<div className='sm:flex-row flex-col flex sm:px-4 justify-between items-center w-full h-full'>
-							<p className='text-xl text-white font-semibold'>Seleccionados:</p>
+							<p className='text-xl text-white font-semibold'>
+								{t('calculator.html.selected')}:
+							</p>
 							<div className='flex justify-evenly sm:w-8/12 w-full gap-4'>
 								<button
 									className={` ${
@@ -361,33 +398,33 @@ const Calculator = () => {
 					) : (
 						<div className='flex sm:flex-row flex-col gap-2 justify-evenly items-center w-full h-full'>
 							<p className='xl:text-lg text-sm text-white font-bold'>
-								Selecciona un tipo, o random
+								{t('calculator.html.select_types')}
 							</p>
 							<p
 								className='text-white font-semibold bg-teal-500 cursor-pointer p-2 rounded-lg hover:bg-teal-400 active:bg-teal-300 active:scale-90 transition truncate sm:text-base text-sm sm:w-auto w-4/6'
 								onClick={pickRandomType}>
-								1 Random
+								{t('calculator.buttons.random_1')}
 							</p>
 							<p
 								className='text-white font-semibold bg-teal-500 cursor-pointer p-2 rounded-lg hover:bg-teal-400 active:bg-teal-300 active:scale-90 transition truncate sm:text-base text-sm sm:w-auto w-4/6'
 								onClick={pickTwoRandomTypes}>
-								2 Random
+								{t('calculator.buttons.random_2')}
 							</p>
 						</div>
 					)}
 				</div>
 
 				<div
-					className={`flex sm:flex-row flex-col w-full justify-evenly sm:gap-4 sm:divide-y-0 divide-y-2 ${
+					className={`flex sm:flex-row flex-col w-full justify-evenly sm:gap-4 sm:divide-y-0 divide-y-2 pb-2 ${
 						currentFirstSelection === '' && currentSecondSelection === ''
 							? 'hidden'
 							: ''
 					}`}>
 					<div
-						className={`bg-teal-500 sm:min-h-[43vh] sm:w-[23vw] w-full sm:rounded-lg sm:p-4 p-2 sm:p-4 p-2 ${
+						className={`bg-teal-500 sm:min-h-[43vh] sm:w-[23vw] w-full sm:rounded-lg sm:p-4 p-2 ${
 							isArrayEmpty(types_x4) && isArrayEmpty(types_x2) ? 'hidden' : ''
 						}`}>
-						<p>Efectivo:</p>
+						<p>{t('calculator.html.effectiveness.effective')}:</p>
 						<div className={`${isArrayEmpty(types_x4) ? 'hidden' : ''}`}>
 							<p className='my-3'>x4:</p>
 							<div className='flex justify-center flex-wrap gap-4'>
@@ -417,7 +454,7 @@ const Calculator = () => {
 						className={`bg-teal-500 sm:min-h-[43vh] sm:w-[23vw] w-full sm:rounded-lg sm:p-4 p-2  ${
 							isArrayEmpty(types_x1) ? 'hidden' : ''
 						}`}>
-						<p>Neutral:</p>
+						<p>{t('calculator.html.effectiveness.neutral')}:</p>
 						<p className='my-3'>x1:</p>
 						<div className='flex justify-center flex-wrap gap-4'>
 							{types_x1.map((type, index) => (
@@ -435,7 +472,7 @@ const Calculator = () => {
 								? 'hidden'
 								: ''
 						}`}>
-						<p>Poco efectivo:</p>
+						<p>{t('calculator.html.effectiveness.ineffective')}:</p>
 						<div className={`${isArrayEmpty(types_x05) ? 'hidden' : ''}`}>
 							<p className='my-3'>x1/2:</p>
 							<div className='flex justify-center flex-wrap gap-4'>
@@ -466,7 +503,7 @@ const Calculator = () => {
 						className={`bg-teal-500 sm:min-h-[43vh] sm:w-[23vw] w-full sm:rounded-lg sm:p-4 p-2  ${
 							isArrayEmpty(types_x0) ? 'hidden' : ''
 						}`}>
-						<p>Inmune:</p>
+						<p>{t('calculator.html.effectiveness.immune')}:</p>
 						<p className='my-3'>x0:</p>
 						<div className='flex justify-center flex-wrap gap-4'>
 							{types_x0.map((type, index) => (
@@ -483,41 +520,66 @@ const Calculator = () => {
 
 			<div
 				ref={settingsRef}
-				className={`fixed sm:right-0 bottom-0 sm:m-3 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-lg text-white font-medium ${
+				className={`fixed sm:right-0 bottom-0 sm:m-3 bg-slate-700 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-lg text-white font-medium ${
 					showSettings
 						? 'scale-100 translate-y-0 translate-x-0'
 						: 'scale-0 translate-y-full translate-x-40'
 				} transition-all duration-150 transform`}>
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 rounded-t-lg'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 rounded-t-lg'
 					onClick={() => {
 						openCalculatorTutorial();
 						setShowSettings(false);
 					}}>
-					¿Cómo funciona?
+					{t('calculator.settings.how_to_use')}
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700'
 					onClick={handleShowIcons}>
-					{`Mostrar ${showIcons ? 'nombres' : 'iconos'}`}
+					{t(`calculator.settings.show_${showIcons ? 'names' : 'icons'}`)}
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700'
 					onClick={handleShowGimmickForms}>
-					{`Formas Gimmick en Pokedex: ${gimmickForms ? 'SI' : 'NO'} `}
+					{t('calculator.settings.gimmick_forms', {
+						value: gimmickForms
+							? t('calculator.settings.yes')
+							: t('calculator.settings.no'),
+					})}
+				</div>
+
+				<div className='flex items-center justify-center gap-2 h-full w-full py-2'>
+					<span>{t('calculator.settings.volume')}:</span>
+					<input
+						className={`range transition-all ease-in duration-300 cursor-pointer ${
+							volume <= 0.8 ? 'accent-yellow-300' : 'accent-red-500'
+						} `}
+						id='volume'
+						type='range'
+						min='0'
+						max='1'
+						step='0.01'
+						value={volume}
+						onChange={handleVolumeChange}
+					/>
+					<div
+						className='cursor-pointer hover:text-yellow-500'
+						onClick={handleMute}>
+						{volume !== 0 ? <GoUnmute /> : <GoMute />}
+					</div>
 				</div>
 
 				<div
-					className='w-full py-2 bg-orange-400 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-b-lg'
+					className='w-full py-2 bg-red-500 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 sm:rounded-b-lg'
 					onClick={() => setShowSettings(false)}>
-					Cerrar
+					{t('calculator.settings.close')}
 				</div>
 			</div>
 
 			<div
-				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer sm:bg-teal-600 bg-gray-700 rounded-lg p-2 sm:hover:bg-teal-500 active:scale-95 active:hover:bg-gray-500 sm:active:hover:bg-teal-400 transition-all ease-in-out duration-150 transform ${
+				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer bg-slate-700 rounded-lg p-2 hover:bg-slate-600 active:scale-95 active:hover:bg-slate-500 transition-all ease-in-out duration-150 transform ${
 					!showSettings ? 'scale-100' : 'scale-0'
 				}`}
 				onClick={handleShowSettings}>
@@ -526,6 +588,11 @@ const Calculator = () => {
 					alt='settings'
 				/>
 			</div>
+			<AudioPlayer
+				audioSrc={audioUrl}
+				shouldPlay={shouldPlay}
+				volume={volume}
+			/>
 		</div>
 	);
 };

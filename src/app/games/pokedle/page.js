@@ -13,19 +13,17 @@ import {
 	saveToLocalStorage,
 } from '../../utils/services/localStorage.js';
 import Image from 'next/image.js';
-
-const attributes = [
-	'Foto',
-	'Nombre',
-	'Generación',
-	'Tipo 1',
-	'Tipo 2',
-	'Fuerza',
-	'Peso (kg)',
-	'Altura (mts)',
-];
+import TutorialModal from '@/app/Components/TutorialModal/TutorialModal.js';
+import { useTranslation } from 'react-i18next';
 
 const Pokedle = () => {
+	const { t } = useTranslation();
+
+	//PONER FALSE CUANDO NO ESTE TESTEANDO
+	const testing = false; //PONER FALSE CUANDO NO ESTE TESTEANDO
+	if (testing) console.log('TESTING ON'); //PONER FALSE CUANDO NO ESTE TESTEANDO
+	//PONER FALSE CUANDO NO ESTE TESTEANDO
+
 	const MySwal = withReactContent(Swal);
 
 	useEffect(() => {
@@ -51,6 +49,10 @@ const Pokedle = () => {
 		}
 	}, []);
 
+	const tutorialModalOpened =
+		getFromLocalStorage('pokedle_tutorial') === 'true';
+	const [isModalOpen, setIsModalOpen] = useState(!tutorialModalOpened);
+
 	const [comparisons, setComparisons] = useState([]);
 	const [inputValue, setInputValue] = useState('');
 	const [originalPokemon, setOriginalPokemon] = useState({});
@@ -69,11 +71,42 @@ const Pokedle = () => {
 
 	const [guessButtonDisabled, setGuessButtonDisabled] = useState(false);
 
+	const tutorialSteps = [
+		{
+			image: '/assets/tutorial/pokedle/tutorial_1.png',
+			text: t('pokedle.tutorial.1'),
+		},
+		{
+			image: '/assets/tutorial/pokedle/tutorial_2.png',
+			text: t('pokedle.tutorial.2'),
+		},
+		{
+			image: '/assets/tutorial/pokedle/tutorial_3.png',
+			text: t('pokedle.tutorial.3'),
+		},
+	];
+
+	const attributes = [
+		t('pokedle.attributes.image'),
+		t('pokedle.attributes.name'),
+		t('pokedle.attributes.generation'),
+		t('pokedle.attributes.type_1'),
+		t('pokedle.attributes.type_2'),
+		t('pokedle.attributes.power'),
+		t('pokedle.attributes.weight'),
+		t('pokedle.attributes.height'),
+	];
+
 	useEffect(() => {
 		startNewGame();
 	}, []);
 
 	const startNewGame = async () => {
+		if (testing) {
+			const newPokemon = await getPokemon('eevee');
+			setOriginalPokemon(newPokemon);
+			return;
+		}
 		const newPokemon = await getPokemon(
 			generateRandomPokemonNumber(currentGenerations)
 		);
@@ -135,22 +168,23 @@ const Pokedle = () => {
 		}
 
 		if (originalPokemon.name === newChosenPokemon.name) {
+			const pokemon = originalPokemon.name.replace(/-/g, ' ');
+
+			const tries = comparisons.length + 1;
+
 			const response = await MySwal.fire({
-				title: `Felicitaciones! El Pokemon era <span class="text-green-500 font-bold">${originalPokemon.name.replace(
-					/-/g,
-					' '
-				)}</span>.`,
+				title: t('pokedle.messages.win.title', { pokemon }),
 				text: `${
-					comparisons.length !== 0
-						? `Adivinaste en ${comparisons.length + 1} intentos`
-						: 'Adivinaste a la primera. Wow.'
+					comparisons.length === 0
+						? t('pokedle.messages.win.text.one_try')
+						: t('pokedle.messages.win.text.more_tries', { tries })
 				}`,
 				icon: 'success',
 				showCancelButton: true,
 				confirmButtonColor: '#007bff',
 				cancelButtonColor: '#787878',
-				confirmButtonText: 'Jugar otra vez',
-				cancelButtonText: 'Ver el tablero',
+				confirmButtonText: t('pokedle.buttons.play_again'),
+				cancelButtonText: t('pokedle.buttons.see_board'),
 			});
 			updatePokedleStats(comparisons.length + 1);
 			if (response.isConfirmed) {
@@ -197,25 +231,24 @@ const Pokedle = () => {
 		}
 
 		const response = await MySwal.fire({
-			title: `Seguro que quieres reiniciar la partida?.`,
-			text: `Esto borrará tu progreso e iniciará una nueva partida`,
+			title: t('pokedle.messages.restart.title'),
+			text: t('pokedle.messages.restart.text'),
 			icon: 'warning',
 			showCancelButton: true,
-			cancelButtonText: 'Cancelar',
-			confirmButtonText: 'Confirmar',
+			cancelButtonText: t('pokedle.buttons.cancel'),
+			confirmButtonText: t('pokedle.buttons.confirm'),
 			confirmButtonColor: 'rgb(99 102 241)',
 			cancelButtonColor: 'rgb(239 68 68)',
 		});
 		if (response.isConfirmed) {
+			const pokemon = originalPokemon.name.replace(/-/g, ' ');
+
 			await MySwal.fire({
-				title: `La partida ha finalizado.`,
-				html: `No has adivinado. El Pokémon era <span class="text-red-500 font-bold">${originalPokemon.name.replace(
-					/-/g,
-					' '
-				)}</span>`,
+				title: t('pokedle.messages.lose.title'),
+				html: t('pokedle.messages.lose.text', { pokemon }),
 				icon: 'error',
 				showCancelButton: false,
-				confirmButtonText: 'Confirmar',
+				confirmButtonText: t('pokedle.buttons.play_again'),
 			});
 			reloadGame();
 			updatePokedleResetNumber();
@@ -229,15 +262,16 @@ const Pokedle = () => {
 	const putDataStyle = (data) => {
 		switch (data) {
 			case 'correct-guess':
-				return 'bg-green-500';
+				return 'bg-green-600';
+
 			case 'wrong-guess':
-				return 'bg-red-500';
+				return 'bg-red-600';
 
 			case 'partial-correct-guess':
-				return 'bg-yellow-500';
+				return 'bg-yellow-600';
 
 			default:
-				return 'bg-indigo-500';
+				return 'bg-slate-700';
 		}
 	};
 
@@ -266,16 +300,7 @@ const Pokedle = () => {
 
 	const openPokedleTutorial = () => {
 		setShowSettings(false);
-		MySwal.fire({
-			title: '¿Cómo se juega?',
-			html: `Debes adivinar el Pokemon escondido. Comienza eligiendo uno y continúa a partir de las pistas que éste te otorgue.<br>
-			Por ejemplo, si el pokemon que tocó es <span class='font-bold text-gray-500'>Magnemite</span>, y yo elegí a <span class='font-bold text-yellow-500'>Pikachu</span>, me dirá que coinciden en su primer tipo (<span class='font-bold text-yellow-500'>Eléctrico</span>), pero no coincidirán en el segundo, ya que <span class='font-bold text-yellow-500'>Pikachu</span> es monotipo y <span class='font-bold text-gray-500'>Magnemite</span> es tipo <span class='font-bold text-yellow-500'>Eléctrico</span>/<span class='font-bold text-gray-500'>Acero</span>. También me comparará el resto de los datos.<br><br>
-			<span class='font-bold text-green-500'>Dato</span>: En la generación, fuerza, peso y altura habrá una flecha hacia arriba/abajo que indica si el número del Pokemon objetivo es mayor o menor en caso de no coincidir.
-			.`,
-			showCancelButton: false,
-			confirmButtonColor: 'rgb(99 102 241)',
-			confirmButtonText: '¡Estoy listo!',
-		});
+		setIsModalOpen(true);
 	};
 
 	const updatePokedleResetNumber = () => {
@@ -327,35 +352,48 @@ const Pokedle = () => {
 		const pokedleStats = getFromLocalStorage('pokedle_stats');
 		setShowSettings(false);
 
+		const guesses_1 = pokedleStats.guesses[1];
+		const guesses_2 = pokedleStats.guesses[2];
+		const guesses_3 = pokedleStats.guesses[3];
+		const guesses_4 = pokedleStats.guesses[4];
+		const guesses_5 = pokedleStats.guesses[5];
+		const guesses_6 = pokedleStats.guesses[6];
+		const guesses_7 = pokedleStats.guesses[7];
+		const guesses_8 = pokedleStats.guesses[8];
+		const guesses_9 = pokedleStats.guesses[9];
+		const guesses_10 = pokedleStats.guesses[10];
+		const restarts = pokedleStats.games_restarted;
+
 		MySwal.fire({
-			title: 'Estadísticas de Pokedle',
-			html: `
-					1 Intento: <span class='font-semibold text-blue-800'>${pokedleStats.guesses[1]} </span><br>
-					2 Intentos: <span class='font-semibold text-blue-800'>${pokedleStats.guesses[2]} </span><br>
-					3 Intentos: <span class='font-semibold text-blue-800'>${pokedleStats.guesses[3]} </span><br>
-					4 Intentos: <span class='font-semibold text-blue-800'>${pokedleStats.guesses[4]} </span><br>
-					5 Intentos: <span class='font-semibold text-blue-800'>${pokedleStats.guesses[5]} </span><br>
-					6 Intentos: <span class='font-semibold text-blue-800'>${pokedleStats.guesses[6]} </span><br>
-					7 Intentos: <span class='font-semibold text-blue-800'>${pokedleStats.guesses[7]} </span><br>
-					8 Intentos: <span class='font-semibold text-blue-800'>${pokedleStats.guesses[8]} </span><br>
-					9 Intentos: <span class='font-semibold text-blue-800'>${pokedleStats.guesses[9]} </span><br>
-					10+ Intentos: <span class='font-semibold text-blue-800'>${pokedleStats.guesses[10]} </span><br>
-			<br><br>
-			<span class='font-bold'>Partidas reiniciadas: ${pokedleStats.games_restarted} </span><br>
-			`,
+			title: t('pokedle.modals.stats.title'),
+			html: t('pokedle.modals.stats.text', {
+				guesses_1,
+				guesses_2,
+				guesses_3,
+				guesses_4,
+				guesses_5,
+				guesses_6,
+				guesses_7,
+				guesses_8,
+				guesses_9,
+				guesses_10,
+				restarts,
+			}),
 			showCancelButton: false,
 			confirmButtonColor: 'rgb(99 102 241)',
-			confirmButtonText: '¡A seguir ganando!',
+			confirmButtonText: t('pokedle.buttons.keep_winning'),
 		});
 	};
 
 	return (
-		<div className='bg-indigo-100 min-h-screen pb-4 p-1 text-center text-black'>
-			<h2 className='sm:text-3xl text-lg pt-20 -mb-3 sm:mb-0 font-pokemon text-indigo-600 text-center'>
+		<div className='bg-gray-200 min-h-screen pb-4 p-1 text-center text-black '>
+			<h2 className='sm:text-3xl text-lg pt-20 -mb-3 sm:mb-0 font-pokemon text-slate-700 text-center'>
 				Pokedle
 			</h2>
 			<div className='flex sm:flex-row flex-col justify-center items-center gap-4 sm:py-6 pt-14 pb-6'>
-				<span className='sm:block hidden'>Elige un Pokemon:</span>
+				<span className='sm:block hidden'>
+					{t('pokedle.text.choose_pokemon')}:
+				</span>
 				<PokemonSearch
 					onInputChange={handleInputChange}
 					searchPokemon={comparePokemon}
@@ -364,19 +402,20 @@ const Pokedle = () => {
 				<div className='flex justify-center gap-2 sm:gap-4 sm:w-auto w-[65vw] text-sm'>
 					<button
 						id='guess-button'
-						className='bg-indigo-500 enabled:hover:bg-indigo-400 enabled:active:bg-indigo-300 enabled:active:scale-95 transition duration-150 rounded-lg py-4 sm:px-8 px-4 text-white font-bold disabled:opacity-40'
+						className='bg-green-500 enabled:hover:bg-green-400 enabled:active:bg-green-300 enabled:active:scale-95 transition duration-150 rounded-lg py-4 sm:px-8 px-4 text-white font-bold disabled:opacity-40'
 						onClick={() => {
 							comparePokemon(inputValue);
 							setInputValue('');
 						}}
 						disabled={guessButtonDisabled}>
-						ADIVINAR
+						{t('pokedle.buttons.guess')}
 					</button>
 					<button
-						className={`bg-indigo-500 enabled:active:bg-blue-300 enabled:active:scale-95 transition duration-150 enabled:hover:bg-blue-400 disabled:opacity-40 rounded-lg py-4 sm:px-8 px-4 text-white font-bold`}
+						className={`bg-red-500 enabled:active:bg-red-300 enabled:active:scale-95 transition duration-150 enabled:hover:bg-red-400 disabled:opacity-40 rounded-lg py-4 sm:px-8 px-4 text-white font-bold
+							${guessButtonDisabled && 'sm:animate-bounce'}`}
 						onClick={() => resetGame()}
 						disabled={comparisons.length === 0}>
-						REINICIAR
+						{t('pokedle.buttons.restart')}
 					</button>
 				</div>
 			</div>
@@ -387,7 +426,7 @@ const Pokedle = () => {
 							{attributes.map((attribute, index) => (
 								<div
 									key={index}
-									className='bg-blue-700 rounded-lg sm:py-2 px-4 sm:w-1/12 w-24 flex items-center justify-center'>
+									className='bg-slate-900 rounded-lg sm:py-2 px-4 sm:w-1/12 w-24 flex items-center justify-center'>
 									<p className='font-bold text-white text-sm'>{attribute}</p>
 								</div>
 							))}
@@ -403,7 +442,7 @@ const Pokedle = () => {
 										key={property}>
 										<div
 											key={property}
-											className={`sm:w-5/6 w-full h-20 border-2 border-white text-white flex justify-center items-center rounded-lg ${putDataStyle(
+											className={`sm:w-5/6 w-full h-20 border-2 border-slate-700 text-white flex justify-center items-center rounded-lg ${putDataStyle(
 												data.class
 											)} bg-contain bg-center bg-no-repeat`}
 											style={
@@ -426,8 +465,8 @@ const Pokedle = () => {
 					showSettings
 						? 'scale-100 translate-y-0 translate-x-0'
 						: 'scale-0 translate-y-full translate-x-40'
-				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-3 bg-blue-500 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-xl text-white font-medium`}>
-				<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-t-xl'>
+				} transition-all duration-150 transform fixed right-0 bottom-0 sm:m-3 bg-slate-700 h-auto sm:w-[20vw] w-full flex flex-col items-center sm:rounded-2xl text-white font-medium`}>
+				<div className='w-full hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700 sm:rounded-t-xl'>
 					<Generations
 						getGenerations={getGenerations}
 						resetGame={reloadGame}
@@ -436,26 +475,26 @@ const Pokedle = () => {
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 					onClick={openPokedleTutorial}>
-					¿Cómo se juega?
+					{t('pokedle.settings.how_to_play')}
 				</div>
 
 				<div
-					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500'
+					className='w-full py-2 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700'
 					onClick={openStats}>
-					Estadísticas
+					{t('pokedle.settings.stats')}
 				</div>
 
 				<div
-					className='w-full py-2 bg-orange-400 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-blue-500 sm:rounded-b-xl'
+					className='w-full py-2 bg-red-500 hover:bg-yellow-200 active:bg-yellow-300 cursor-pointer hover:text-slate-700 active:text-slate-700 sm:rounded-b-xl'
 					onClick={() => setShowSettings(false)}>
-					Cerrar
+					{t('pokedle.settings.close')}
 				</div>
 			</div>
 
 			<div
-				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer sm:bg-indigo-500 bg-gray-700 rounded-lg p-2 sm:hover:bg-indigo-400 active:scale-95 active:hover:bg-gray-500 sm:active:hover:bg-indigo-300 transition-all ease-in-out duration-150 transform ${
+				className={`fixed right-0 bottom-0 m-4 w-10 cursor-pointer bg-slate-700 rounded-lg p-2 hover:bg-slate-600 active:scale-95  active:hover:bg-slate-500 transition-all ease-in-out duration-150 transform ${
 					!showSettings ? 'scale-100' : 'scale-0'
 				}`}
 				onClick={handleShowSettings}>
@@ -464,6 +503,12 @@ const Pokedle = () => {
 					alt='settings'
 				/>
 			</div>
+			<TutorialModal
+				steps={tutorialSteps}
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				localStorageKey='pokedle_tutorial'
+			/>
 		</div>
 	);
 };

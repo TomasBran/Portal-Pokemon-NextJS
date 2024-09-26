@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import Autosuggest from 'react-autosuggest';
 import './PokemonSearch.css';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 function PokemonSearch(props) {
+	const { t } = useTranslation();
 	const [value, setValue] = useState('');
 	const [suggestions, setSuggestions] = useState([]);
 	const [pokemonData, setPokemonData] = useState([]);
@@ -23,7 +25,7 @@ function PokemonSearch(props) {
 				const pokemonList = data.results;
 				setPokemonData(pokemonList);
 			} catch (error) {
-				console.error('Error al cargar los datos de Pokemon', error);
+				console.error('Error: ', error);
 			}
 		}
 
@@ -61,15 +63,14 @@ function PokemonSearch(props) {
 	const handleKeyDown = (event) => {
 		if (event.key === 'Enter') {
 			if (value.length <= 0) {
-				toast.error(`El buscador está vacío.`);
+				toast.error(t('pokemon_search.messages.empty'));
 				return;
 			}
-			searchPokemon(value);
 		}
 	};
 
 	const inputProps = {
-		placeholder: 'Ej: Pikachu',
+		placeholder: t('pokemon_search.placeholder'),
 		value,
 		onChange,
 		onKeyDown: handleKeyDown,
@@ -100,7 +101,7 @@ function PokemonSearch(props) {
 				<button
 					className='md:py-2 md:px-6 px-1 rounded-2xl bg-gray-500 text-white font-semibold cursor-pointer hover:bg-gray-400 active:bg-gray-300 active:scale-95 transition duration-150'
 					onClick={() => searchPokemon(value)}>
-					Buscar
+					{t('pokemon_search.buttons.search')}
 				</button>
 			)}
 		</div>
