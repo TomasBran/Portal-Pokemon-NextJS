@@ -1,9 +1,11 @@
 'use client';
 import { createContext, useContext, useState } from 'react';
 
+import { useTranslation } from 'react-i18next';
 export const SelectionContext = createContext('Initial Value');
 
 export const SelectionProvider = ({ children }) => {
+	const { t } = useTranslation();
 	const [currentFirstSelection, setCurrentFirstSelection] = useState('');
 	const [currentSecondSelection, setCurrentSecondSelection] = useState('');
 	const [currentEnemyFirstSelection, setCurrentEnemyFirstSelection] =
@@ -19,6 +21,10 @@ export const SelectionProvider = ({ children }) => {
 
 	const setBothTypes = (type1, type2) => {
 		setCurrentFirstSelection(type1);
+
+		if (type2 === t('common.no_type').toLocaleLowerCase()) {
+			return;
+		}
 		setCurrentSecondSelection(type2);
 	};
 
