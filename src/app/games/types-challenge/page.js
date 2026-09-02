@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 const TypesChallenge = () => {
 	const { t } = useTranslation();
 	// PONER FALSE AL NO TESTEAR
-	const testing = true; // PONER FALSE AL NO TESTEAR
+	const testing = false; // PONER FALSE AL NO TESTEAR
 	if (testing) console.log('EL MODO TESTING ESTA ON');
 	// PONER FALSE AL NO TESTEAR
 
